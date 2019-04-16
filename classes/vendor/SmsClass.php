@@ -13,7 +13,7 @@ use classes\FirstClass;
 class SmsClass extends FirstClass
 {
     private $helper;
-    private $accessKeyId = '24871135';
+    private $accessKeyId = 'LTAIuJphx76YZCan';
     private $accessKeySecret = '45da2babaefda95197dca52d9acdb47e';
     private $signName = '米礼';
     public $TemplateParam = null;
