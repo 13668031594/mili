@@ -13,9 +13,9 @@ use classes\FirstClass;
 class SmsClass extends FirstClass
 {
     private $helper;
-    private $accessKeyId = 'LTAIMrTjpA02EVFF';
-    private $accessKeySecret = '9xeqrtNFZVGpgyr8DMa5YquiFMZ5lR';
-    private $signName = '米礼网';
+    private $accessKeyId = '24871135';
+    private $accessKeySecret = '45da2babaefda95197dca52d9acdb47e';
+    private $signName = '米礼';
     public $TemplateParam = null;
 
     public function __construct()
