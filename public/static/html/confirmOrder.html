@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我是确认订单</title>
+    <link type="text/css" rel="stylesheet" href="../index/css/confirm.css">
+</head>
+<body>
+<div class="container">
+    <div class="prompt">
+        <b>已选择的商品</b>
+    </div>
+    <div class="selected-goods">
+        <div class="goods-images">
+            <img src="#" id="goodsImage"/>
+        </div>
+        <div class="goods-weight">
+            <h3 id="goodsWeight">1</h3>
+            <div class="name">重量</div>
+        </div>
+        <div class="goods-number">
+            <h3 id="goodsNumber">1</h3>
+            <div class="name">每单数量</div>
+        </div>
+        <div class="goods-amount">
+            <h3 id="goodsAmount">0.76</h3>
+            <div class="name">单价</div>
+        </div>
+    </div>
+    <div class="prompt">
+        <b>发货信息</b> 店铺：<span id='sendData' style="font-size:13px;color:#666">天猫旗舰店</span>
+    </div>
+    <div class="item-container">
+        <span>快递：<b id="express">圆通快递</b></span>
+        <div class="right">
+            <h3 id="expressAmount">0.76</h3>
+            <div class="name">快递单价</div>
+        </div>
+
+    </div>
+
+    <div class="item-container">
+        <span>收货人信息 <a href="###" class="consignee">查看</a></span>
+        <div class="right">
+            <h3>12</h3>
+            <div class="name">包裹数量</div>
+        </div>
+    </div>
+    <div class="mx">
+        <span>礼品总价</span>
+        <span class="right">
+            <h5>+ &yen; <font id="goodsTotal">127.00</font></h5>
+        </span>
+    </div>
+    <div class="mx">
+        <span>快递总价</span>
+        <div class="right">
+            <h5>+ &yen; <font id="expressTotal">127.00</font></h5>
+        </div>
+    </div>
+    <div class="prompt" style="background: #efefef; margin-top: 10px; text-align: right;padding-right:100px;">
+        <b>订单金额</b>
+        <h3 class="total">&yen;<span id="total">127.00</span></h3>
+    </div>
+    <div class="prompt" style="text-align: right;">
+        支付密码<input type="password" id="payPass" value=""/>
+    </div>
+</div>
+</body>
+</html>

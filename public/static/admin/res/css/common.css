@@ -1,0 +1,127 @@
+.layui-fluid {
+  padding: 15px; }
+
+.m-breadcrumb {
+  padding-bottom: 10px;
+  border-bottom: #efefef solid 1px;
+  margin-bottom: 10px; }
+
+.layui-tab-card {
+  box-shadow: none; }
+
+.layui-form-min {
+  max-width: 600px; }
+
+.layui-op .layui-nav-item1 {
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  line-height: 60px; }
+
+.layui-op .layui-nav-item1 a {
+  margin-right: 20px;
+  color: #bbb; }
+
+.layui-op .layui-nav-item1 a:hover {
+  color: #efefef;
+  -webkit-transition: all .2s; }
+
+.layui-op .layui-nav-bar {
+  height: 0px; }
+
+.layui-form-border {
+  border: #efefef solid 1px;
+  padding: 15px 0px; }
+
+.custom-select {
+  height: 25px;
+  border: #ccc solid 1px;
+  padding: 0px 5px; }
+
+.layui-query-select .layui-select-title .layui-input {
+  height: 30px; }
+
+.layui-query-select .layui-form-select dl {
+  top: 32px !important; }
+
+.layui-form-query {
+  margin-left: 10px; }
+
+.layui-input-mid {
+  height: 30px; }
+
+.layui-form-label-mid {
+  padding: 0px 15px;
+  line-height: 30px; }
+
+.form-radio-type {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center; }
+
+.form-radio-type > ul {
+  overflow: hidden; }
+
+.form-radio-type ul li {
+  float: left;
+  padding: 5px 15px;
+  border: 1px solid #E7E7E7;
+  border-right: none;
+  cursor: pointer; }
+
+.form-radio-type li:hover {
+  color: #fff;
+  background-color: #009688; }
+
+.form-radio-type li:last-of-type {
+  border-right: 1px solid #E7E7E7; }
+
+.form-radio-type .choice {
+  color: #fff;
+  background-color: #009688; }
+
+.layui-field-box .format:not(:first-of-type) {
+  border-top: #f2f2f2 solid 1px;
+  margin-top: 10px;
+  padding-top: 10px; }
+
+.format-container {
+  padding-bottom: 10px; }
+
+.format {
+  overflow: hidden;
+  height: 110px; }
+  .format > div {
+    padding-left: 30px;
+    height: 95px; }
+    .format > div h3 {
+      font-size: 14px;
+      font-weight: normal;
+      margin-bottom: 20px; }
+    .format > div div.number {
+      color: #999; }
+      .format > div div.number span {
+        font-size: 20px;
+        font-weight: 700;
+        color: #009688;
+        margin-right: 5px; }
+    .format > div .prompt {
+      font-size: 12px;
+      color: #ccc; }
+    .format > div:not(:first-of-type) {
+      border-left: #f2f2f2 solid 1px; }
+  .format .format-list li {
+    float: left;
+    width: 33.3%; }
+
+.layui-nav-child a {
+  margin-left: 16px; }
+
+/*# sourceMappingURL=common.css.map */

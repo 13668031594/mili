@@ -1,0 +1,12 @@
+body{
+    background-color:#efefef;
+}
+.login-container{
+    max-width: 400px;
+    margin-top:200px;
+}
+.login-code img{
+    width:100%;
+    height:2.4rem;
+    background-color:white;
+}

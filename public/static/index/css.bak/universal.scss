@@ -1,0 +1,359 @@
+@charset "utf-8";
+
+// Flexbox Containers 块属性弹性盒子
+@mixin flexbox {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+//%flexbox { @include flexbox; }
+
+//----------------------------------
+
+//内联块属性弹性盒子
+@mixin inline-flex {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+}
+
+//%inline-flex { @include inline-flex; }
+
+//------------------------------------
+
+// Flexbox Direction(row || row-reverse || column || column-reverse)
+@mixin flex-direction($value: row) {
+    @if $value == row-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: horizontal;
+    } @else if $value == column {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: vertical;
+    } @else if $value == column-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: vertical;
+    } @else {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+    }
+    -webkit-flex-direction: $value;
+    -moz-flex-direction: $value;
+    -ms-flex-direction: $value;
+    flex-direction: $value;
+}
+
+// Shorter version:
+//@mixin flex-dir($args) { @include flex-direction($args); }
+
+//-------------------------------------------------------------------
+
+// Flexbox Wrap(nowrap || wrap || wrap-reverse)
+@mixin flex-wrap($value: nowrap) {
+    @if $value == nowrap {
+        -ms-flex-wrap: none;
+    } @else {
+        -ms-flex-wrap: $value;
+    }
+    // No Webkit Box fallback.
+    -webkit-flex-wrap: $value;
+    -moz-flex-wrap: $value;
+    flex-wrap: $value;
+}
+
+//----------------------------------
+
+// Flexbox Flow:flex-direction and flex-wrap
+@mixin flex-flow($values: (row nowrap)) {
+    // No Webkit Box fallback.
+    -webkit-flex-flow: $values;
+    -moz-flex-flow: $values;
+    -ms-flex-flow: $values;
+    flex-flow: $values;
+}
+
+//------------------------------------------
+
+// Flexbox Order
+@mixin order($int: 0) {
+    -webkit-box-ordinal-group: $int + 1;
+    -webkit-order: $int;
+    -moz-order: $int;
+    -ms-flex-order: $int;
+    order: $int;
+}
+
+//------------------------------------------
+
+// Flexbox Grow
+@mixin flex-grow($int: 0) {
+    -webkit-box-flex: $int;
+    -webkit-flex-grow: $int;
+    -moz-flex-grow: $int;
+    -ms-flex-positive: $int;
+    flex-grow: $int;
+}
+
+//---------------------------
+
+// Flexbox Shrink
+@mixin flex-shrink($int: 1) {
+    -webkit-flex-shrink: $int;
+    -moz-flex-shrink: $int;
+    -ms-flex-negative: $int;
+    flex-shrink: $int;
+}
+
+//----------------------------------
+
+// Flexbox Basis
+@mixin flex-basis($value: auto) {
+    -webkit-flex-basis: $value;
+    -moz-flex-basis: $value;
+    -ms-flex-preferred-size: $value;
+    flex-basis: $value;
+}
+
+//-----------------------------------
+
+// Flexbox Flex:flex-grow and flex-shrink and basis
+@mixin flex($fg: auto, $fs: 1, $fb: auto) {
+
+    // Set a variable to be used by box-flex properties
+    $fg-boxflex: $fg;
+
+    // Box-Flex only supports a flex-grow value so let's grab the
+    // first item in the list and just return that.
+    @if type-of($fg) == 'list' {
+        $fg-boxflex: nth($fg, 1);
+    }
+
+    -webkit-box-flex: $fg-boxflex;
+    -webkit-flex: $fg $fs $fb;
+    -moz-box-flex: $fg-boxflex;
+    -moz-flex: $fg $fs $fb;
+    -ms-flex: $fg $fs $fb;
+    flex: $fg $fs $fb;
+}
+
+//--------------------------------------------------------------------
+
+// Flexbox Justify Content(flex-start || flex-end || center || space-between || space-around)
+@mixin justify-content($value: flex-start) {
+    @if $value == flex-start {
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+    } @else if $value == flex-end {
+        -webkit-box-pack: end;
+        -ms-flex-pack: end;
+    } @else if $value == space-between {
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+    } @else if $value == space-around {
+        -ms-flex-pack: distribute;
+    } @else {
+        -webkit-box-pack: $value;
+        -ms-flex-pack: $value;
+    }
+    -webkit-justify-content: $value;
+    -moz-justify-content: $value;
+    justify-content: $value;
+}
+
+// Shorter version:
+//@mixin flex-just($args) { @include justify-content($args); }
+
+//----------------------------------------------------------------------
+
+// Flexbox Align Items(stretch || flex-start || flex-end || baseline || center)
+@mixin align-items($value: stretch) {
+    @if $value == flex-start {
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+    } @else if $value == flex-end {
+        -webkit-box-align: end;
+        -ms-flex-align: end;
+    } @else {
+        -webkit-box-align: $value;
+        -ms-flex-align: $value;
+    }
+    -webkit-align-items: $value;
+    -moz-align-items: $value;
+    align-items: $value;
+}
+
+//---------------------------------------
+
+// Flexbox Align Self(stretch || flex-start || flex-end || baseline || center)
+@mixin align-self($value: auto) {
+    // No Webkit Box Fallback.
+    -webkit-align-self: $value;
+    -moz-align-self: $value;
+    @if $value == flex-start {
+        -ms-flex-item-align: start;
+    } @else if $value == flex-end {
+        -ms-flex-item-align: end;
+    } @else {
+        -ms-flex-item-align: $value;
+    }
+    align-self: $value;
+}
+
+//------------------------------------
+
+// Flexbox Align Content(stretch || flex-start || flex-end || baseline || center)
+@mixin align-content($value: stretch) {
+    // No Webkit Box Fallback.
+    -webkit-align-content: $value;
+    -moz-align-content: $value;
+    @if $value == flex-start {
+        -ms-flex-line-pack: start;
+    } @else if $value == flex-end {
+        -ms-flex-line-pack: end;
+    } @else {
+        -ms-flex-line-pack: $value;
+    }
+    align-content: $value;
+}
+
+// 创建动画
+@mixin keyframes($animation-name) {
+    @-webkit-keyframes #{$animation-name} {
+        @content;
+    }
+    @-moz-keyframes #{$animation-name} {
+        @content;
+    }
+    @-ms-keyframes #{$animation-name} {
+        @content;
+    }
+    @-o-keyframes #{$animation-name} {
+        @content;
+    }
+    @keyframes #{$animation-name} {
+        @content;
+    }
+}
+
+// 使用动画
+@mixin animation($str) {
+    -webkit-animation: #{$str};
+    -moz-animation: #{$str};
+    -ms-animation: #{$str};
+    -o-animation: #{$str};
+    animation: #{$str};
+}
+
+// 过渡动画
+@mixin transition($args) {
+    -webkit-transition: $args;
+    -moz-transition: $args;
+    -ms-transition: $args;
+    -o-transition: $args;
+    transition: $args;
+}
+
+// 对元素进行旋转、缩放、移动或倾斜
+@mixin transform($thing) {
+    transform: #{$thing};
+    -ms-transform: #{$thing}; /* IE 9 */
+    -webkit-transform: #{$thing}; /* Safari 和 Chrome */
+    -o-transform: #{$thing}; /* Opera */
+    -moz-transform: #{$thing}; /* Firefox */
+}
+
+// 改变被转换元素的位置
+@mixin transform-origin( $axis ) {
+    transform-origin: #{$axis};
+    -ms-transform-origin: #{$axis}; /* IE 9 */
+    -webkit-transform-origin: #{$axis}; /* Safari 和 Chrome */
+    -moz-transform-origin: #{$axis}; /* Firefox */
+    -o-transform-origin: #{$axis}; /* Opera */
+}
+
+// 滤镜
+@mixin filter( $filter ) {
+    filter: #{$filter};
+    -ms-filter: #{$filter};
+    -moz-filter: #{$filter};
+    -webkit-filter: #{$filter};
+}
+
+// 文本框提示文字样式
+@mixin placeholder-style {
+    ::-webkit-input-placeholder { /* WebKit browsers */
+        @content;
+    }
+    :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        @content;
+    }
+    ::-moz-placeholder { /* Mozilla Firefox 19+ */
+        @content;
+    }
+    :-ms-input-placeholder { /* Internet Explorer 10+ */
+        @content;
+    }
+}
+
+//圆角
+@mixin radius($radius:10px) {
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+    border-radius: $radius;
+}
+
+//盒子模型计算方式（怪异模式）
+@mixin box-sizing($box:border-box) {
+    box-sizing: $box;
+    -moz-box-sizing: $box;
+    -webkit-box-sizing: $box;
+}
+
+//透明度
+@mixin opacity($opacity:0.5, $opacit:50) {
+    filter: alpha(opacity=$opacit);
+    -moz-opacity: $opacity;
+    -khtml-opacity: $opacity;
+    opacity: $opacity;
+}
+
+//阴影
+@mixin shadow($shadow:10px 10px 5px 5px gray) {
+    -moz-box-shadow: $shadow;
+    -webkit-box-shadow: $shadow;
+    box-shadow: $shadow;
+}
+
+//背景色线性渐变
+@mixin linear-gradient( $angle ) {
+    background: -webkit-linear-gradient(#{$angle}); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#{$angle}); /* Opera 11.6 - 12.0 */
+    background: -moz-linear-gradient(#{$angle}); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#{$angle}); /* 标准的语法 */
+}
+
+//背景色重复线性渐变
+@mixin repeating-linear-gradient( $angles ) {
+    background: -webkit-repeating-linear-gradient(#{$angles}); /* Safari 5.1 - 6.0 */
+    background: -o-repeating-linear-gradient(#{$angles}); /* Opera 11.1 - 12.0 */
+    background: -moz-repeating-linear-gradient(#{$angles}); /* Firefox 3.6 - 15 */
+    background: repeating-linear-gradient(#{$angles}); /* 标准的语法 */
+}
+
+//文字超出显示省略号
+@mixin omit {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@mixin background-size( $back ) {
+    background-size: #{$back}; //只支持IE9+
+    -webkit-background-size: #{$back}; //webkit核心
+    -moz-background-size: #{$back}; //FF核心
+    -o-background-size: #{$back}; //应该是Opera核心吧，反正不是IE的，就先不管它了
+}

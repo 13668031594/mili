@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+* {
+     margin: 0px;
+     padding: 0px;
+}
+
+html,body{
+    font-size: 14px;
+}
+
+a {
+     text-decoration: none;
+}
+
+li {
+     list-style: none;
+}
+
+a, input, button {
+     outline: none;
+}
+
+/*img{
+  border:0;
+}*/
+
+/*img[src=""]{
+  @include opacity(0,0);
+}*/
+
+//去除iphone下按钮默认圆角样式
+/*input[type="button"], input[type="text"], input[type="submit"], input[type="reset"], input[type="number"], textarea, select{
+  -webkit-appearance: none;
+  @include radius(0);
+  outline: none;
+}*/
+
+input[type='checkbox'], input[type='radio'] {
+     cursor: pointer;
+}
+
