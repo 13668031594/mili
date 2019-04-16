@@ -4,6 +4,7 @@ namespace app\master\controller;
 
 use app\http\controller\AdminController;
 use classes\master\LoginClass;
+use classes\system\SystemClass;
 use think\Request;
 
 class LoginController extends AdminController
@@ -17,10 +18,14 @@ class LoginController extends AdminController
 
     public function getLogin()
     {
+        $set = new SystemClass();
+
+        $set = $set->index();
+
         $master = $this->class->master();
 
 //        if (is_null($master))
-            return parent::view('login');
+        return parent::view('login', ['set' => $set]);
 //        else
 //            return self::getIndex();
     }
@@ -49,8 +54,12 @@ class LoginController extends AdminController
 
     public function getIndex()
     {
+        $set = new SystemClass();
+
+        $set = $set->index();
+
         $master = $this->class->master();
 
-        return parent::view('index', ['master' => $master]);
+        return parent::view('index', ['master' => $master, 'set' => $set]);
     }
 }
