@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+
+        <div class="data-right">
+            <div class="data-right-container container-shadow">
+                <div class="title">余额充值</div>
+                <div class="data-content">
+
+                    <form class="layui-form" id="forms" action="recharge" method="post">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">充值金额</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="" required lay-verify="required" placeholder="请输入充值金额"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item sub-btn">
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn layui-btn-fluid" lay-submit>提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="hint" value="" type="hidden"/>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+
+        //提示
+        if ($('#hint') && $('#hint').val() != '') {
+            layer.alert($('#hint').val());
+        }
+    });
+</script>
+</html>

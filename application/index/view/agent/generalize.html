@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content" style="overflow: visible;">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+        <div class="data-right">
+            <div class="data-right-container container-shadow">
+                <div class="title">推广连接</div>
+
+                <div class="user-link">
+                    <div>您的推广链接</div>
+                    <input type="text" value="http://{$host}/reg?referee={$member['id']}" readonly/>  <span class="link-money">奖励总额：{$total}元</span>
+                </div>
+
+                <div class="link-rules">奖励规则：您推广会员充值金额的{$set['userCommiss'] / 100 }%</div>
+
+                <table class="layui-hide" id="table" lay-filter="data"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    layui.use(['layer', 'table',], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+
+        table.render({
+            elem: '#table',
+            url: '/son',
+            parseData: function (res) {
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+            autoSort: false,
+            cols: [[
+                {field: 'account', title: '用户名'},
+                {field: 'phone', title: '电话'},
+                {field: 'nickname', title: '昵称'},
+                {field: 'remind_all', title: '充值总数', width: 200},
+                {field: 'created_at', title: '注册时间', width: 200},
+            ]],
+            page: true
+        });
+    });
+</script>
+</html>

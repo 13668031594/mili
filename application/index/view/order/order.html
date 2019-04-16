@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+
+<div class="new-order">
+    <div class="my-steps clearfix" style="margin:30px 0px;">
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title"><span>选购商品</span></div>
+                    <p>请在礼品大厅选择商品</p>
+                </div>
+            </li>
+            <li class="layui-timeline-item active">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title"><span>确认收货人信息</span></h3>
+                    <p>批量上传收货人或手工录入</p>
+                </div>
+            </li>
+
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">支付发货</div>
+                    <p></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="pt"><span class="layui-badge"><b>1</b></span><b class="ct">请选择收货人类型</b></div>
+    <div class="new-order-content clearfix">
+        <div class="consignee">
+            <form class="layui-form" id="form" method="post" enctype="multipart/form-data" action="/order">
+
+                <input type="hidden" name="goods" value="{$goods['id']}"/>
+                <input type="hidden" name="number" value="1"/>
+                <input type="hidden" id='orderType' name="type" value="1"/>
+
+                <input type="hidden" id="expressName" name="expressName" value=""/>
+
+                <input type="hidden" id='sendName' name="sendName" value=""/>
+
+
+                <div class="layui-tab" lay-filter="type">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this" lay-id="1">批量上传收货人</li>
+                        <li lay-id="0">手工录入</li>
+                    </ul>
+                    <div style="padding:20px 0px 0px 10px;">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">发货店铺</label>
+                            <div class="layui-input-inline" style="width: 350px;">
+                                <select name="store" lay-filter="send">
+                                    <option value="">请选择发货店铺</option>
+                                    {foreach $store as $k => $v}
+                                    <option value="{$v['id']}">{$v['name']}-{$platform[$v['platform']]}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                            <div class="layui-form-mid ">
+                                <a href="/store">添加店铺</a>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">快递</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                                <select name="express" lay-filter="express">
+                                    <option value="">请选择快递</option>
+                                    {foreach $express as $k => $v}
+                                    <option value="{$k}">{$v}/每单</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                          <div class="layui-form-item">
+                                <label class="layui-form-label">平台</label>
+                                <div class="layui-input-block" style="width: 350px;">
+                                    <select name="platform" lay-filter="platform" lay-verify="required">
+                                        <option value="0">{$set['webName']}</option>
+                                        <!--<option value="1">淘宝</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label">批量上传</label>
+                                <div class="layui-input-block">
+                                    <label class="import">
+                                        <span class="import-btn">选择文件</span>
+                                        <input id="file-input" type="file" name="file"
+                                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                                    </label>
+                                    <span class="import-see" id="import-see">查看导入数据</span>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block layui-word-aux">
+                                    不清楚上传格式，请<a style="text-decoration: underline" href="orderInModel.xls">下载模板</a>，按模板内容填写后上传
+                                </div>
+                            </div>
+
+                            <!--<div class="layui-form-item" style="padding-left: 110px;">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" style="width: 200px;" lay-submit>确认下单
+                                    </button>
+                                </div>
+                            </div>-->
+
+
+                        </div>
+                        <div class="layui-tab-item">
+                            <div class="layui-form-item lay-hint" id="lay-hint">
+                                {php}echo $set['fwb-content'];{/php}
+                            </div>
+                            <div class="layui-form-item layui-form-text" id="type1">
+                                <label class="layui-form-label">收货地址</label>
+                                <div class="layui-input-block">
+                                    <textarea name="address" id="address" placeholder="请输入收货地址"
+                                              class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="padding-left: 10px;">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" style="width: 200px;" lay-submit>确认下单
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="select-goods">
+            <h3>已选择商品</h3>
+            <div class="goods-info">
+                <div class="goods-info-images">
+                    <img id="goodsImage" src="{$goods['location']}" alt="{$goods['describe']}"/>
+                </div>
+                <div class="goods-info-params">
+                    <p>商品金额：<span id="goodsAmount">{$goods['amount']}</span></p>
+                    <p>商品重量：<span id="goodsWeight">{$goods['weight']}</span></p>
+                    <p>每单数量：<input id="order-num" type="number" name="number1" value="1" required lay-verify="required"
+                                   placeholder="请输入每单数量" class="layui-input">
+                    </p>
+                </div>
+            </div>
+            <!--注：每单最大数量不能超过<span id="max-num">{$goods['express_number']}</span>-->
+            {php}echo $prompt;{/php}
+        </div>
+    </div>
+  <h3>商品详情</h3>
+    <div style='padding:10px;'>
+        {php}echo $content['content'];{/php}
+    </div>
+</div>
+
+
+{include file="index@Base/copyright"}
+</body>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/xlsx/0.12.7/xlsx.core.min.js"></script>
+<script type="text/javascript" src="{$src}js/ajax_form.js"></script>
+<script>
+
+    var previewHeader;
+    var previewBody;
+
+    $('#order-num').on('input change', function () {
+
+        var goodsNumber = $(this).val();
+
+        if (Number($(this).val()) > Number($('#max-num').text())) {
+            $(this).val($('#max-num').text());
+            goodsNumber = $('#max-num').text();
+        }
+
+        $("input[name=number]").each(function () {
+            $(this).prop('value', goodsNumber);
+        })
+    });
+
+    layui.use(['layer', 'form', 'element'], function () {
+
+        var form = layui.form;
+        var element = layui.element;
+        var formId = $("batForm");
+
+        // 订单类型切换
+        element.on('tab(type)', function (data) {
+            //console.log(data);
+            $("#orderType").val(data.index == 1 ? 0 : 1);
+        });
+
+        $('#form').on('submit', function () {
+
+            var orderType = $("#orderType").val();
+
+            if (orderType == 1) {
+                var file = $(this).find('input[name=file]').val();
+                if (!file) {
+                    layer.alert('请选择上传文档');
+                    return false;
+                }
+            }
+            ajax_submit_func($(this), ajax_submit_callback);
+            return false;
+        });
+
+        form.on('select(express)', function (data) {
+
+            var expressInfo = data.elem.selectedOptions[0].textContent;
+
+            if (expressInfo.indexOf('/') != -1) {
+                var expressArray = expressInfo.split('/');
+                $("#expressName").val(expressArray[0]);
+            } else {
+                $("#expressName").val("");
+            }
+        });
+
+        form.on('select(send)', function (data) {
+
+            var sendInfo = data.elem.selectedOptions[0].textContent;
+            console.log(sendInfo);
+            $("#sendName").val(sendInfo);
+        });
+
+        // 确认清单
+        function openConfirm(form, data) {
+            var formData = new FormData($(form)[0]);
+            layer.open({
+                title: '订单确认',
+                type: 2,
+                area: ['800px', '600px'],
+                content: 'static/html/confirmOrder.html',
+                btn: ['立即支付'],
+                yes: function (index, layero) {
+
+                    var body = layer.getChildFrame('body', index);
+                    var payPass = body.find('input').val();
+
+                    if (!payPass) {
+                        layer.msg('请输入支付密码');
+                        return false;
+                    }
+
+
+                    // 额外参数
+                    var extras = {
+                        'confirm': 1,
+                        'pay': payPass,
+                    };
+
+                    layer.confirm('您确认要支付吗？', function () {
+                        //layer.msg('确认支付了哦');
+
+                        var loading = layer.open({
+                            type: 3
+                        });
+                        ajax_submit_func(form, function (data) {
+                            //layer.close(loading);
+                            console.log('支付后', data);
+                            if (data.status == 'success') {
+                                layer.msg('支付成功,请稍候..');
+                                setTimeout(function(){
+                                    window.location.href='/goods-had' ;
+                                },1000)
+                            } else {
+                              	layer.close(loading);
+                                layer.msg(data.message);
+                            }
+                        }, extras);
+                    });
+
+                },
+                success: function (layero, index) {
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    //console.log(body.html()) //得到iframe页的body内容
+                    //body.find('input').val('Hi，我是从父页来的')
+                    body.find('#goodsAmount').html($("#goodsAmount").text());
+                    body.find('#goodsImage').attr('src', $("#goodsImage").attr('src'));
+                    body.find('#goodsWeight').html($("#goodsWeight").text());
+                    body.find('#goodsName').html($("#goodsName").text());
+                    body.find('#goodsNumber').html(formData.get('number'));
+                    body.find('#express').html(formData.get('expressName'));
+                    body.find('#expressAmount').html(data.express_amount);
+                    body.find('#expressTotal').html(data.express_total);
+                    body.find('#expressNumber').html(data.express_number);
+                    body.find('#goodsTotal').html(data.goods_total);
+                    body.find('#total').html(data.total);
+                    console.log(formData.get('sendName'));
+                    body.find('#sendData').html(formData.get('sendName'));
+                    var preview = '' ;
+                    var expressNumber = data.express_number ;
+                  	for( var i = 0 ; i < data.address.length ; i ++ ){
+                      preview+="<tr>" ;
+                      preview+="<td>"+ data.address[i].name + "</td>";
+                      preview+="<td>"+ data.address[i].phone + "</td>";
+                      preview+="<td>"+ data.address[i].address + "</td>";
+                      preview+="</tr>" ;
+                    }
+                  	//body.find('#preview').html(preview);
+                   
+                //body.find('#express').html(data.get('number')) ;
+					 body.find('#view').click(function(){
+                      layer.open({
+                        title: '预览收货人',
+                        type: 2,
+                        area: ['800px', '600px'],
+                        content: 'static/html/uploadPreview.html',
+                        success: function (layero, index) {
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']];
+                            //body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
+                            body.find('#tbody').html(preview);
+                            body.find('#count').html(expressNumber);
+                        }
+                      });
+                     });
+             
+                    //body.find('#express').html(data.get('number')) ;
+                }
+            });
+        }
+
+        function ajax_submit_callback(data) {
+
+            if (data && data.status == 'success') {
+                //console.log(data);
+                openConfirm($("#form"), data);
+            } else {
+                if (data.code == '999') {
+                    layer.alert('登录失效, 请重新登录', function (index) {
+                        window.location.href = '/index-login';
+                        layer.close(index);
+                    });
+                } else {
+                    layer.alert(data.message);
+                }
+            }
+        }
+
+        $('#file-input').change(function (e) {
+            var dmsg = layer.msg('导入中...', {time: false});
+
+            $('.import-btn').text(e.target.files[0].name);
+
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (ev) {
+                try {
+                    var data = ev.target.result,
+                        workbook = XLSX.read(data, {
+                            type: 'binary'
+                        }), // 以二进制流方式读取得到整份excel表格对象
+                        persons = []; // 存储获取到的数据
+                } catch (e) {
+                    layer.alert('文件类型不正确');
+                    $('.import-btn').text('选择文件');
+                    $('#file-input').val('');
+                    layer.close(dmsg);
+                    return;
+                }
+
+                // 表格的表格范围，可用于判断表头是否数量是否正确
+                var fromTo = '';
+                // 遍历每张表读取
+                for (var sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        fromTo = workbook.Sheets[sheet]['!ref'];
+                        //console.log('123123',fromTo);
+                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+
+                //console.log(persons);
+                //将persons赋值给要展示的表格数组里即可展示在界面
+                var data = persons[0];
+                //var thead = [];
+                previewHeader = [];
+                for (var i in data) {
+                    previewHeader.push('<th>' + i + '</th>');
+                }
+                //$('#thead').empty();
+                //$('#thead').append('<tr>' + thead.join('') + '</tr>');
+                previewBody = [];
+                persons.forEach(function (obj) {
+                    var arr = [];
+                    for (var j in obj) {
+                        arr.push('<td>' + obj[j] + '</td>');
+                    }
+                    previewBody.push('<tr>' + arr.join('') + '</tr>');
+                });
+                //console.log(previewBody) ;
+                //$('#tbody').empty();
+                //$('#tbody').append(tbody.join(''));
+                //$('#import-table-num').text(persons.length);
+                $('#import-see').show();
+                layer.close(dmsg);
+
+            };
+
+            // 以二进制方式打开文件
+            fileReader.readAsBinaryString(files[0]);
+        });
+    });
+
+    //查看
+    $('#import-see').click(function () {
+        //$('.screen').show();
+        //$('.import-pop').show();
+        layer.open({
+            title: '预览收货人',
+            type: 2,
+            area: ['800px', '600px'],
+            content: 'static/html/uploadPreview.html',
+            success: function (layero, index) {
+                var body = layer.getChildFrame('body', index);
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
+                body.find('#tbody').html(previewBody.join(''));
+                body.find('#count').html(previewBody.length);
+                //body.find('#express').html(data.get('number')) ;
+
+            }
+        });
+    });
+
+    //关闭
+    $('#import-pop-close').click(function () {
+        $('.screen').hide();
+        $('.import-pop').hide();
+    });
+</script>
+</html>

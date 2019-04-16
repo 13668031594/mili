@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+<body style="background: #fcfcfc;">
+<!-- 中 -->
+<div class="register">
+    <div class="register-left">
+        <h2>欢迎来到<span>{$set['webName']}</span></h2>
+        <h3>{$set['loginReason']}<a href="/">首页</a></h3>
+        <form class="layui-form" action="/login" method="post">
+            <div class="auth">
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-username"></i>
+                        <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                               onafterpaste="this.value=this.value.replace(/\D/g,'')" name="account"
+                               lay-verify="required" lay-verType="tips" placeholder="请输入用户名或手机号" autocomplete="off" class="layui-input">
+                </div>
+
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-password"></i>
+                        <input type="password" name="password" lay-verType="tips"  lay-verify="required" placeholder="请输入密码"
+                               autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <!--<div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit>登录</button>
+            </div>-->
+            <div class="register-link">
+                <span class="auth-bottom-prompt">QQ和手机号码均可以登录</span><a href="/reg">没有账号，立即注册</a>
+            </div>
+            <div class="auth-button-container" >
+                <button class="layui-btn layui-btn-fluid" lay-submit>立即登录</button>
+            </div>
+            <div class="register-link">
+                <span class="auth-bottom-prompt"><a href="/reset">忘记密码？</a></span>
+            </div>
+           <!-- <div class="layui-form-item layui-form-pane remeber">
+                &lt;!&ndash;<input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>&ndash;&gt;
+                <a href="/reset">忘记密码？</a>
+            </div>
+
+            <div class="register-link">
+                <a href="/reg">立即注册</a>
+            </div>-->
+        </form>
+    </div>
+
+    <div class="register-right">
+        <div class="reg-img">
+            <a href="{$set['loginUrl']}"><img src="{$set['login']}"/></a>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="hint" value="{$errors}"/>
+</body>
+
+<script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+
+        //提示
+        if ($('#hint') && $('#hint').val() != '') {
+            layer.alert($('#hint').val());
+        }
+    });
+</script>
+</html>

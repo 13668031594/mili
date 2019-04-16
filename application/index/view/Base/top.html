@@ -1,0 +1,190 @@
+<div class="header-out">
+    <div class="header-top">
+        <div class="header-top-content">
+            <span class="header-top-text">亲，欢迎来到{$set['webName']}！</span>
+            {if is_null($member)}
+            <a href="/login" class="header-top-login">请登录</a>
+            <a href="/reg" class="header-top-register">免费注册</a>
+            {else/}
+            <a href="/user" class="header-top-login">{$member['nickname']}</a>
+            <a href="javascript:;" id="logout" class="header-top-register">退出</a>
+            {/if}
+            <span class="header-top-join">加入QQ卖家交流群</span>
+            <a href="###" class="header-top-qq"><img src="{$src}images/group.png" alt=""/></a>
+            <a href="###" class="header-top-desktop"><i class="iconfont icon-xinxinicon"></i>设置为桌面图标</a>
+            <span class="header-top-personal">
+                <i class="iconfont icon-user"></i>个人中心<i class="iconfont icon-down-trangle"></i>
+                <ul class="header-top-personal-list">
+                    <li><a href="/user">个人首页</a></li>
+                    <li><a href="data">完善资料</a></li>
+                    <li><a href="change-password">修改密码</a></li>
+                    <li><a href="store">发货店铺</a></li>
+                    <li><a href="upgrade">升级会员</a></li>
+                </ul>
+            </span>
+            <a href="javascript: join_favorite(window.location, '5A礼品网');" class="header-top-collection"><i class="iconfont icon-xing"></i>收藏本站</a>
+            <div class="clear"></div>
+        </div>
+    </div>
+  
+  	<script>
+        //注销提示
+        $('#logout').click(function(){
+          layer.confirm('确定要退出吗？', function(){
+            window.location.href = '/logout';
+          });
+        });
+      
+      	//定义加入收藏夹函数
+        function join_favorite(siteUrl, siteName){
+            //捕获加入收藏过程中的异常
+            try{
+                //判断浏览器是否支持document.all
+                if(window.external){
+                //如果支持则用external方式加入收藏夹
+                    window.external.addFavorite(siteUrl,siteName);
+                }else if(window.sidebar){
+                    //如果支持window.sidebar，则用下列方式加入收藏夹
+                    window.sidebar.addPanel(siteName, siteUrl,'');
+                }
+            }catch (e){ //处理异常
+                layer.alert("由于浏览器限制加入收藏夹失败，请使用Ctrl+D快捷键进行添加操作!");
+            }
+        }
+    </script>
+
+    <div class="header-content">
+        <div class="header-logo">
+            <!--{$set['webName']}-->
+            <a href="/"><img src="{$set['logo']}" style="width: 320px;height: 130px;"></a>
+        </div>
+
+        <form class="header-content-search" action="/goods" method="get">
+            <div class="search-top">宝贝</div>
+            <div class="search">
+                <span class="iconfont icon-sousuo search-icon"></span>
+                <input type="hidden" name="goodsClass" value="{if isset($goodsClass)}{$goodsClass}{/if}">
+                <input type="text" name="goodsName" value="{if isset($goodsName)}{$goodsName}{/if}" placeholder="请输入宝贝名称"/>
+                <button type="submit">宝贝查询</button>
+            </div>
+
+            {if count($link) > 0}
+            <ul class="search-bottom">
+                {foreach $link as $v}
+                <li>
+                    <a href="{$v['link']}">{$v['title']}</a>
+                {if $v['hot'] == 'on'}
+                <img class="hot" src="{$src}images/link_hot.gif"/>
+                {/if}
+                </li>
+                {/foreach}
+            </ul>
+            {/if}
+        </form>
+      
+      	<!--<div class="header-qr">-->
+            <!--<img src=""/>-->
+        <!--</div>-->
+
+        <div class="clear"></div>
+    </div>
+	
+  	<div class="header-bottom-out">
+      	<ul class="header-bottom">
+            <!-- 设置文字闪烁添加class="change-color" 设置热添加以下注释图片 -->
+            <li>
+                <a href="/" {if $nav['index']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['index']['tilt'] == 'on'}<i>{/if}
+                首页
+                {if $nav['index']['tilt']}</i>{/if}
+                </a>
+                {if $nav['index']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+            </li>
+            <li>
+                <a href="/goods" {if $nav['goods']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['goods']['tilt'] == 'on'}<i>{/if}
+                礼品大厅
+                {if $nav['goods']['tilt']}</i>{/if}
+                </a>
+                {if $nav['goods']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+            </li>
+            <li>
+                <a href="/goods-had" {if $nav['order']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['order']['tilt'] == 'on'}<i>{/if}
+                已买礼品
+                {if $nav['order']['tilt']}</i>{/if}
+                </a>
+                {if $nav['order']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+            </li>
+            <li>
+                <a href="/user" {if $nav['user']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['user']['tilt'] == 'on'}<i>{/if}
+                用户中心
+                {if $nav['user']['tilt']}</i>{/if}
+                </a>
+                {if $nav['user']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+                <ul>
+                    <li><a href="/data">完善资料</a></li>
+                    <li><a href="/change-password">修改密码</a></li>
+                    <li><a href="/pay-password">支付密码</a></li>
+                    <li><a href="/store">发货店铺</a></li>
+                    <li><a href="/upgrade">升级会员</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="/recharge" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['recharge']['tilt'] == 'on'}<i>{/if}
+                在线充值
+                {if $nav['recharge']['tilt']}</i>{/if}
+                </a>
+                {if $nav['recharge']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+                <ul>
+                    <li><a href="/recharge-note">充值记录</a></li>
+                    <li><a href="/expense-note">余额记录</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" {if $nav['agent']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['agent']['tilt'] == 'on'}<i>{/if}
+                代理中心
+                {if $nav['agent']['tilt']}</i>{/if}
+                </a>
+                {if $nav['agent']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+                <ul>
+                    <li><a href="/generalize">我的推广</a></li>
+                    <li><a href="/deduct-note">提现记录</a></li>
+                    <li><a href="/withdraw">佣金管理</a></li>
+                    <li><a href="/commis">佣金记录</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" {if $nav['article']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['article']['tilt'] == 'on'}<i>{/if}
+                公告文章
+                {if $nav['article']['tilt']}</i>{/if}
+                </a>
+                {if $nav['article']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+                <ul>
+                    <li><a href="/notice">公告</a></li>
+                    <li><a href="/article">文章</a></li>
+                </ul>
+            </li>
+            <div class="clear"></div>
+        </ul>
+  	</div>
+</div>

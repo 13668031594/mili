@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        <div class="data-left">
+            <dl class="left-menu-item">
+                <!--<dt></dt>-->
+                <dd><a href='/notice'>公告列表</a></dd>
+                <dd><a href='/article'>文章列表</a></dd>
+            </dl>
+        </div>
+        <div class="data-right">
+            <div class="content-title">
+                <span>文章</span>
+            </div>
+
+            <ul class="article-content" id="article">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'flow'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var flow = layui.flow;
+        var limit = 20;
+
+        flow.load({
+            elem: '#article', //指定列表容器
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('/article-table?limit=' + limit + '&page=' + page, function (res) {
+                    if (res && res.status == 'success') {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.message, function (index, item) {
+                            lis.push('<li><a href="/article-info/' + item.id + '">' +
+                                '<div class="article-content-title">' + item.title + '</div>' +
+                                '<div class="article-content-text">' + item.describe + '</div>' +
+                                '<div class="article-content-time">' + item.created_at + '</div></a></li>'
+                            );
+                        });
+
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < (Number(res.total) / limit));
+                    } else {
+                        layer.alert(resp.message);
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

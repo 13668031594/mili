@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+
+        <div class="data-right">
+            <div class="data-right-container container-shadow">
+                <div class="title">佣金管理</div>
+                <div class="data-content">
+                    <form class="layui-form" id="forms" action="withdraw" method="post">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">佣金</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="{$member['commis']}" disabled="disabled" readonly="readonly"
+                                       class="layui-input" style="border: none;">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">操作</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="type" value="1" title="提现" checked lay-filter="rad">
+                                <input type="radio" name="type" value="2" title="转换为余额" lay-filter="rad">
+                            </div>
+                        </div>
+
+                        {if empty($member['bank_no'])}
+                        <div class="layui-form-item" id="zhi">
+                            <label class="layui-form-label">支付宝</label>
+                            <div class="layui-input-block">
+                                <a href="/data" class="perfect-data">您还没有添加支付宝账号，去完善资料</a>
+                            </div>
+                            </div>
+                        {else/}
+                        <div class="layui-form-item" id="zhi2">
+                            <label class="layui-form-label">支付宝姓名</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="{$member['bank_name']}" disabled="disabled" readonly="readonly"
+                                       class="layui-input" style="border: none;">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="zhi">
+                            <label class="layui-form-label">支付宝账号</label>
+                            <div class="layui-input-block">
+                                <input type="text" value="{$member['bank_no']}" disabled="disabled" readonly="readonly"
+                                       class="layui-input" style="border: none;">
+                            </div>
+                        </div>
+                        {/if}
+
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">金额</label>
+                            <div class="layui-input-block">
+                                <input type="number" name="number" required lay-verify="required" placeholder="请输入金额"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">支付密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="pay" required lay-verify="required" placeholder="请输入支付密码"
+                                       class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item sub-btn">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn layui-btn-fluid" lay-submit>提交</button>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item sub-btn" id="zhi3">
+                            <div class="layui-input-block">
+                                <div class="user-hint">{php}echo $set['withdraw'];{/php}</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="hint" value="" type="hidden"/>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script src="{$src}js/ajax.js"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+
+        form.on('radio(rad)', function (data) {
+            //console.log(data.value);
+            if (data.value == '1') {
+                $('#zhi').show();
+                $('#zhi2').show();
+                $('#zhi3').show();
+            } else {
+                $('#zhi').hide();
+                $('#zhi2').hide();
+                $('#zhi3').hide();
+            }
+        });
+    });
+</script>
+</html>

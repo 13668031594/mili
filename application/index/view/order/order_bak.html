@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="order">
+        <div class="content-title">
+            <span>礼品下单</span>
+        </div>
+
+        <div class="order-content">
+          	<form class="layui-form order-form" id="forms" action="/order" method="post" enctype="multipart/form-data" style="border-left: 3px solid #ff7b1c;">
+              	<div class="order-title"><span>1</span>发货礼品</div>
+              	<!-- 发货礼品 -->
+                <div class="order-goods-info">
+                    <div class="order-goods-img">
+                        <img src="{$goods['location']}" alt="{$goods['describe']}"/>
+                    </div>
+
+                    <div class="order-goods-text">
+                        <div class="order-goods-item goods-name">{$goods['name']}</div>
+                      <div class="order-goods-item goods-weight">编号：<span>{$goods['code']}</span></div>
+                      <div class="order-goods-item goods-price">重量：<span>{$goods['weight']}</span></div>
+                        <div class="order-goods-item goods-price">价格：<span>{$goods['amount']}</span></div>
+                    </div>
+                </div>
+
+            	<!-- 确认发货信息 -->
+                <div class="order-title"><span>2</span>确认发货信息</div>
+              	<div class="form-order">
+                  	<div class="lay-form">
+                        <input type="hidden" name="goods" value="{$goods['id']}">
+
+                        <div class="order-hint">注：每单最大数量不能超过<span id="max-num">{$goods['express_number']}</span></div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">每单数量</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                              <input id="order-num" type="number" name="number" value="1" required  lay-verify="required" placeholder="请输入每单数量" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">快递</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                                <select name="express">
+                                    <option value="">请选择快递</option>
+                                    {foreach $express as $k => $v}
+                                    <option value="{$k}">{$v}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">发货店铺</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                                <div class="store-add-link">
+                                    <select name="store">
+                                        <option value="">请选择发货店铺</option>
+                                        {foreach $store as $k => $v}
+                                        <option value="{$v['id']}">{$v['name']}-{$platform[$v['platform']]}</option>
+                                        {/foreach}
+                                    </select>
+                                    <a href="/store">添加店铺</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="layui-form-item">
+                            <label class="layui-form-label">支付密码</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                                <input type="password" name="pay" value="" required  lay-verify="required" placeholder="请输入支付密码" class="layui-input">
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">收货人信息</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="type" value="0" title="手工输入" checked lay-filter="rad">
+                            <input type="radio" name="type" value="1" title="批量导入" lay-filter="rad">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item lay-hint" id="lay-hint">
+                        <!--<p class="lay-hint-text">格式：姓名；手机；地址。
+                            例如：张三；13812345678；浙江省杭州市下城区文兴路888号
+                        </p>
+                        <p>
+                            注：所有的都为必填项，单条记录中，各项中间用中文分号（；）隔开，手机要求为11位，每行为一条记录（由于格式原因造成的下单失败本站概不负责）
+                        </p>-->
+                        <!--{php}echo $set['fwb-content'];{/php}-->
+                      	<p class="lay-hint-text"><i></i>按照如下格式填写：<span>姓名；手机；地址。</span></p>
+                        <p class="lay-hint-text"><i></i>示例：<span>张三；13812345678；浙江省杭州市下城区文兴路888号。</span></p>
+                        <p class="lay-hint-text"><i></i>所有的都为必填项中间用“；”隔开，末尾以“。”结束，手机要求为11位</p>
+                        <p class="lay-hint-text"><i></i>每一行添加一个收货地址，请严格按照上面格式来（由于格式原因造成的下单失败本站概不负责）</p>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text" id="type1">
+                        <label class="layui-form-label">收货地址</label>
+                        <div class="layui-input-block">
+                            <textarea name="address" id="address" placeholder="请输入收货地址" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div id="type2">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">导入模板</label>
+                            <div class="layui-input-block">
+                              <a href="orderInModel.xls" class="perfect-data">查看导入数据模板</a>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">批量导入</label>
+                            <div class="layui-input-block">
+                                <label class="import">
+                                    <span class="import-btn">选择文件</span>
+                                    <input id="file-input" type="file" name="file"
+                                           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                                </label>
+                                <span class="import-see" id="import-see">查看导入数据</span>
+                            </div>
+                        </div>
+                    </div>
+              	</div>
+				
+              	<!-- 支付发货 -->
+                <div class="order-title"><span>3</span>支付发货</div>
+                <div class="layui-form-item" style="padding-left: 110px;">
+                    <button type="submit" class="layui-btn" style="width: 200px;" lay-submit>确认下单</button>
+                </div>
+            </form>
+          
+          	<div class="screen"></div>
+
+            <!-- 导入列表详情 -->
+            <div class="import-pop">
+                <div class="import-pop-title">
+                    <span class="pop-title">导入数据</span>
+
+                    <span class="pop-title-num">总数据：<span id="import-table-num">0</span>条</span>
+                </div>
+
+                <div class="import-pop-content">
+                    <table class="layui-table order-table" lay-even lay-size="sm">
+                        <thead id="thead">
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="import-pop-btn">
+                    <span id="import-pop-close">关闭</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/xlsx/0.12.7/xlsx.core.min.js"></script>
+<script>
+  	$('#order-num').on('input change', function(){
+        if( Number($(this).val()) > Number($('#max-num').text()) ){
+            $(this).val($('#max-num').text());
+        }
+    });
+  
+    layui.use(['layer', 'form'], function(){
+        var form = layui.form;
+
+        form.on( 'radio(rad)', function(data){
+            //console.log(data.value);
+            if( data.value == '0' ){
+                $('.import-btn').text('选择文件');
+                $('#file-input').val('');
+              	$('#import-see').hide();
+                $('#type1').show();
+                $('#type2').hide();
+                $('#lay-hint').show();
+              	$('#thead').empty();
+                $('#tbody').empty();
+            }else{
+                $('#address').val('');
+                $('#type1').hide();
+                $('#type2').show();
+                $('#lay-hint').hide();
+            }
+        } );
+      
+        $('#forms').on('submit', function(){
+          	ajax($(this));
+            return false;
+        });
+
+      	function ajax(form){
+          	var datas = new FormData($(form)[0]);
+            $.ajax({
+                type: $(form).prop('method'),
+                url: $(form).prop('action'),
+                dataType: 'json',
+                data: datas,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(resp){
+                    if( resp && resp.status == 'success' ){
+                        layer.confirm('<ul class="order-sure-pop"><li class="sure-d"><span>礼品单价：</span>'+resp.goods_amount+
+                                      '</li><li class="sure-s"><span>礼品数量：</span>'+resp.goods_number+
+                                      '</li><li class="sure-z"><span>礼品总价：</span>'+resp.goods_total+
+                                      '</li><li class="sure-d"><span>快递单价：</span>'+resp.express_amount+
+                                      '</li><li class="sure-s"><span>快递数量：</span>'+resp.express_number+
+                                      '</li><li class="sure-z"><span>快递总价：</span>'+resp.express_total+
+                                      '</li><li class="sure-all"><span>总价：</span>'+resp.total+
+                                      '</li><li class="sure-q"><span>会员支付前余额：</span>'+resp.member_remind+
+                                      '</li><li class="sure-h"><span>会员支付后余额：</span>'+resp.member_remind_now +
+                                      '</li><li class="sure-pass"><span class="sure-pass-text">支付密码：</span><input type="password" id="sure-pass" value="" placeholder="请输入支付密码"/></li></ul>', 
+                                      {area: '460px'}, function(index){
+                          	var dat = new FormData($('#forms')[0]);
+                          	dat.append("confirm", "1");
+                          	dat.append('pay', $('#sure-pass').val());
+                            $.ajax({
+                              type: $(form).prop('method'),
+                              url: $(form).prop('action'),
+                              dataType: 'json',
+                              data: dat,
+                              cache: false,
+                              contentType: false,
+                              processData: false,
+                              success: function(resp){
+                                if( resp && resp.status == 'success' ){
+                                  /*layer.alert(resp.message + '！订单号：' + resp.order_number, function(index){
+                                    window.location.href = '/goods-had';
+                                    layer.close(index);
+                                  });*/
+                                  layer.confirm('订单下单成功！请耐心等待后台审核，订单详情和状态请到【已买礼品】查看。', {title:'提示', btn: ['查看订单','继续下单']}, function(){
+                                    window.location.href = '/goods-had';
+                                  }, function(){
+                                    window.location.href = '/goods';
+                                  });
+                                }else{
+                                  if( resp.code == '999' ){
+                                    layer.alert('登录失效, 请重新登录', function(index){
+                                      window.location.href = '/index-login';
+                                      layer.close(index);
+                                    });
+                                  }else{
+                                    layer.alert(resp.message);
+                                  }
+                                }
+                              },
+                              error: function(data){
+                                //console.log('error', data);
+                                layer.msg('错误：'+ data.status);
+                              },
+                            });
+                            layer.close(index);
+                        });
+                    }else{
+                        if( resp.code == '999' ){
+                            layer.alert('登录失效, 请重新登录', function(index){
+                                window.location.href = '/index-login';
+                                layer.close(index);
+                            });
+                        }else{
+                            layer.alert(resp.message);
+                        }
+                    }
+                },
+                error: function(data){
+                    //console.log('error', data);
+                    layer.msg('错误：'+ data.status);
+                },
+            });
+        }
+      
+      	$('#file-input').change(function(e){
+            var dmsg = layer.msg('导入中...', {time: false});
+
+            $('.import-btn').text(e.target.files[0].name);
+
+            var files = e.target.files;
+
+            var fileReader = new FileReader();
+            fileReader.onload = function(ev) {
+                try {
+                    var data = ev.target.result,
+                        workbook = XLSX.read(data, {
+                            type: 'binary'
+                        }), // 以二进制流方式读取得到整份excel表格对象
+                        persons = []; // 存储获取到的数据
+                } catch (e) {
+                    layer.alert('文件类型不正确');
+                  	$('.import-btn').text('选择文件');
+                  	$('#file-input').val('');
+                    layer.close(dmsg);
+                    return;
+                }
+
+                // 表格的表格范围，可用于判断表头是否数量是否正确
+                var fromTo = '';
+                // 遍历每张表读取
+                for (var sheet in workbook.Sheets) {
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        fromTo = workbook.Sheets[sheet]['!ref'];
+                        //console.log('123123',fromTo);
+                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+
+                //console.log(persons);
+                //将persons赋值给要展示的表格数组里即可展示在界面
+                var data = persons[0];
+                var thead = [];
+                for( var i in data ){
+                    thead.push('<th>'+ i +'</th>');
+                }
+              	$('#thead').empty();
+                $('#thead').append('<tr>'+ thead.join('') +'</tr>');
+                var tbody = [];
+                persons.forEach(function(obj){
+                    var arr = [];
+                    for( var j in obj ){
+                        arr.push('<td>'+ obj[j] +'</td>');
+                    }
+                    tbody.push( '<tr>'+ arr.join('') +'</tr>' );
+                });
+              	$('#tbody').empty();
+                $('#tbody').append( tbody.join('') );
+              	$('#import-table-num').text(persons.length);
+              	$('#import-see').show();
+
+                layer.close(dmsg);
+            };
+
+            // 以二进制方式打开文件
+            fileReader.readAsBinaryString(files[0]);
+        });
+    });
+  
+  	//查看
+    $('#import-see').click(function(){
+        $('.screen').show();
+        $('.import-pop').show();
+    });
+
+    //关闭
+    $('#import-pop-close').click(function(){
+        $('.screen').hide();
+        $('.import-pop').hide();
+    });
+</script>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #fcfcfc;">
+
+<!-- 中 -->
+<div class="register">
+    <div class="register-left">
+        <h2>欢迎来到<span>{$set['webName']}</span></h2>
+        <h3>{$set['loginReason']}<a href="/" style="">首页</a></h3>
+        <form class="layui-form" id="forms" action="/reg" method="post">
+            <div class="auth">
+                <input type="hidden" name="referee" value="{$referee}">
+
+                <!-- 老板页面 -->
+                <!--<div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" name="account" required  lay-verify="required" placeholder="请用QQ号注册，售后服务以此QQ为凭证" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">手机号码</label>
+                    <div class="layui-input-block">
+                        <input type="text" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" name="phone" required  lay-verify="required|phone|number" placeholder="请输入手机号码" autocomplete="off" class="layui-input username">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">设置密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="pass" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="again" required  lay-verify="required" placeholder="请再次输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">验证码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="code" style="width: 150px;" required lay-verify="required" placeholder="请输入手机验证码" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding: 0 !important; text-align: right">
+                        <button type="button" class="layui-btn layui-btn-primary code-btn">获取验证码</button>
+                    </div>
+                </div>-->
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-cellphone"></i>
+                    <input type="text" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')" name="phone"
+                           lay-verify="phone|number" lay-verType="tips" placeholder="请输入手机号码" autocomplete="off"
+                           class="layui-input  username" value="">
+                </div>
+
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-vercode"></i>
+                    <div class="layui-input-inline" style="width:250px;">
+                        <input type="text" name="code"  lay-verify="required" lay-verType="tips"
+                               placeholder="请输入手机验证码" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <div class="layui-form-mid layui-word-aux" style="width:130px;border-left:#efefef solid 1px; padding:0px!important; text-align: right">
+                        <button style="border:none;" type="button" class="layui-btn layui-btn-primary code-btn">获取验证码</button>
+                    </div>
+                </div>
+
+
+
+                <div class="layui-form-item ">
+                    <i class="layui-icon layui-icon-password"></i>
+                    <input type="password" name="pass" lay-verify="required" lay-verType="tips" placeholder="请输入密码"
+                           autocomplete="off" class="layui-input">
+                </div>
+
+
+                <div class="layui-form-item">
+                    <i class="layui-icon layui-icon-login-qq"></i>
+                    <input type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')" name="account"
+                           lay-verify="required" lay-verType="tips" placeholder="输入QQ号" autocomplete="off"
+                           class="layui-input">
+                </div>
+
+                <!--<div class="layui-form-item">-->
+                    <!--<input type="text" name="weixin" lay-verType="tips" lay-verify="required" placeholder="请输入微信号" autocomplete="off" class="layui-input" />-->
+                <!--</div>-->
+
+            </div>
+
+            <div class="register-link">
+                <span class="auth-bottom-prompt">QQ和微信便于我们的客服更好的为您服务</span><a href="/login">已有账号，去登录</a>
+            </div>
+
+            <div class="auth-button-container">
+                <button class="layui-btn " lay-submit>完成注册</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="register-right">
+        <!--<div class="reg-content">
+            <div class="reg-title">全网唯一<span>真实手淘APP查排名</span></div>
+            <div class="reg-text1">帮您走出查询排名的误区，不再被忽悠坑害？</div>
+            <div class="reg-text2">采用WAP端方式查排名的都是耍流氓</div>
+        </div>-->
+        <div class="reg-img">
+            <a href="{$set['regUrl']}"><img src="{$set['reg']}"/></a>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="{$src}js/ajax.js"></script>
+<script>
+
+    layui.use(['layer'], function () {
+
+        initializeSendPhone();
+
+        var layer = layui.layer;
+
+        var timer = null;
+        var num = 60;
+        var can_get_code = true;
+        var nextSend = 60 ;
+        // 按钮禁止点击
+        var disSendPhone = false ;
+
+        $('.code-btn').on('click', sendPhoneCode );
+
+        // 短信验证码
+        function sendPhoneCode(){
+
+            var phone = $('.username').val() ;
+
+            // 验证手机号码
+            if( !verPhone( phone ) ){
+                layer.alert('请输入正确的手机号码', '提示');
+                return false ;
+            }
+            if( disSendPhone ){
+                return false ;
+            }
+
+
+            disSendPhone = true ;
+            $(this)[0].innerText = '正在发送中..' ;
+            $(this)[0].className = $(this)[0].className + " dis-send-phone" ;
+
+            var _this = this ;
+
+            $.getJSON('/regSms/'+phone ,{},function(data){
+
+                //console.log(data) ;
+
+                if( data.status == 'success' ){
+                    window.localStorage.setItem( 'codeTime' , data.time ) ;
+                    sendSuccess(_this);
+                }else{
+                    var error = '' ;
+
+                    if( data.code == '001' ){ // 下次发送时间
+                        sendSuccess(_this,data.message ) ;
+                        return false ;
+                    }else{
+                        resetSend(_this);
+                        error = data.message ;
+                    }
+
+                    layer.alert(error) ;
+                }
+            });
+        }
+
+        function resetSend( obj ){
+
+            var clsName = $(obj)[0].className.split(" ") ;
+            clsName.pop();
+            disSendPhone = false ;
+            $(obj)[0].innerText = '获取验证码' ;
+            $(obj)[0].className = clsName.join(" ") ;
+        }
+
+        function sendSuccess( obj , current  ){
+
+            current = current || nextSend ;
+
+            var timer = setInterval(function(){
+                if( current <= 0 ){
+                    clearInterval(timer) ;
+                    resetSend(obj) ;
+                    window.localStorage.setItem( 'codeTime' , 0 ) ;
+                    return false ;
+                }
+                $(obj)[0].innerText = '下次获取' + current + 's' ;
+                current--;
+            },1000) ;
+        }
+
+        function verPhone( phone ) {
+            var myreg=/^[1][3|4|5|6|7|8|9][0-9]{9}$/;
+            if (!myreg.test(phone)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        // 初始化发送短信
+        function initializeSendPhone(){
+            // 获取本地是否存在数据
+            var nextSendTime = window.localStorage.getItem('codeTime') || 0  ;
+            var currentTime  = Date.parse( new Date() ) / 1000 ; // 去掉毫秒
+            var time = nextSendTime - currentTime ;
+
+            // 时间未到
+            if( time > 0 ){
+                disSendPhone = true ;
+                $(".code-btn")[0].className = $(".code-btn")[0].className + " dis-send-phone" ;
+                sendSuccess( $(".code-btn") , time ) ;
+            }
+
+            //console.log( 'dd' , end ) ;
+        }
+
+        //获取短信验证码
+        /*function getCode() {
+            if ($('.username').val() != '') {
+                if (can_get_code) {
+                    can_get_code = false;
+                    $.ajax({
+                        type: 'get',
+                        url: '/regSms/' + $('.username').val(),
+                        dataType: 'json',
+                        success: function (resp) {
+                            //console.log('短信验证码', resp);
+                            if (resp && resp.status == 'success') {
+                                window.localStorage.setItem('code_times', JSON.stringify(resp.time + '000'));
+                                $('.code-btn').text('重新获取(' + num + ')');
+                                timer = setInterval(countDown, 1000);
+                            } else {
+                                if (resp.code == '001') {
+                                    num = resp.message;
+                                    $('.code-btn').text('重新获取(' + num + ')');
+                                    timer = setInterval(countDown, 1000);
+                                } else {
+                                    can_get_code = true;
+                                    clearInterval(timer);
+                                    num = 60;
+                                    $('.code-btn').text('获取验证码');
+                                    layer.alert(resp.message, '提示');
+                                }
+                            }
+                        },
+                        error: function (data) {
+                            //console.log('error', data);
+                            layer.msg('错误：' + data.status);
+                        }
+                    });
+                }
+            } else {
+                layer.alert('请先输入手机号，再点击获取短信验证码。', '提示');
+            }
+        }
+
+        //获取验证码的获取间隔时间
+        function getTime() {
+            var code_time = Number(JSON.parse(window.localStorage.getItem('code_times')));
+            var now_time = Number(Date.parse(new Date()));
+            if (code_time && now_time < code_time) {
+                can_get_code = false;
+                num = (code_time - now_time) / 1000;
+                $('.code-btn').text('重新获取(' + num + ')');
+                timer = setInterval(countDown, 1000);
+            }
+        }
+
+        //倒计时
+        function countDown() {
+            if (num == 0) {
+                clearInterval(timer);
+                window.localStorage.removeItem('code_times');
+                $('.code-btn').text('获取验证码');
+                num = 120;
+                can_get_code = true;
+            } else {
+                num--;
+                $('.code-btn').text('重新获取(' + num + ')');
+            }
+        }
+
+        getTime();
+        */
+    });
+</script>
+</html>

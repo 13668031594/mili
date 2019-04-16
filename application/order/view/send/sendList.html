@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>直充列表</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">订单管理</a>
+          <a><cite>发货列表</cite></a>
+        </span>
+    </div>
+
+    <div class="toolTable">
+
+        <!--<button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
+            <i class="layui-icon ">&#xe640;</i>批量删除
+        </button>-->
+
+        <form class="layui-form layui-inline layui-form-query">
+            <!--<div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="pay" lay-verify="" style="height:30px;">
+                    <option value="">全部</option>
+                    <option value="0">付款</option>
+                    <option value="1">未付</option>
+                </select>
+            </div>-->
+            <input type="hidden" name="id" value="{$id}">
+            <div class="layui-input-inline layui-query-select" style="width:90px;">
+                <select name="keywordType" lay-verify="" style="height:50px;">
+                    <option value="1">订单号</option>
+                    <option value="2">快递单</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" />
+            </div>
+            <div class="layui-input-inline layui-query-select" style="width:100px;">
+                <select name="timeType" lay-verify="" style="height:30px;">
+                    <option value="1">下单时间</option>
+                    <option value="2">发货时间</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+
+                <div class="layui-input-inline">
+                    <input type="text" placeholder="请选择起始时间" name="startTime" class="layui-input layui-input-mid" id="startTime" readonly/>
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" placeholder="请选择结束时间" name="endTime" class="layui-input layui-input-mid" id="endTime" readonly/>
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="query">
+                    <i class="layui-icon ">&#xe615;</i>搜索
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
+    </table>
+</div>
+
+<script src="{$src}layui/layui.js"></script>
+
+<script type="text/html" id="tableTool">
+    <a class="layui-btn layui-btn-xs" href="order.html"><i class="layui-icon layui-icon-search"></i>查看</a>
+</script>
+
+<script type="text/html" id="userStatus">
+    {{# if d.status == 0 { }}
+    <span class="layui-badge layui-bg-green">未付款</span>
+    {{# }else if( d.status == 1) { }}
+    <span class="layui-badge layui-bg-green">付款</span>
+    {{# else{ }}
+    <span class="layui-badge layui-bg-green">停用</span>
+    {{# } }}
+</script>
+
+
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['layer', 'mTable', 'jquery', 'element','laydate'], function () {
+
+        var layer = layui.layer;
+        var mTable = layui.mTable;
+        var laydate = layui.laydate ;
+
+        laydate.render({
+            elem: '#startTime',
+            type:'datetime'
+        });
+        laydate.render({
+            elem: '#endTime',
+            type:'datetime'
+        });
+
+        mTable.init({
+            url: {
+                del: 'http://test.test/?d=1',
+                table: '/admin/send/table?id={$id}',
+                edit: 'active.html?',
+                add: 'member.html'
+            },
+            cols: [[
+                {field: 'send_order', width: 170, title: '发货编号'},
+                {field: 'store', width: 100, title: '店铺'},
+                {field: 'express', title: '快递', width: 100 },
+                {field: 'order_number', title: '订单号',width: 100 },
+                {field: 'express_no', title: '快递单',width: 130 },
+                {field: 'goods', title: '宝贝名称',width: 170 },
+                {field: 'consignee', title: '收件人',width: 100 },
+                {field: 'phone', title: '电话',width: 120 },
+                {field: 'address', title: '地址',minWidth: 100 },
+                {field: 'send_create',width: 170,  title: '发货时间'},
+                {field: 'created_at',width: 170,  title: '下单时间'},
+//                {fixed: 'right', title: '操作', width: 90, align: 'center', toolbar: '#tableTool'}
+            ]]
+        });
+        mTable.render();
+    });
+</script>
+</body>
+
+</html>

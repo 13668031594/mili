@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="article-info">
+        <div class="article-info-title">
+            <div class="title">{$self['title']}</div>
+            <div class="info">
+                <span class="author">作者：{$self['author']}</span>
+                <span class="time">{$self['created_at']}</span>
+            </div>
+        </div>
+
+        <div class="article-info-content">{php}echo $self['content'];{/php}</div>
+    </div>
+</div>
+
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script src="{$src}js/layui-v2.4.5/layui/layui.js"></script>
+
+</html>

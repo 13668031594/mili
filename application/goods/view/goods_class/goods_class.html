@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品分类</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">商品管理</a>
+          <a href="javascript:;">商品分类</a>
+          <a><cite>{if isset($self)}编辑{else/}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/goods_class/save">
+        {if isset($self)}
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        {/if}
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" placeholder="商品分类名称" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sort" lay-verify="number" placeholder="排序" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else}50{/if}' maxlength="3"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">影响前台的显示顺序</div>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+                <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'form']);
+</script>
+</body>
+
+</html>

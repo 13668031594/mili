@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+<style>
+    .table-out .layui-table-cell {
+        height: auto;
+        overflow: visible;
+        text-overflow: inherit;
+        white-space: normal;
+    }
+
+    .remark-button {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: 18px;
+    }
+
+</style>
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content" style="overflow: visible; ">
+    <div class="table" style='min-height:800px;'>
+        <div class="content-title">
+            <span>已买礼品</span>
+        </div>
+
+        <!-- 列表工具栏 -->
+        <!--<script type="text/html" id="toolbar">-->
+        <div class="table-content container-shadow" style='padding:10px;'>
+            <div class="tool-search">
+                <form class="layui-form" id="form">
+                    <div class="layui-form-item layui-form-pane">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style='margin-right:0; width:100px;'>
+                                <select name='orderType'>
+                                    <option value='1'>订单号</option>
+                                    <option value='2'>快递号</option>
+                                    <option value='3'>手机号</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="order" placeholder="请输入搜索关键字" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">店铺</label>
+                            <div class="layui-input-inline">
+                                <select name="store">
+                                    <option value="">请选择</option>
+                                    {foreach $store as $k => $v}
+                                    <option value="{$v['id']}">{$v['name']}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-filter="search" lay-submit>搜索</button>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item form-radio-type">
+
+                        <input type="hidden" id="time-type" name="timeType" value=""/>
+                        <ul id="order-type">
+                            <li lang="1">今日订单</li>
+                            <li lang="3">昨日订单</li>
+                            <li lang="2">时间段</li>
+                            <li lang="" class="choice">全部订单</li>
+                        </ul>
+
+                        <div class="layui-inline time-interval" style="overflow: hidden;">
+                            <label class="layui-form-label" style="width: 110px;">选择时间段</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="time-start" name="startTime"
+                                       placeholder="开始时间">
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="time-end" name="endTime" placeholder="结束时间">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+            <div class="layui-tab" lay-filter="orderType">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="order">发货任务管理</li>
+                    <li lay-id="orderDetails">订单详情管理</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+
+                        <div>
+                            <div class="tool-btn" id="export">导出数据</div>
+                            <a id='clickDown' style='display:none;' href="javascript:;">点击下载数据</a>
+                        </div>
+
+                        <div class="table-out">
+                            <table id="table" lay-filter="data"></table>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="table-out-d">
+                            <table id="table-details" class="layui-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--<div class="table-out">
+                <table class="layui-hide" id="table" lay-filter="data" style="margin-top: 0;"></table>
+            </div>-->
+
+        </div>
+        <!--</script>-->
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script type="text/html" id="tableTool">
+    <a class="layui-btn layui-btn-xs" href="/order-info?id={{d.id}}"><i class="layui-icon layui-icon-search"></i>查看</a>
+    {{# if ( d.order_status == 10 ) { }}
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="javascript:;" lay-event="cancel"><i
+            class="layui-icon layui-icon-release"></i>撤销</a>
+    <!--<a href="/order-back?id={{d.id}}">撤销</a>-->
+    {{# }else if ( d.order_status == 20 ) { }}
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="/order-list?id={{d.id}}"><i
+            class="layui-icon layui-icon-list"></i>清单</a>
+    {{# } }}
+</script>
+
+<script type="text/html" id="orderNoTpl">
+    <span class='d-header'>
+    {{# if( d.LAY_INDEX > 1 ){ }}
+        <div></div>
+    {{#} }}
+    <span>订单号：{{ d.orderNo }}</span>
+       <span>发货时间：{{ d.sendTime }}</span>
+        <span>状态：<i>{{ d.status }}</i></span>
+    </span>
+    <div class='goods-images clearfix'>
+        <div>
+            <img src='{{ d.goodsUrl }}' height='80'/>
+        </div>
+        <ul>
+            <li>{{ d.goodsName }}</li>
+            <li>
+                <span>单价：{{ d.goodsAmount }}元</span>
+                <span>重量：{{ d.goodsWeight }}kg</span>
+                <span>数量：{{ d.goodsNumber }}</span>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script type="text/html" id="remarkTpl">
+    <div style='padding-left:25px;'><span>{{d.note ? d.note : '无备注'}}</span> <a class='remark-button' href='javascript:;'
+                                                                 onclick='javascript:editBeizhu(this , "{{d.id}}")'><i
+            class="layui-icon layui-icon-edit"></i></a></div>
+</script>
+
+<script type="text/html" id="consigneeTpl">
+    <ul class='goods-address'>
+        <li><i>收件人：</i><span>{{d.consigneeName}}</span></li>
+        <li><i>手机号：</i><span>{{d.consigneePhone}}</span></li>
+        <li><i>地址：</i><span>{{d.consigneeAds}}</span></li>
+    </ul>
+</script>
+
+<script type="text/html" id="totalTpl">
+    <div class='goods-total'>
+        <h5>总价（元）</h5>
+        <h3>&yen;{{d.totalAmount}}</h3>
+        <div class=''>
+            总价=商品价（元）+ 运费价（元）
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="expressTpl">
+    {{# if (d.sendTime) { }}
+    <div class='express'>
+        <h3>{{d.expressName}}</h3>
+        <span>{{d.expressNo}}</span>
+    </div>
+    {{# }else { }}
+    -
+    {{# } }}
+</script>
+
+<script>
+    var remarkUrl = '/order-note';
+
+    layui.use(['layer', 'form', 'table', 'laydate', 'element'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var element = layui.element;
+        var is_click = true;
+//        var num = 300;
+//        var timer = null;
+
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+        $('#order-type li').click(function () {
+            $('#order-type li').each(function () {
+                $(this).prop('class', '');
+            });
+            $('#time-type').val($(this).prop('lang'));
+            $(this).prop('class', 'choice');
+            if ($(this).prop('lang') == '2') {
+                $('.time-interval').show();
+            } else {
+                $('.time-interval').hide();
+                var datas = $('#form').serializeObject();
+                console.log('表格数据：', datas);
+                table.reload('table', {
+                    where: datas
+                });
+            }
+        });
+
+        // 导出方法
+        function exportData(table_data) {
+            var arr = [];
+            table_data.forEach(function (i) {
+                arr.push(i.id);
+            });
+            is_click = false;
+            var index = layer.load(1);
+            $.ajax({
+                type: 'get',
+                url: '/order-download',
+                dataType: 'json',
+                data: {id: arr.join('')},
+                success: function (resp) {
+                    layer.close(index);
+                    is_click = true;
+                    if (resp && resp.status == 'success') {
+                        layer.msg('文件生成成功，请在5分钟内确认导出');
+                        console.log(resp.url);
+                        $("#clickDown").attr('href', resp.url).show();
+                        //window.location.href = 'http://47.110.78.2/' + resp.url;
+
+                    } else {
+                        if (resp.code == '999') {
+                            layer.alert('登录失效, 请重新登录', function (index) {
+                                window.location.href = '/index-login';
+                                layer.close(index);
+                            });
+                        } else {
+                            layer.close(index);
+                            layer.alert(resp.message);
+                        }
+                    }
+                },
+                error: function (data) {
+                    is_click = true;
+                    layer.msg('错误：' + data.status);
+                }
+            });
+        }
+
+        //导出
+        $('#export').click(function () {
+
+            if (is_click) {
+                //alert(table.checkStatus('data').data.length);
+                var table_data = table.checkStatus('table').data;
+                //console.log('表格数据：', table_data);
+                if (table_data.length <= 0) {
+                    layer.alert('请至少勾选列表中的一项');
+                    return;
+                }
+
+                layer.confirm('您确定要导出数据吗？', function () {
+                    exportData(table_data);
+                });
+
+            } else {
+                layer.alert('请勿频繁操作，请稍后再试！');
+            }
+        });
+
+        var order = table.render({
+            elem: '#table',
+            url: '/goods-had-table',
+            parseData: function (res) {
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+            autoSort: false,
+//            toolbar: true,
+            defaultToolbar: ['exports'],
+            cols: [[
+                {field: 'id', width: 50, type: 'checkbox'},
+                {
+                    field: 'order_status', width: 80, title: '状态', templet: function (d) {
+                    if (d.order_status == 40) {
+                        return '<span class="layui-badge layui-bg-blue">已取消</span>'
+                    } else if (d.order_status == 30) {
+                        return '<span class="layui-badge layui-bg-blue">已撤销</span>'
+                    } else if (d.order_status == 20) {
+                        return '<span class="layui-badge-rim">已发货</span>';
+                    } else {
+                        return '<span class="layui-badge layui-bg-green">待处理</span>';
+                    }
+                }
+                },
+                {field: 'order_number', width: 160, title: '订单号'},
+                {field: 'total', title: '支付金额', width: 100},
+                {field: 'goods_name', title: '宝贝名称', width: 100},
+                {field: 'express_number', title: '发货单数', width: 100},
+                {field: 'note', title: '备注', width: 200, templet: "#remarkTpl"},
+//                {field: 'express_amount', title: '快递单价', width: 100},
+//                {field: 'goods_number', title: '每单发货', width: 100},
+//                {field: 'goods_amount', title: '宝贝单价', width: 100},
+                {field: 'created_at', minWidth: 170, title: '下单时间'},
+                {fixed: 'right', title: '操作', align: 'center', toolbar: '#tableTool'}
+            ]],
+            page: true,
+            limit: 20
+        });
+
+
+        table.render({
+            width: 1260,
+            elem: '#table-details',
+            url: '/goods-send-table',
+            parseData: function (res) {
+                // 数据结构
+                /*res.message = [
+                    {
+                        orderNo: 'G5D85D56S3',
+                        sendTime: '2019-01-03 15:53:25',
+                        status: '已发货',
+                        goodsUrl: "images/xks.png",
+                        goodsName: '面子果实',
+                        goodsAmount: '0.75',
+                        goodsWeight: '0.5',
+                        goodsNumber: '1',
+                        consigneeName: '张三',
+                        consigneePhone: '13608554522',
+                        consigneeAds: '重庆市江北区啊失落的空间啊睡了多久',
+                        totalAmount: '10.6',
+                        expressNo: '321654987654',
+                        expressName: '圆通快递'
+                    },
+                    {
+                        orderNo: 'G5D85D56S3',
+                        sendTime: '2019-01-03 15:53:25',
+                        status: '已发货',
+                        goodsUrl: "images/xks.png",
+                        goodsName: '面子果实',
+                        goodsAmount: '0.75',
+                        goodsWeight: '0.5',
+                        goodsNumber: '1',
+                        consigneeName: '张三',
+                        consigneePhone: '13608554522',
+                        consigneeAds: '重庆市江北区啊失落的空间啊睡了多久',
+                        totalAmount: '10.6',
+                        expressNo: '321654987654',
+                        expressName: '圆通快递'
+                    }
+                ];*/
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+            autoSort: false,
+//            toolbar: true,
+            //defaultToolbar: ['exports'],
+            cols: [[
+                {field: 'orderNo', width: '400', templet: "#orderNoTpl"},
+                {field: 'consigneeName', width: '300', templet: "#consigneeTpl"},
+                {field: 'totalAmount', width: '300', templet: "#totalTpl"},
+                {field: 'expressName', width: '255', templet: "#expressTpl"}
+            ]],
+            page: true,
+            limit: 20
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar(data)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    $('.screen').show();
+                    $('.store-add').show();
+                    break;
+            }
+        });
+
+        //今日，昨日...
+        /*form.on('select(type-choice)', function (data) {
+            //console.log('data',data);
+            if (data.value == '2') {
+                $('.time-interval').show();
+            } else {
+                $('.time-interval').hide();
+            }
+        });*/
+
+        form.on('submit(search)', function (data) {
+            //console.log(data.field);
+            //console.log( data.field.order.length ) ;
+            // 大于一就是订单详情的东西了
+            if (data.field.orderType == 1) {
+
+                table.reload('table', {
+                    where: data.field
+                });
+            } else if (data.field.order.length > 0) {
+                // 详情的时候，选项卡自动切换到详情
+                element.tabChange('orderType', 'orderDetails');
+            }
+
+            // 什么条件详情都可以搜索
+            table.reload('table-details', {
+                where: data.field
+            });
+
+            return false;
+        });
+
+        laydate.render({
+            elem: '#time-start', //指定元素
+            done: function (value, date, endDate) {
+                if ($('#time-start').val() != '' && $('#time-end').val() != '') {
+                    var datas = $('#form').serializeObject();
+                    console.log('表格数据：', datas);
+                    table.reload('table', {
+                        where: datas
+                    });
+                    table.reload('table-details', {
+                        where: datas
+                    });
+                }
+            }
+        });
+
+        laydate.render({
+            elem: '#time-end', //指定元素
+            done: function (value, date, endDate) {
+                if ($('#time-start').val() != '' && $('#time-end').val() != '') {
+                    var datas = $('#form').serializeObject();
+                    console.log('表格数据：', datas);
+                    table.reload('table', {
+                        where: datas
+                    });
+                }
+            }
+        });
+
+        //撤销订单
+        table.on('tool(data)', function (obj) {
+            var data = obj.data;
+            //console.log('obj',obj);
+            switch (obj.event) {
+                case 'cancel':
+                    layer.confirm('确定要撤销吗？', function (index) {
+                        $.getJSON('order-back', {id: data.id}, function (res) {
+                            if (res.status == 'success') {
+                                layer.msg('撤销成功');
+                                table.reload('table');
+                            } else {
+                                layer.msg('撤销失败');
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    break;
+            }
+        });
+    });
+
+    function editBeizhu(obj, id) {
+        var old = $(obj).prev().html()
+        layer.prompt({
+            formType: 2,
+            value: old,
+            title: '备注',
+            maxlength: 140,
+            area: ['400px', '250px'] //自定义文本域宽高
+        }, function (value, index, elem) {
+            if (value != '') {
+
+                layer.close(index);
+                if (old != value) {
+                    $(obj).prev().html(value);
+                    $.get(remarkUrl, {id: id, value, value});
+                }
+            } else {
+                layer.msg('请输入备注内容');
+            }
+            //alert(value); //得到value
+            //layer.close(index);
+        });
+        //console.log(obj) ;
+    }
+</script>
+</html>

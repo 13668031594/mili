@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>导航设置</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a><cite>导航管理</cite></a>
+          <a><cite>导航设置</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" lay-filter="form" action="/admin/nav/index" method="post">
+
+        <div class="layui-tab-item layui-show">
+            <div class="layui-form-min">
+
+                {foreach $set as $k => $v}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v['name']}</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="{$k}[hot]" value="on" title="加热" {if $v['hot'] == 'on'}checked{/if}>
+                        <input type="checkbox" name="{$k}[flash]" value="on" title="闪烁" {if $v['flash'] == 'on'}checked{/if}>
+                        <input type="checkbox" name="{$k}[tilt]" value="on" title="斜体" {if $v['tilt'] == 'on'}checked{/if}>
+                    </div>
+                </div>
+                {/foreach}
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id='submit' class="layui-btn" lay-filter="*" lay-submit>保存</button>
+                </div>
+            </div>
+    </form>
+</div>
+
+<script src="{$src}layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element'], function () {
+
+        var element = layui.element;
+        var form = layui.form;
+        var layer = layui.layer;
+
+    });
+</script>
+</body>
+</html>

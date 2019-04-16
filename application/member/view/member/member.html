@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>会员</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">会员列表</a>
+          <a><cite>{if isset($self)}编辑{else/}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/member/save">
+        <div class="layui-form-min">
+            {if isset($self)}
+            <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+            {/if}
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">推荐人</label>
+
+                {if isset($self)}
+                <div class="layui-form-mid">{$self["referee_phone"]}</div>
+                {else/}
+                <div class="layui-input-inline">
+                    <input type="text" name="referee" title="推荐人" placeholder="请填写正确的推荐人"
+                           autocomplete="off" class="layui-input" maxlength="5">
+                </div>
+                <div class="layui-form-mid layui-word-aux">推荐人的推荐号,没有留空</div>
+                {/if}
+
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="account" lay-verify="number" title="账号" placeholder="请输入会员帐号"
+                           autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["account"]}{/if}' maxlength="12" {if
+                           isset($self)}readonly{/if} />
+                </div>
+                <div class="layui-form-mid layui-word-aux">登录时的帐号</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="phone" lay-verify="phone" title="手机号码" placeholder="请输入手机号码"
+                           autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["phone"]}{/if}' maxlength="12" {if
+                           isset($self)}readonly{/if} />
+                </div>
+                <div class="layui-form-mid layui-word-aux">登录时的手机号码</div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="nickname" required lay-verify="required" placeholder="请输入会员昵称"
+                           autocomplete="off" class="layui-input" value='{if isset($self)}{$self["nickname"]}{/if}'>
+                </div>
+                <div class="layui-form-mid layui-word-aux">显示的昵称名字</div>
+            </div>
+
+            <div class="layui-form-item">
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline" style="width:80px;">
+                        <select name="status" lay-verify="">
+                            <option value="0" {if isset($self) && $self['status'] == '0'}selected{/if}>正常</option>
+                            <option value="1" {if isset($self) && $self['status'] == '1'}selected{/if}>冻结</option>
+                            <option value="2" {if isset($self) && $self['status'] == '2'}selected{/if}>停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:55px;">身份</label>
+                    <div class="layui-input-inline" style="width:100px;">
+                        <select name="grade" lay-verify="">
+                            {foreach $grade as $k => $v}
+                            <option value="{$k}" {if isset($self) && ($self[
+                            'grade_id'] == $k)}selected{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 编辑的时候，显示该项
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <blockquote class="layui-elem-quote">如不修改密码，请勿操作密码</blockquote>
+                    </div>
+                </div>
+            -->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="pass" placeholder="请输入管理员密码"
+                           autocomplete="off" class="layui-input"
+                           value='{if isset($self)}w!c@n#m$b%y^{else/}123456{/if}' maxlength="20">
+                </div>
+                <div class="layui-form-mid layui-word-aux">初始密码为：123456</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">支付密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="pay_pass" required lay-verify="pass" placeholder="请输入管理员密码"
+                           autocomplete="off" class="layui-input"
+                           value='{if isset($self)}w!c@n#m$b%y^{else/}123456{/if}' maxlength="20">
+                </div>
+                <div class="layui-form-mid layui-word-aux">初始密码为：123456</div>
+            </div>
+        </div>
+        <hr>
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">收款帐号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="bank_no" placeholder="请输入卡号"
+                           autocomplete="off" class="layui-input" value='{if isset($self)}{$self["bank_no"]}{/if}'>
+                </div>
+                <div class="layui-form-mid layui-word-aux">支付宝直接写号码</div>
+            </div>
+
+            {if isset($self)}
+            <div class="layui-form-item">
+                <label class="layui-form-label">注册时间</label>
+                <div class="layui-form-mid">{$self['created_at']}</div>
+            </div>
+            {/if}
+        </div>
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id='submit' lay-submit lay-filter="*">确认保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element']); //加载入口
+</script>
+</body>
+
+</html>

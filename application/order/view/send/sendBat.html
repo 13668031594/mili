@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>批量发货</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">订单管理</a>
+          <a><cite>批量发货</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/">
+        <div class="layui-form-item">
+            <label class="layui-form-label">操作类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" lay-filter="type" value="1" title="导出需发货的订单" checked/>
+                <input type="radio" name="type" lay-filter="type" value="0" title="批量导入快递单号"/>
+            </div>
+        </div>
+        <!-- 导出 -->
+        <div id="export">
+            <div class="layui-form-item">
+                <label class="layui-form-label">导出时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" placeholder="截止时间" name="startTime" class="layui-input " id="startTime"
+                           readonly/>
+                </div>
+                <div class="layui-input-inline layui-form-mid layui-word-aux">不选择则为当前时间</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" id='exportButton'>立即导出</button>
+                    <a id="download" download="" class="layui-hide" href="javascript:;">点击下载</a>
+                </div>
+            </div>
+
+        </div>
+        <!-- 导入 -->
+        <div id="import" class="layui-hide">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择数据</label>
+                <button type="button" id="upload"
+                        class="layui-btn">
+                    <i class="layui-icon">&#xe67c;</i>上传数据
+                </button>
+                <span id="uploadCount" class="layui-hide">上传数据:<span id="count">0</span></span>
+            </div>
+           <!-- <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" id='importButton'>批量填写快递单号并自动发货</button>
+                </div>
+            </div>-->
+
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    var url = {
+        /**
+         * 根据时间导出未发货地址
+         * 请求格式get
+         * 请求字段time，为空则为当前时间
+         * 返回格式
+         * {
+         *      status : 'success' ,
+         *      message: '失败时填写错误信息',
+         *      url : '文件路径',
+         * }
+         */
+        exp: '/admin/send/bats',
+        /**
+         * 导入快递单号
+         * 返回格式
+         * {
+         *      status : ,
+         *      message : ,
+         *      number: 上传成功时 返回表内的数量，总共多少条记录
+         * }
+         */
+        imp: '/admin/send/sends',
+    };
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'laydate', 'form','upload'], function () {
+
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var upload = layui.upload;
+
+        laydate.render({
+            elem: '#startTime',
+            type: 'datetime'
+        });
+
+        var uploadPms = {
+            elem: '#upload'
+            , url: url.imp
+            //, multiple: true
+            , field: 'file'
+            , exts: 'xls|csv'
+            , number: 1
+            ,before:function(){
+                //console.log('dddd') ;
+                $("#upload").attr('disabled',true).addClass('layui-btn-disabled').text('正在上传请稍候...') ;
+            }
+            , done: function (res, index, upload) {
+                //console.log(index);
+
+                console.log(res);
+                $("#upload").attr('disabled',false).removeClass('layui-btn-disabled').text('上传数据') ;
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#uploadCount").removeClass('layui-hide');
+                    $("#count").html(res.number) ;
+                } else {
+                    layer.msg('上传失败:'+res.message);
+                }
+            }
+        };
+
+        upload.render(uploadPms);
+
+        form.on('radio(type)', function (data) {
+
+            var exp = $("#export");
+            var imp = $("#import");
+
+            if (data.value == 0) {
+
+                if (!exp.hasClass('layui-hide')) {
+                    exp.addClass('layui-hide');
+                }
+
+                if (imp.hasClass('layui-hide')) {
+                    imp.removeClass('layui-hide');
+                }
+
+            } else {
+
+                if (exp.hasClass('layui-hide')) {
+                    exp.removeClass('layui-hide');
+                }
+
+                if (!imp.hasClass('layui-hide')) {
+                    imp.addClass('layui-hide');
+                }
+
+            }
+        });
+    });
+
+    // 导出
+    $("#exportButton").on('click', function () {
+
+        $(this).prop({'disabled': true}).addClass('layui-btn-disabled').text('正在导出...');
+
+        var time = $("#startTime").val();
+        var _this = this;
+
+        $.getJSON(url.exp, {time: time}, function (data) {
+
+            $(_this).prop({'disabled': false}).removeClass('layui-btn-disabled').text('立即导出');
+
+            if (data.status == 'success') {
+                layer.msg('导出成功,请点击下载按钮');
+                var files = data.url.split('/');
+                var fileName = files.pop();
+                $("#download").attr({'href': data.url, 'download': fileName}).removeClass('layui-hide');
+            } else {
+                layer.msg('导出失败:' + data.message);
+            }
+
+        });
+
+        return false;
+    });
+
+
+</script>
+</body>
+
+</html>

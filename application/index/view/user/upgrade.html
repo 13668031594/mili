@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+        <div class="data-right">
+            <div class="data-right-container container-shadow">
+                <div class="title">会员升级</div>
+                <div class="data-content">
+
+                    <p class="identity">您目前的等级：<b>{$member['grade_name']}</b></p>
+                    <form class="layui-form" id="forms" action="/upgrade" method="post">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="200">
+                                <col width="200">
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>等级</th>
+                                <th>费用</th>
+                                <th>快递价格</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 嵌套完了，麻烦把这个注释删了
+                                rowspan 快递数量如果大于1就填写这个数量
+                                如果快递数量=1 就不填写这个 不填写的时候rowspan都不要写
+                                <tr> 快递3个 就3个TR，2个就2个TR，一个就1个TR
+                                </tr>
+                            -->
+                            {foreach $grades as $v}
+                            {if count($express) > 1}
+                            <tr>
+                                {if $v['id'] == $member['grade_id']}
+                                <td rowspan="{php}echo count($express);{/php}">当前：{$member['grade_name']}</td>
+                                {else}
+                                <td rowspan="{php}echo count($express);{/php}"><input type="radio" name="grade"
+                                                                                      value="{$v['id']}|{$v['buy_total']}"
+                                                                                      title="{$v['name']}"
+                                                                                      lay-filter="filter"></td>
+                                {/if}
+                                <td rowspan="{php}echo count($express);{/php}">{$v['buy_total']}</td>
+                                <td>{$express[0]['name']}：{$v['mode'] =='on' ? $v['amount'] :
+                                    (isset($v['express'][$express[0]['id']]) ? $v['express'][$express[0]['id']] :
+                                    config('young.default_express_amount'))}
+                                </td>
+                            </tr>
+                            {foreach $express as $ke => $va}
+                            {if $ke != '0'}
+                            <tr>
+                                <td>{$va['name']}：{$v['mode'] =='on' ? $v['amount'] : (isset($v['express'][$va['id']]) ?
+                                    $v['express'][$va['id']] : config('young.default_express_amount'))}
+                                </td>
+                            </tr>
+                            {/if}
+                            {/foreach}
+                            {else}
+                            <tr>
+                                {if $v['id'] == $member['grade_id']}
+                                <td>当前：{$member['grade_name']}</td>
+                                {else}
+                                <td><input type="radio" name="grade" value="{$v['id']}|{$v['buy_total']}"
+                                           title="{$v['name']}"
+                                           lay-filter="filter"></td>
+                                {/if}
+                                <td>{$v['buy_total']}</td>
+                                <td>{$express[0]['name']}：{$v['mode'] =='on' ? $v['amount'] :
+                                    (isset($v['express'][$express[0]['id']]) ? $v['express'][$express[0]['id']] :
+                                    config('young.default_express_amount'))}
+                                </td>
+                            </tr>
+                            {/if}
+                            {/foreach}
+
+                            </tbody>
+                        </table>
+
+                        <div class="layui-form-item">
+                            已选择:<span id='isChoice'></span>
+                        </div>
+                        <hr>
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <input type="password" name="pay_pass" required lay-verify="required"
+                                       placeholder="请输入支付密码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item sub-btn">
+                            <button type="submit" class="layui-btn " lay-submit>确认升级</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input id="hint" value="" type="hidden"/>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var layer = layui.layer;
+        var form = layui.form;
+
+        form.on('radio(filter)', function (data) {
+            $("#isChoice").html(data.elem.title);
+        });
+
+        //提示
+        if ($('#hint') && $('#hint').val() != '') {
+            layer.alert($('#hint').val());
+        }
+    });
+</script>
+</html>

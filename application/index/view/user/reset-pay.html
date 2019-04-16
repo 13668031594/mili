@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+
+        <div class="data-right">
+            <div class="content-title">
+                <span>修改密码</span>
+            </div>
+
+            <form class="layui-form" id="forms" action="/reset-pay" method="post">
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="pass" required  lay-verify="required" placeholder="请输新入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="again" required  lay-verify="required" placeholder="请再次输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-pane">
+                    <label class="layui-form-label">验证码</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="code" required lay-verify="required" placeholder="请输入手机验证码" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux" style="padding: 0 !important; text-align: right">
+                        <button type="button" class="layui-btn layui-btn-primary code-btn">获取验证码</button>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit>重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+
+<script src="{$src}js/ajax.js"></script>
+<script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+
+        var timer = null;
+        var num = 120;
+        var can_get_code = true;
+
+        $('.code-btn').on('click', getCode);
+
+        //获取短信验证码
+        function getCode() {
+            if (can_get_code) {
+                can_get_code = false;
+                $.ajax({
+                    type: 'get',
+                    url: '/PaySms',
+                    dataType: 'json',
+                    success: function (resp) {
+                        //console.log('短信验证码', resp);
+                        if (resp && resp.status == 'success') {
+                            window.localStorage.setItem('code_times', JSON.stringify(resp.time + '000'));
+                            $('.code-btn').text('重新获取(' + num + ')');
+                            timer = setInterval(countDown, 1000);
+                        } else {
+                            if (resp.code == '001') {
+                                num = resp.message;
+                                $('.code-btn').text('重新获取(' + num + ')');
+                                timer = setInterval(countDown, 1000);
+                            } else {
+                                can_get_code = true;
+                                clearInterval(timer);
+                                num = 120;
+                                $('.code-btn').text('获取验证码');
+                                layer.alert(resp.message, '提示');
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        //console.log('error', data);
+                        layer.msg('错误：' + data.status);
+                    }
+                });
+            }
+        }
+
+        //获取验证码的获取间隔时间
+        function getTime() {
+            var code_time = Number(JSON.parse(window.localStorage.getItem('code_times')));
+            var now_time = Number(Date.parse(new Date()));
+            if (code_time && now_time < code_time) {
+                can_get_code = false;
+                num = (code_time - now_time) / 1000;
+                $('.code-btn').text('重新获取(' + num + ')');
+                timer = setInterval(countDown, 1000);
+            }
+        }
+
+        //倒计时
+        function countDown() {
+            if (num == 0) {
+                clearInterval(timer);
+                window.localStorage.removeItem('code_times');
+                $('.code-btn').text('获取验证码');
+                num = 120;
+                can_get_code = true;
+            } else {
+                num--;
+                $('.code-btn').text('重新获取(' + num + ')');
+            }
+        }
+
+        getTime();
+    });
+</script>
+</html>

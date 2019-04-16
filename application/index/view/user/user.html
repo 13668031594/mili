@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content ">
+    <div class="data">
+        {include file="index@Base/common_left"}
+        <div class="data-right">
+
+            <!--<div class="content-title">-->
+            <!--<span>用户中心</span>-->
+            <!--</div>-->
+            <!--data-right-container container-shadow -->
+            <div class="data-right-container container-shadow" style="padding:0px;">
+                <div class="user-center-wallet">
+                    <div class="user-center-avatar">
+                        <div class="avatar">
+                            <div class="iconfont icon-touxiang"><img src="{$member['cover']}"/></div>
+                        </div>
+
+                        <p class="nickname"><span>{$member['nickname']}</span> <a href="###">编辑</a></p>
+                        <!--<p class="phone">
+                            <span class=""></span>手机：{$member['phone']}
+                        </p>-->
+                        <p class="identity"><span>普通会员</span> <span><a href="/upgrade">立即升级</a></span></p>
+
+                    </div>
+                    <div style="margin: 9px 0 9px 250px;overflow: visible;">
+                        <div class="title"><i class="layui-icon layui-icon-username"></i> 用户中心</div>
+                        <div class="ct">
+                            <ul>
+                                <li>
+                                    <a class="num" href="/recharge">{$member['remind']}</a>
+
+                                    <div class="name">余额</div>
+                                    <div class="extra">用于下单</div>
+                                    <a href="/recharge">充值</a>
+                                </li>
+                                <li>
+                                    <a class="num" href="/withdraw">{$member['commis']}</a>
+
+                                    <div class="name">佣金</div>
+                                    <div class="extra">推广后会获得</div>
+                                    <a href="/withdraw">提现</a>
+                                </li>
+
+                                <!--<li>
+                                    <a class="num" href="/withdraw">{$member['commis']}</a>
+
+                                    <div class="name">团队人数</div>
+                                    <div class="extra"></div>
+                                    &lt;!&ndash;<a href="/withdraw">充值</a>&ndash;&gt;
+                                </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--<div class="user">
+                    <div class="user-head">
+                        <div class="iconfont icon-touxiang"><img src="{$member['cover']}"/></div>
+                        <a href="data.html" class="user-change">修改</a>
+                    </div>
+
+                    <div class="user-info">
+                        <div class="user-nickname">Hi~亲爱的 {$member['nickname']}</div>
+                        <div class="user-phone">
+                            <span class=""></span>手机：{$member['phone']}
+                        </div>
+                        <div class="user-item">
+                            <span class=""></span>佣金：<span class="user-item-num">{$member['commis']}</span><a
+                                href="/withdraw" class="user-item-btn">管理</a>
+                        </div>
+                        <div class="user-item">
+                            <span class=""></span>余额：<span class="user-item-num">{$member['remind']}</span><a
+                                href="/recharge" class="user-item-btn">充值</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-link">
+                    我的推荐链接：<input type="text" value="http://{$host}/reg?referee={$member['id']}"/>
+                    &lt;!&ndash;<button type="button">复制链接</button>&ndash;&gt;
+                </div>
+
+                <div class="user-hint">温馨提示：凡通过此链接进入网站注册的人都计算在您的推荐人数内。</div>-->
+            </div>
+
+            <div class="data-right-container container-shadow">
+                <div class="title"><i class="layui-icon layui-icon-share"></i> 推广连接</div>
+                <div class="user-link">
+                    <div>我的推荐链接</div>
+                    <input type="text" value="http://{$host}/reg?referee={$member['id']}" readonly/>
+                    <!--<button type="button">点击复制</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script src="{$src}js/layui-v2.4.5/layui/layui.js"></script>
+</html>

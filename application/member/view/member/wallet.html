@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>会员钱包</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">会员列表</a>
+          <a href="javascript:;">{$self['nickname']}</a>
+          <a><cite>钱包</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/member/wallet">
+
+        <div class="layui-row">
+            <div class="layui-col-sm5">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="200">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td>帐号</td>
+                        <td>{$self['account']}</td>
+                    </tr>
+                    <tr>
+                        <td>手机</td>
+                        <td>{$self['phone']}</td>
+                    </tr>
+                    <tr>
+                        <td>昵称</td>
+                        <td>{$self['nickname']}</td>
+                    </tr>
+                    <tr>
+                        <td>状态/身份</td>
+                        <td><span class="layui-badge layui-bg-green">{$status[$self['status']]}</span> <span
+                                class="layui-badge layui-badge-rim">{$self['grade_name']}</span></td>
+                    </tr>
+                    <tr>
+                        <td>余额/累计</td>
+                        <td>{$self['remind']}/{$self['remind_all']} <a href="/admin/member/record?id={$self['id']}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a></td>
+                    </tr>
+                    <tr>
+                        <td>佣金/累计</td>
+                        <td>{$self['commis']}/{$self['commis_all']} <a href="/admin/member/record?id={$self['id']}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a></td>
+                    </tr>
+                    <tr>
+                        <td>累计充值</td>
+                        <td>{$self['recharge']}</td>
+                    </tr>
+                    <tr>
+                        <td>收款帐号</td>
+                        <td>{$self['bank_no']}</td>
+                    </tr>
+                    <tr>
+                        <td>注册时间</td>
+                        <td>{$self['created_at']}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-col-sm7 layui-anim layui-anim-upbit">
+                <div style="max-width:400px;margin-top:10px;">
+
+                    <!-- 编辑时写入id -->
+                    <input type='hidden' id='id' name="id" value='{$self["id"]}'/>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作类型</label>
+                        <div class="layui-input-block">
+                            <select name="type" lay-filter="type">
+                                <option value="0">余额</option>
+                                <option value="1">佣金</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">充值数量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="number" required title="充值数量" lay-verify="required|number"
+                                   placeholder="请输入充值数量"
+                                   autocomplete="off" class="layui-input" value='0'/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element', 'form'], function () {
+        var form = layui.form;
+        form.on('select(type)', function (data) {
+            console.log(data);
+            if (data.value == 0) {
+                $("#assetTypeContainer").show();
+            } else {
+                $("#assetTypeContainer").hide();
+            }
+        });
+    });
+</script>
+</body>
+</html>

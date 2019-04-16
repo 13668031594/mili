@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a><cite>系统设置</cite></a>
+        </span>
+    </div>
+    <form class="layui-form" lay-filter="form" action="/admin/system/index">
+
+        <div class="layui-tab layui-tab-card" lay-filter="tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基础设置</li>
+                <li>充值设置</li>
+                <li>登录注册</li>
+                <li>提示文字</li>
+                <!--<li>提现转账</li>-->
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-min">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="webName" lay-verify="required" title="网站名称"
+                                       placeholder="网站名称" autocomplete="off" value="{$self['webName']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">前台显示的网站名字</div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">title</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="webTitle" lay-verify="required" title="网站title"
+                                       placeholder="网站title" autocomplete="off" value="{$self['webTitle']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">网站顶部title显示到关键词</div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">keyword</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="webKeyword" title="关键字"
+                                       placeholder="关键字" autocomplete="off" value="{$self['webKeyword']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">网站关键字</div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">网站描述</label>
+                            <div class="layui-input-block">
+                        <textarea type="text" name="webDesc" title="网站描述"
+                                  placeholder="网站描述" autocomplete="off"
+                                  class="layui-textarea">{$self['webDesc']}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">底部版权</label>
+                            <div class="layui-input-block">
+                        <textarea type="text" name="webCopyright" title="底部版权"
+                                  placeholder="底部版权" autocomplete="off"
+                                  class="layui-textarea">{$self['webCopyright']}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">开关网站</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" id='webSwitch' lay-filter="webSwitch"
+                                       lay-skin="switch"
+                                       lay-text="开启|关闭" {if $self["webSwitch"] == 'on'}checked{/if}/>
+                                <input type="hidden" id='webSwitchValue' name="webSwitch" value="{$self['webSwitch']}"/>
+                            </div>
+                        </div>
+
+
+                        <!-- style="display:none" -->
+                        <div id="webClose" class="layui-form-item" {if $self[
+                        "webSwitch"] == 'on'}style="display:none"{/if}>
+                        <label class="layui-form-label">关闭原因</label>
+                        <div class="layui-input-block">
+                            <textarea id="webCloseReason" title="关闭原因" name="webCloseReason" lay-verify="reason"
+                                      placeholder="请输入关闭原因"
+                                      class="layui-textarea">{$self['webCloseReason']}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">logo</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="upload">
+                            <i class="layui-icon">&#xe67c;</i>上传LOGO
+                        </button>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">LOGO尺寸为：320x130</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">logo预览</label>
+                    <div class="layui-input-inline">
+                        <img id="logoUrl" src="{$self['logo']}" width="320" height="130"/>
+                        <input type="hidden" id="logo" name="logo" value="{$self['logo']}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">充值开关</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='rechargeSwitch' lay-filter="rechargeSwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["rechargeSwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='rechargeSwitchValue' name="rechargeSwitch"
+                               value="{$self['rechargeSwitch']}"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">充值送会员</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='rechargeGradeSwitch' lay-filter="rechargeGradeSwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["rechargeGradeSwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='rechargeGradeSwitchValue' name="rechargeGradeSwitch"
+                               value="{$self['rechargeGradeSwitch']}"/>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">开启后，充值达到等级中设定的升级值后，即可自动升级</div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">佣金比例</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="userCommiss" title="佣金比例" lay-filter="numberZ"
+                                   placeholder="佣金比例" autocomplete="off" value="{$self['userCommiss']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">设置会员直推佣金比例 10000 = 100%</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">充值基数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="rechargeBase" title="充值基数" lay-filter="numberZ"
+                                   placeholder="充值基数" autocomplete="off" value="{$self['rechargeBase']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">充值的最低金额</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">充值倍数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="rechargeTimes" title="充值倍数" lay-filter="numberZ"
+                                   placeholder="充值倍数" autocomplete="off" value="{$self['rechargeTimes']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">充值金额必须为此数的整数倍</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">登录图片</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="loginImage">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">图片尺寸为：379x565</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片链接</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="loginUrl" title="图片链接"
+                               placeholder="图片链接" autocomplete="off" value="{$self['loginUrl']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">登录图片连接</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片预览</label>
+                    <div class="layui-input-inline">
+                        <img id="loginUrl" src="{$self['login']}" width="189" height="282"/>
+                        <input type="hidden" id="login" name="login" value="{$self['login']}"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">注册图片</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="regImage">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">图片尺寸为：379x565</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片链接</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="regUrl" title="图片链接"
+                               placeholder="图片链接" autocomplete="off" value="{$self['regUrl']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">注册图片连接</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片预览</label>
+                    <div class="layui-input-inline">
+                        <img id="regUrl" src="{$self['reg']}" width="189" height="282"/>
+                        <input type="hidden" id="reg" name="reg" value="{$self['reg']}"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                            <textarea id="loginReason" title="描述" name="loginReason" lay-verify="reason"
+                                      placeholder="请输入描述"
+                                      class="layui-textarea">{$self['loginReason']}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">下单提示</label>
+                    <div class="layui-input-block">
+                    <textarea id="fwb-content" title="下单提示" name="fwb-content"
+                              placeholder="下单时提示警告文字"
+                              class="layui-textarea">{$self['fwb-content']}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品数量</label>
+                    <div class="layui-input-block">
+                    <textarea title="商品数量" name="goods_number" style="height: 100px"
+                              placeholder="商品数量"
+                              class="layui-textarea">{$self['goods_number']}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">完善资料</label>
+                    <div class="layui-input-block">
+                    <textarea title="完善资料" name="self_default" style="height: 100px"
+                              placeholder="完善资料"
+                              class="layui-textarea">{$self['self_default']}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">佣金管理</label>
+                    <div class="layui-input-block">
+                    <textarea title="佣金管理" name="self_default" style="height: 100px"
+                              placeholder="佣金管理"
+                              class="layui-textarea">{$self['withdraw']}</textarea>
+                    </div>
+                </div>
+
+                <blockquote class="layui-elem-quote">{}内为变量占位，可以调整位置，但请勿修改，修改后会导致变量无法正常显示
+                </blockquote>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id='submit' class="layui-btn" lay-filter="*" lay-submit>保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="{$src}layui/layui.js"></script>
+<script>
+
+    var urls = {
+        upload: '/admin/system/image', // logo上传地址
+    };
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element', 'upload'], function () {
+
+        var element = layui.element;
+        var form = layui.form;
+        var layer = layui.layer;
+
+        var upload = layui.upload;
+        upload.render({
+            elem: '#upload'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#logoUrl").prop('src', res.image);
+                    $("#logo").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        var loginImage = layui.upload;
+        loginImage.render({
+            elem: '#loginImage'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#loginUrl").prop('src', res.image);
+                    $("#login").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        var regImage = layui.upload;
+        regImage.render({
+            elem: '#regImage'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#regUrl").prop('src', res.image);
+                    $("#reg").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        form.verify({
+
+            reason: function (value, item) {
+                if (!$("#webSwitch").prop('checked') && !value) {
+                    return '请填写关闭网站理由';
+                }
+            }
+        });
+
+        // 监听开关
+        form.on('switch(webSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#webClose').hide();
+                $('#webSwitchValue').prop('value', 'on');
+            } else {
+                $('#webClose').show();
+                $('#webSwitchValue').prop('value', 'off');
+            }
+        });
+
+        // 监听开关
+        form.on('switch(rechargeSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#rechargeSwitchValue').prop('value', 'on');
+            } else {
+                $('#rechargeSwitchValue').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(userRegisterSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#userRegisterSwitch').prop('value', 'on');
+            } else {
+                $('#userRegisterSwitch').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(rechargeGradeSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#rechargeGradeSwitchValue').prop('value', 'on');
+            } else {
+                $('#rechargeGradeSwitchValue').prop('value', 'off');
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

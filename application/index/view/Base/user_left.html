@@ -1,0 +1,28 @@
+<div class="data-left">
+    <ul>
+        <!--class="choice"-->
+        <li>
+            <a href="/user" {if isset($choice) && ($choice == '/user')}class="choice"{/if}>用户中心</a>
+        </li>
+
+        <li>
+            <a href="/data" {if isset($choice) && ($choice == '/data')}class="choice"{/if}>完善资料</a>
+        </li>
+
+        <li>
+            <a href="/change-password" {if isset($choice) && ($choice == '/change-password')}class="choice"{/if}>修改密码</a>
+        </li>
+
+        <li>
+            <a href="/pay-password" {if isset($choice) && ($choice == '/pay-password')}class="choice"{/if}>交易密码</a>
+        </li>
+
+        <li>
+            <a href="/store" {if isset($choice) && ($choice == '/store')}class="choice"{/if}>发货店铺</a>
+        </li>
+
+        <li>
+            <a href="/upgrade" {if isset($choice) && ($choice == '/upgrade')}class="choice"{/if}>升级会员</a>
+        </li>
+    </ul>
+</div>

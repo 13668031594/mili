@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>订单发货</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        body {
+            padding-bottom: 50px;
+        }
+
+        .fixed-bottom {
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            background: #efefef;
+            text-align: center;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">订单管理</a>
+          <a href="javascript:;">{$self['order_number']}</a>
+          <a><cite>发货</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/order/send">
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+
+        <div class="layui-field-box">
+            <table class="layui-table" lay-even>
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                </colgroup>
+                <tbody>
+                <tr>
+                    <td>订单号</td>
+                    <td>{$self["order_number"]}</td>
+                </tr>
+                <tr>
+                    <td>付款状态</td>
+                    <td>
+                        {if $self["pay_status"] != '0'}
+                        <span class="layui-badge-rim">已付款</span>
+                        {else/}
+                        <span class="layui-badge-rim">未付款</span>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>订单状态</td>
+                    <td>
+                        {if $self["order_status"] == '10'}
+                        <span class="layui-badge-rim">待处理</span>
+                        {else/}
+                        <span class="layui-badge-rim">已导出，待发货</span>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>备注</td>
+                    <td>{$self["note"]}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>清单列表</legend>
+            <div class="layui-field-box">
+                <table class="layui-table" lay-size="sm" lay-even>
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>地址</th>
+                        <th>快递</th>
+                        <th>快递号</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 遍历tr标签 -->
+                    {if empty($sends)}
+                    {foreach $express as $k => $v}
+                    <tr>
+                        <td>{$self['order_number']}-{$k+1}</td>
+                        <td>{$v['address']}</td>
+                        <td>{$self['express_name']}</td>
+                        <td><input type="text" name="sendNo[{$k}]" lay-verify='required' class="layui-input" value=""/>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {else/}
+                    {foreach $sends as $k => $v}
+                    <tr>
+                        <td>{$v['send_order']}</td>
+                        <td>{$v['address']}</td>
+                        <td>{$v['express']}</td>
+                        <td><input type="text" name="sendsNo[{$v['id']}]" lay-verify='required' class="layui-input" value=""/>
+                        </td>
+                    </tr>
+                    {/foreach}
+                    {/if}
+
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="fixed-bottom">
+            <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即发货</button>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element']);
+</script>
+</body>
+
+</html>

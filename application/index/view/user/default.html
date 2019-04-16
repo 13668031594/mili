@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+
+        <div class="data-right">
+            <div class="data-right-container container-shadow">
+                <div class="title">完善初始资料</div>
+                <div class="data-content">
+
+                    <form class="layui-form" id="forms" action="/default" method="post">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">头像</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <div class="head-set-out">
+                                    <div class="head-img iconfont icon-touxiang">
+                                        <img src="{$member['cover']}" id="head-url"/>
+                                    </div>
+
+                                    <div class="head-type">
+                                        <div class="head-set">选择头像</div>
+                                        <label class="head-update">
+                                            <input type="file" id="file-img" name="file" value=""/>
+                                            <span>上传头像</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <input id="head" type="hidden" name="cover" value="{$member['cover']}"/>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">昵称</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="text" name="nickname" value="{$member['nickname']}" required
+                                       lay-verify="required"
+                                       placeholder="请输入昵称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">支付宝</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="text" name="bank_no" value="{$member['bank_no']}" required
+                                       lay-verify="required"
+                                       placeholder="请输入支付宝账号" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">收款人姓名</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="text" name="bank_name" value="{$member['bank_name']}" required
+                                       lay-verify="required"
+                                       placeholder="请输入收款人姓名" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">旧交易密码</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="password" name="pass" required lay-verify="required"
+                                       placeholder="若您没有修改过交易密码，既为您的登录密码"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">交易密码</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="password" name="new" required lay-verify="required" placeholder="请输入交易密码"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 110px;">确认交易密码</label>
+                            <div class="layui-input-block" style="margin-left: 140px;">
+                                <input type="password" name="again" required lay-verify="required"
+                                       placeholder="请输入再次输入确认交易密码"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item sub-btn">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn layui-btn-fluid" lay-submit>确认修改</button>
+                            </div>
+                        </div>
+                        <div class="layui-form-item sub-btn">
+                            <div class="layui-input-block">
+                                <div class="user-hint">{php}echo $set['self_default'];{/php}</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="screen"></div>
+
+            <div class="head-choice">
+                <div class="head-choice-title">请选择头像</div>
+
+                <div class="head-choice-content">
+                    <ul class="head-list" id="head-list">
+                        {foreach $covers as $v}
+                        <li id="{$v}">
+                            <img src="{$v}"/>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+
+                <div class="head-choice-btn">
+                    <span class="close">关闭</span>
+                    <span class="sure">确定</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+
+<script src="{$src}js/ajax.js"></script>
+<script>
+    $('.head-set').click(function () {
+        $('.screen').show();
+        $('.head-choice').show();
+    });
+
+    $('#file-img').change(function (event) {
+        //图片预览
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        //console.log('reader',reader);
+
+        //读取文件过程方法
+        /*reader.onloadstart = function (e) {
+            console.log("开始读取....");
+        };
+        reader.onprogress = function (e) {
+            console.log("正在读取中....");
+        };
+        reader.onabort = function (e) {
+            console.log("中断读取....");
+        };
+        reader.onerror = function (e) {
+            console.log("读取异常....");
+        };*/
+        reader.onload = function (e) {
+            //console.log("成功读取....");
+            //console.log('e:',e);
+
+            //给Img赋值图片路径
+            $('#head-url').prop('src', e.target.result);
+        };
+
+        reader.readAsDataURL(file);
+
+        $('#head').val('');
+    });
+
+    var id = '';
+    var url = '';
+
+    $('#head-list li').click(function () {
+        $('#head-list li').each(function () {
+            if ($(this).hasClass('choice-head')) {
+                $(this).removeClass('choice-head');
+            }
+        });
+        $(this).addClass('choice-head');
+        id = $(this).prop('id');
+        url = $(this).find('img').eq(0).prop('src');
+    });
+
+    //确认
+    $('.sure').click(function () {
+        if (id != '' && url != '') {
+            $('#head-list li').each(function () {
+                if ($(this).hasClass('choice-head')) {
+                    $(this).removeClass('choice-head');
+                }
+            });
+            $('#head').val(id);
+            $('#head-url').prop('src', url);
+            $('.screen').hide();
+            $('.head-choice').hide();
+            $('#file-img').val('');
+        } else {
+            layer.alert('请先选择头像再确认');
+        }
+    });
+
+    //关闭
+    $('.close').click(function () {
+        $('#head-list li').each(function () {
+            if ($(this).hasClass('choice-head')) {
+                $(this).removeClass('choice-head');
+            }
+        });
+        id = '';
+        url = '';
+        $('.screen').hide();
+        $('.head-choice').hide();
+    });
+</script>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+    <style type="text/css">
+        .images-item {
+            height: 212px;
+            width: 212px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .images-item-img {
+
+            vertical-align: middle;
+            height: 200px;
+            width: 200px;
+            border: #ccc solid 1px;
+            padding: 5px;
+            display: table-cell;
+
+        }
+
+        .images-item-img img {
+
+            max-width: 200px;
+            height: auto;
+        }
+
+        .images-item .layui-block {
+            margin-bottom: 10px;
+        }
+
+        /* 图片的背景层 */
+        .images-bg {
+            position: absolute;
+            height: 212px;
+            width: 212px;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .images-button-container {
+            position: absolute;
+            z-index: 11;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100px;
+            height: 80px;
+            margin: auto;
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+            <a href="javascript:;">商品管理</a>
+          <a href="javascript:;">商品列表</a>
+          <a><cite>{if isset($self)}编辑{else/}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/goods/save" method="post">
+
+        {if isset($self)}
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        {/if}
+
+        <!-- 图片的id们 -->
+        <div id="albumId">
+            <!--<input type='hidden' name='imageId[]' id='imageId' value=''/>-->
+        </div>
+
+        <div class="layui-form-min">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品分类</label>
+                <div class="layui-input-inline">
+                    <select name="goods_class" lay-verify="">
+                        {foreach $goods_class as $k => $v}
+                        <option value="{$k}" {if isset($self) && ($self[
+                        'goods_class_id'] == $k)}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">商品所在分类</div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品名字</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" placeholder="商品名称" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品编号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" placeholder="商品编号" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["code"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品重量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="weight" placeholder="商品重量" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["weight"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品描述</label>
+                <div class="layui-input-block">
+                <textarea type="text" name="describe" lay-verify="required" placeholder="商品描述" autocomplete="off"
+                          class="layui-textarea" maxlength="60">{if isset($self)}{$self["describe"]}{/if}</textarea>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">单价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="amount" lay-verify="required|number" placeholder="商品单价" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["amount"]}{else/}0{/if}' maxlength="60"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">每单数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="express_number" lay-verify="required|number" placeholder="商品单价" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["express_number"]}{else/}5{/if}' maxlength="60"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sort" lay-verify="required" placeholder="商品排序" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="60"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" lay-filter="show"
+                           lay-skin="switch"
+                           lay-text="上架|未上架" {if isset($self) && ($self['status'] == 'on')}checked{/if}/>
+                    <!-- 显示开关 嵌套填充 -->
+                    <input type="hidden" id='show' name="status"
+                           value="{if isset($self) && ($self['status'] == 'on')}on{else}off{/if}"/>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <blockquote class="layui-elem-quote">商品相册图片最多增加4张</blockquote>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a href="javascript:;" id="addGoodsImage" class="layui-btn layui-btn-sm layui-btn-primary"><i
+                        class="layui-icon layui-icon-add-1"></i> 新增图片</a>
+            </div>
+        </div>
+        <!-- 隐藏的上传 -->
+        <button type="button" id="upload"
+                class="layui-btn layui-btn-primary layui-btn-xs images-item-button layui-hide">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+        </button>
+
+        <div id="defaultImage" class="layui-inline">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span>封面预览</span></label>
+                <div class="images-item">
+                    <div class="images-bg"></div>
+                    <div class="images-item-img">
+                        <img class="images-preview" src="{if isset($self)}{$self['location']}{/if}"/>
+                    </div>
+                    <div class="images-button-container">
+                        <div>
+                            <button type="button" data-id="0"
+                                    onclick="javascript:clickUpload(this);"
+                                    class="layui-btn layui-btn-primary layui-btn-xs images-item-button">
+                                <i class="layui-icon">&#xe67c;</i>上传
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" data-id="0"
+                                    class="layui-btn layui-btn-xs layui-btn-danger uploadDelete"
+                                    style="display:none;margin-top:10px;"
+                                    onclick="javascript:removeImage(this)">
+                                <i class="layui-icon layui-icon-delete"></i>删除
+                            </button>
+                        </div>
+                    </div>
+                    {if isset($self)}
+                    <input type='hidden' name='imageId[]' value='{$self["cover"]}'/>
+                    {else}
+                    <input type='hidden' name='imageId[]' value=''/>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        <div id="extendImages">
+        {if isset($self)}
+            {foreach $images as $k => $v}
+            <div class="layui-inline">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span>预览</span></label>
+                    <div class="images-item">
+                        <div class="images-bg"></div>
+                        <div class="images-item-img">
+                            <img class="images-preview" src="{$v['location']}"/>
+                        </div>
+                        <div class="images-button-container">
+                            <div>
+                                <button type="button" data-id="{$k}"
+                                        onclick="javascript:clickUpload(this);"
+                                        class="layui-btn layui-btn-primary layui-btn-xs images-item-button">
+                                    <i class="layui-icon">&#xe67c;</i>上传
+                                </button>
+                            </div>
+                            <div>
+                                <button type="button"
+                                        class="layui-btn layui-btn-xs layui-btn-danger uploadDelete"
+                                        style="margin-top:10px;"
+                                        onclick="javascript:removeImage(this)">
+                                    <i class="layui-icon layui-icon-delete"></i>删除
+                                </button>
+                            </div>
+                        </div>
+                        <input type='hidden' name='imageId[]' value='{$v["id"]}'/>
+                    </div>
+                </div>
+            </div>
+            {/foreach}
+        {/if}
+        </div>
+        <hr>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品详情</label>
+            <div class="layui-input-block">
+                <textarea id="fwb-content" name="fwb-content" placeholder="描述"
+                          autocomplete="off"
+                          class="layui-textarea" maxlength="60">{if isset($self)}{$content['content']}{/if}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    var urls = {
+        upload: '/admin/goods/image',
+        delete: '/'
+    }
+
+    // 上传序号
+    var imageIndex = 0;
+    // 相册最大数量
+    var maxAlbum = 4;
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'upload', 'form'], function () {
+        var upload = layui.upload;
+        var form = layui.form;
+
+        var uploadPms = {
+            elem: '#upload'
+            , url: urls.upload
+            //, multiple: true
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , data: { // 动态参数
+                index: function () {
+                    return imageIndex;
+                }
+            }
+            , done: function (res, index, upload) {
+                //console.log(index);
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 *      index : 0 图片序号，我会传一个index给你，你原路返回给我
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $(".images-preview").eq(res.index).prop('src', res.image);
+                    $("input[name='imageId[]']").eq(res.index).prop('value', res.imageId);
+
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        };
+
+        upload.render(uploadPms);
+
+        form.on('switch(show)', function (data) {
+            if (data.elem.checked) {
+                $('#show').prop('value', 'on');
+            } else {
+                $('#show').prop('value', 'off');
+            }
+        });
+
+        // 新增一个图片
+        $("#addGoodsImage").on('click', function () {
+            if ($("#extendImages .layui-inline").length == maxAlbum) {
+                layer.msg('最多只能增加' + maxAlbum + '张图片');
+                return false;
+            }
+            $("#extendImages").append($("#defaultImage").clone().prop('id', ''));
+            $("#extendImages .layui-inline:last").find('span').html("预览");
+            $("#extendImages .layui-inline:last").find('button').data("id", $("#extendImages .layui-inline").length);
+            $("#extendImages .layui-inline:last").find('img').prop('src', '');
+            $("#extendImages .layui-inline:last").find('input').prop('value', '');
+            $("#extendImages .layui-inline:last").find('.uploadDelete').show();
+        });
+
+
+    });
+
+
+    // 触发上传
+    function clickUpload(obj) {
+        imageIndex = $(obj).data('id');
+        $("#upload").click();
+    }
+
+
+    // 移除相册图片
+    function removeImage(obj) {
+
+        $(obj).parents('.layui-inline').remove();
+        // 刷新
+        $("#extendImages .layui-inline").each(function (i) {
+            $(this).find('button').data('id', i + 1);
+        });
+    }
+
+
+</script>
+</body>
+
+</html>

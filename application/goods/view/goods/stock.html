@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品库存</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">商品管理</a>
+          <a href="javascript:;">{$self['name']}</a>
+          <a><cite>库存管理</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/goods/stock">
+        <div class="layui-row">
+            <div class="layui-col-sm5">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="200">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td>商品名字</td>
+                        <td>{$self['name']}</td>
+                    </tr>
+                    <tr>
+                        <td>商品编号</td>
+                        <td>{$self['code']}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            {if $self['status'] == 'on'}
+                            <span class="layui-badge layui-bg-green">已上架</span>
+                            {else/}
+                            <span class="layui-badge layui-bg-gray">未上架</span>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>当前库存</td>
+                        <td>{$self['stock']} <a href=/admin/goods/record?id={$self['id']}" class="layui-btn layui-btn-primary layui-btn-xs">查看</a></td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$self['created_at']}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-col-sm7 layui-anim layui-anim-upbit">
+                <div style="max-width:400px;margin-top:10px;">
+
+                    <!-- 编辑时写入id -->
+                    <input type="hidden" id="id" name="id" value="{$self['id']}"/>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作类型</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="type" value="1" title="入库" checked>
+                            <input type="radio" name="type" value="2" title="出库">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数量</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="number" required title="数量" lay-verify="required|number"
+                                   placeholder="请输入数量"
+                                   autocomplete="off" class="layui-input" value='0'/>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
+                            <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element']);
+</script>
+</body>
+</html>

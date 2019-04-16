@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>会员列表</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+    <style type="text/css">
+        .layui-btn + .layui-btn {
+            margin-left: 2px;
+        }
+    </style>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a><cite>会员列表</cite></a>
+        </span>
+    </div>
+
+    <div class="toolTable">
+
+        <button class="layui-btn layui-btn-sm" data-type="addData">
+            <i class="layui-icon">&#xe654;</i>添加会员
+        </button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
+            <i class="layui-icon ">&#xe640;</i>批量删除
+        </button>
+
+        <form class="layui-form layui-inline layui-form-query">
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="grade" lay-verify="" style="height:30px;">
+                    <option value="">全部</option>
+                    {foreach $grade as $k => $v}
+                    <option value="{$k}">{$v}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name='account' placeholder="请输入账号或手机号" class="layui-input layui-input-mid"/>
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="query">
+                    <i class="layui-icon ">&#xe615;</i>搜索
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+    <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
+    </table>
+</div>
+
+<script src="{$src}layui/layui.js"></script>
+
+<script type="text/html" id="tableTool">
+
+    <a class="layui-btn layui-btn-primary layui-btn-xs" href="/admin/store/index?member_id={{d.id}}">店铺</a>
+    <!--<i class="layui-icon layui-icon-rmb"></i>-->
+    <a class="layui-btn layui-btn-xs layui-btn-normal" href="/admin/member/wallet?id={{d.id}}">钱包</a>
+    <!--<i class="layui-icon layui-icon-edit"></i>-->
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <!--<i class="layui-icon layui-icon-user"></i>-->
+    <a class="layui-btn layui-btn-xs layui-bg-cyan" href="/admin/member/team?id={{d.id}}">团队</a>
+    <!-- <i class="layui-icon layui-icon-form"></i> -->
+
+</script>
+
+<script type="text/html" id="userStatus">
+    {{# if d.status == 0 { }}
+    <span class="layui-badge layui-bg-green">正常</span>
+    {{# }else if( d.status == 1) { }}
+    <span class="layui-badge layui-bg-green">冻结</span>
+    {{# else{ }}
+    <span class="layui-badge layui-bg-green">停用</span>
+    {{# } }}
+</script>
+
+
+<script>
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['layer', 'mTable', 'jquery', 'element'], function () {
+
+        var layer = layui.layer;
+        var mTable = layui.mTable;
+
+        mTable.init({
+            url: {
+                del: '/admin/member/delete',
+                table: '/admin/member/table',
+                edit: '/admin/member/edit',
+                add: '/admin/member/create'
+            },
+            cols: [[
+                {field: 'id', width: 50, type: 'checkbox'},
+                {
+                    field: 'status', width: 70, title: '状态', templet: function (d) {
+                    if (d.status == 0) {
+                        return '<span class="layui-badge layui-bg-green">正常</span>'
+                    } else if (d.status == 1) {
+                        return '<span class="layui-badge layui-bg-orange">冻结</span>';
+                    } else {
+                        return '<span class="layui-badge layui-bg-red">停用</span>';
+                    }
+                }
+                },
+                {field: 'grade_name', width: 100, title: '身份'},
+                {field: 'account', width: 150, title: '账号'},
+                {field: 'phone', width: 120, title: '手机'},
+                {field: 'nickname', width: 130, title: '昵称'},
+                {field: 'remind', width: 100, title: '余额', sort: true},
+                {field: 'commis', width: 100, title: '佣金', sort: true},
+                {field: 'recharge', width: 100, title: '累计充值', sort: true},
+                {field: 'created_at', minWidth: 170, title: '注册时间'},
+                {fixed: 'right', title: '操作', width: 210, align: 'center', toolbar: '#tableTool'}
+            ]]
+        });
+        mTable.render();
+    });
+</script>
+</body>
+
+</html>

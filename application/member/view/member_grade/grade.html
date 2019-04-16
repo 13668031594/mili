@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>等级信息</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">会员管理</a>
+          <a href="javascript:;">等级管理</a>
+          <a><cite>{if isset($self)}编辑{else/}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/member_grade/save">
+        {if isset($self)}
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        {/if}
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">等级名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" placeholder="等级名称" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                 <label class="layui-form-label">快递费</label>
+                 <div class="layui-input-inline">
+                     <input type="text" name="amount" lay-verify="number" placeholder="快递费" autocomplete="off"
+                            class="layui-input" value='0' maxlength="10"/>
+                 </div>
+                 <div class="layui-form-mid layui-word-aux">普通会员快递费</div>
+             </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="sort" lay-verify="number" placeholder="排序" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="3"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">影响前台的显示顺序</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">充值升级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="recharge" lay-verify="number" placeholder="充值升级" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["recharge"]}{else/}100{/if}'
+                           maxlength="9"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">会员充值达到该值时，自动升级为当前等级。</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">购买升级</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="buy_total" lay-verify="number" placeholder="购买升级" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["buy_total"]}{else/}100{/if}'
+                           maxlength="9"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">可以直接支付此数值的金额，成为会员</div>
+            </div>
+        </div>
+        <hr>
+        <div class="layui-form-item">
+            <label class="layui-form-label">统一模式</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-filter="show"
+                       lay-skin="switch"
+                       lay-text="开启|关闭" {if !isset($self) || $self["mode"] == "on"}checked{/if}/>
+                <!-- 显示开关 嵌套填充 -->
+                <input type="hidden" id='show' name="mode"
+                       value='{if !isset($self) || $self["mode"] == "on"}on{else}off{/if}'/>
+            </div>
+        </div>
+        <!-- mode1 统一模式，所有快递统一价格 mode2 独立模式，所有快递单独设置价格 -->
+        <div id="mode1" class="layui-form-min" {if isset($self) && ($self[
+        "mode"] == "off")}style="display:none"{/if}>
+        <div class="layui-form-item">
+            <label class="layui-form-label">快递费</label>
+            <div class="layui-input-inline">
+                <input type="text" name="amount" lay-verify="number" placeholder="快递费" autocomplete="off"
+                       class="layui-input" value='{if isset($self)}{$self["amount"]}{else}0{/if}' maxlength="10"/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">所有快递统一价格</div>
+        </div>
+</div>
+<div id='mode2' class="layui-form-min" {if !isset($self) || $self[
+"mode"] == "on"}style="display:none"{/if}>
+{foreach $express as $k => $v}
+<div class="layui-form-item">
+    <label class="layui-form-label">{$v}</label>
+    <div class="layui-input-inline">
+        <input type="text" name="expressAmount[{$k}][amount]" lay-verify="" placeholder="快递费" autocomplete="off"
+               class="layui-input expressAmount"
+               value='{if isset($amount) && isset($amount[$k])}{$amount[$k]}{else/}0{/if}' maxlength="10"/>
+        <input type="hidden" name="expressAmount[{$k}][id]" value="{$k}">
+        <input type="hidden" name="expressAmount[{$k}][name]" value="{$v}">
+    </div>
+</div>
+{/foreach}
+</div>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+        <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+    </div>
+</div>
+</form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'form'], function () {
+        var form = layui.form;
+        form.on('switch(show)', function (data) {
+            if (data.elem.checked) {
+                $('#show').prop('value', 'on');
+                $("#mode1").show();
+                $("#mode2").hide();
+                $(".expressAmount").each(function (i) {
+                    //console.log('on',i) ;
+                    $(this).attr('lay-verify', '');
+                });
+            } else {
+                $('#show').prop('value', 'off');
+                $("#mode1").hide();
+                $("#mode2").show();
+                $(".expressAmount").each(function (i) {
+                    //console.log('close',i) ;
+                    $(this).attr('lay-verify', 'number');
+                });
+            }
+        });
+    }); //加载入口
+</script>
+</body>
+</html>

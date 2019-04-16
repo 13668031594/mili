@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="content-left">
+        <!-- 轮播 -->
+        <div class="content-left-shuffling">
+            <div class="layui-carousel" id="carousel" lay-filter="test1">
+                <div carousel-item>
+                    {foreach $banner as $v}
+                    <div class="carousel-item">
+                        <a href="{$v['link']}">
+                        <img src="{$v['location']}" alt="$v['title']"/>
+                        </a>
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+
+        <!-- 广告 -->
+        <div class="content-quick">
+            <ul>
+                {foreach $adv as $k => $v}
+                <li>
+                    <a href="{$v['link']}" {if $k !=0}style="border-left: 1px solid #f4f4f4;"{/if}>
+                    <img src="{$v['location']}"/>
+                    </a>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="content-right">
+        <!-- 登录信息显示 -->
+        <div class="content-right-login" style="overflow:hidden;">
+            {if is_null($member)}
+                <div class="c-login-head">
+                    <div class="iconfont icon-icontouxiang"></div>
+                </div>
+                <p>Hi,你还没有登录哦~</p>
+                <div class="c-login-btn">
+                    <a href="/login" class="c-login-l">立即登录</a>
+                    <a href="/reg" class="c-login-r">免费注册</a>
+                </div>
+            {else/}
+                <div class="right-login-head">
+                    <div class="iconfont icon-touxiang"><img src="{$member['cover']}"/></div>
+                </div>
+
+                <div class="right-login-info" style="width:140px; margin-top: 50px;">
+                    <p class="info-nickname">Hi~亲爱的{$member['nickname']}</p>
+                    <p class="info-text">欢迎使用{$set['webName']}</p>
+                    <div class="info-commission">
+                        <span>佣金：<span>{$member['commis']}</span></span>
+                    </div>
+                    <div class="info-num">
+                        <span>余额：<span>{$member['remind']}</span></span>
+                    </div>
+                    <div class="info-btn">
+                        <a href="/recharge">充值</a>
+                    </div>
+                </div>
+            {/if}
+        </div>
+
+        <!-- 公告 -->
+        <div class="content-notice">
+            <div class="c-notice-title">
+                <span>最新公告</span>
+                <a href="/notice">更多></a>
+            </div>
+
+            <ul class="c-notice-list">
+                {foreach $notice as $k => $v}
+                <li><a href="/notice/{$k}">{$v}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 文章 -->
+<div class="article-top">
+    <span>文章</span>
+    <a href="/article">查看更多</a>
+</div>
+<ul class="article">
+    {foreach $article as $v}
+    <li>
+        {foreach $v as $va}
+    <!--    <a href="/article-info/{$va['id']}" title="{$va['title']}">
+            <h3>{$va['title']}</h3>
+            <p class="article-text">{$va['describe']}</p>
+            <p>{$va['created_at']}</p>
+        </a>-->
+        <a href="/article-info/{$va['id']}" title="{$va['title']}">
+            <h3>{$va['title']}</h3>
+            <p class="article-time"><span>作者：{$va['author']}</span><span>{$va['created_at']}</span></p>
+            <p class="article-text">{$va['describe']}</p>
+        </a>
+        {/foreach}
+    </li>
+    {/foreach}
+  
+  	<!--<li>
+        <a href="article-info.html" title="">
+          <h3>文章标题</h3>
+          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
+          <p class="article-text">文章内容</p>
+        </a>
+
+        <a href="article-info.html" title="">
+          <h3>文章标题</h3>
+          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
+          <p class="article-text">文章内容</p>
+        </a>
+
+        <a href="article-info.html" title="">
+          <h3>文章标题</h3>
+          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
+          <p class="article-text">文章内容</p>
+        </a>
+    </li>-->
+</ul>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script src="{$src}js/layui-v2.4.5/layui/layui.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'carousel'], function () {
+        var layer = layui.layer;
+        var carousel = layui.carousel;
+
+        //建造实例
+        carousel.render({
+            elem: '#carousel',
+            width: '100%', //设置容器宽度
+            arrow: 'hover', //悬停显示箭头
+            interval: 3000, //切换时间间隔
+            //,anim: 'updown' //切换动画方式
+        });
+    });
+</script>
+</html>

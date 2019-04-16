@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>头像</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+    <style type="text/css">
+        .images-item {
+            height: 112px;
+            width: 112px;
+            display: inline-block;
+        }
+
+        .images-item-img {
+            vertical-align: middle;
+            height: 100px;
+            width: 100px;
+            border: #ccc solid 1px;
+            padding: 5px;
+            display: table-cell;
+
+        }
+
+        .images-item-img img {
+
+            max-width: 100px;
+            height: auto;
+        }
+
+        .images-item .layui-block {
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+            <a href="javascript:;">头像列表</a>
+          <a><cite>{if isset($self)}编辑{else/}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form layui-form-min" action="/admin/avatar/save">
+
+        <input type='hidden' name='id' id='id' value='{if isset($self)}{$self["id"]}{/if}'/>
+        <!-- 图片的id -->
+        <input type='hidden' name='imageId' id='imageId' value='{if isset($self)}{$self["image"]}{/if}'/>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="required" placeholder="描述" autocomplete="off"
+                       class="layui-input" value='{if isset($self)}{$self["title"]}{/if}' maxlength="20"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sort" class="layui-input" lay-verify="number" value="{if isset($self)}{$self["sort"]}{else/}50{/if}" />
+            </div>
+            <div class="layui-form-mid layui-word-aux">影响前台排序显示</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-filter="show"
+                       lay-skin="switch"
+                       lay-text="开启|关闭" {if !isset($self) || $self['show'] == 'on'}checked{/if}/>
+                <!-- 显示开关 嵌套填充 -->
+                <input type="hidden" id='show' name="show" value="{if !isset($self) || $self['show'] == 'on'}on{else/}off{/if}"/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">预览</label>
+            <div class="images-item">
+                <div class="images-item-img">
+                    <img id="img" src='{if isset($self)}{$self["location"]}{/if}'/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block"><div class="layui-input-mid layui-word-aux">最佳尺寸：100x100</div></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">操作</label>
+
+            <!-- 没有图片id 就显示上传按钮 否则显示删除按钮 <button> 内增加 style='display:none' 隐藏  -->
+            <button type="button" id="upload" class="layui-btn layui-btn-primary layui-btn-sm imagesItemButton">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+
+            <button type="button" id="uploadDelete" class="layui-btn layui-btn-sm layui-btn-danger"
+                    style="display:none;">
+                <i class="layui-icon layui-icon-delete"></i>删除
+            </button>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    var urls = {
+        upload: '/admin/avatar/image',
+    }
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'upload', 'form'], function () {
+        var upload = layui.upload;
+        var form = layui.form;
+        upload.render({
+            elem: '#upload'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#img").prop('src', res.image);
+                    $("#imageId").prop('value', res.imageId);
+                } else {
+                    layer.msg('上传失败');
+                    //uploadMode();
+                }
+            }
+        });
+
+        form.on('switch(show)', function (data) {
+            if (data.elem.checked) {
+                $('#show').prop('value', 'on');
+            } else {
+                $('#show').prop('value', 'off');
+            }
+        });
+    });
+
+    $("#uploadDelete").on('click', function () {
+
+        var imageId = $("#imageId").val();
+
+        if (!imageId) {
+            layer.msg('删除失败，请刷新重试');
+            return false;
+        }
+
+        $.getJSON(urls.upload, {id: imageId}, function (data) {
+
+            if (data.status == 'success') {
+                uploadMode();
+            } else {
+                layer.msg(data.message);
+            }
+        });
+    });
+
+    function uploadMode() {
+        $("#uploadDelete").hide();
+        $("#upload").show();
+        $("#imageId").prop('value', "");
+        $("#img").prop('src', '');
+    }
+
+    function deleteMode(res) {
+        $("#img").src = res.image;
+        $("#uploadDelete").show();
+        $("#upload").hide();
+        $("#imageId").prop('value', res.imageId);
+    }
+</script>
+</body>
+
+</html>

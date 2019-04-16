@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f6f6f6;">
+{include file="index@Base/top"}
+
+
+<!-- 中 -->
+<div class="goods">
+    <div class="goodsFilterOut">
+        <div class="goodsFilter">
+            <!-- 商品筛选 -->
+            <div class="filterItem" style="border-top: none;">
+                <!--<div class="filterItem-title">分类：</div>-->
+                <ul class="filterItem-content">
+                    {foreach $class as $k => $v}
+                    <li>
+                        <!-- 选中添加class="choice" -->
+                        {if $goodsClass == $k}
+                        <a href="/goods?goodsName={$goodsName}" class="choice">{$v}</a>
+                        {else/}
+                        <a href="/goods?goodsClass={$k}&goodsName={$goodsName}">{$v}</a>
+                        {/if}
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentOut" style="padding-top: 10px;">
+        <!-- 中心内容 -->
+        <div id="content">
+            <!-- 商品显示 -->
+            <div class="goodsShow">
+                <div class="goodsOut" id="goods" style="overflow: hidden; padding-top: 15px;">
+                    <!--<a href="order.html" class="goodsCell" title="" target="_Blank">
+                        <img class="goodsImg" src="" alt="图片"/>
+                        <p class="goodsTitle">水电费</p>
+                        <p class="goodsText">编号：3215</p>
+                        <p class="goodsPrice">价格：<span class="yen">324</span></p>
+                    </a>-->
+
+                    <!--<div class="haveNotGoods">-&#45;&#45; 暂无商品 -&#45;&#45;</div>-->
+
+                    <!--<div class="clear"></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'flow'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var flow = layui.flow;
+        var limit = 20;
+
+        flow.load({
+            elem: '#goods', //指定列表容器
+            end: '<div style="width: 100%; padding-top: 20px; font-size: 14px; text-align:center; color: gray; float:left;">没有更多了</div>',
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('/goods-table?goodsName={$goodsName}&goodsClass={$goodsClass}&limit=' + limit + '&page=' + page, function (res) {
+                    if (res && res.status == 'success') {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.message, function (index, item) {
+                            var itemString = '<a href="/order?goodsId=' + item.id + '" class="goodsCell" title="' + item.name + '" target="_Blank">';
+                                itemString += '<span class="selected" href="/order?goodsId=' + item.id + '" title="' + item.name + '" target="_Blank">选购礼品</span>';
+                                itemString += '<img class="goodsImg" src="' + item.location + '" alt="商品图片"/>';
+                                itemString += '<p class="goodsTitle">' + item.name + '</p>';
+                                itemString += '<p class="goodsText">礼品重量：' + item.weight + '</p>';
+                                itemString += '<p class="goodsPrice">价格：<span class="yen">' + item.amount + '</span></p></a>';
+
+                            lis.push(itemString);
+                        });
+
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < (Number(res.total) / limit));
+                    } else {
+                        layer.alert(resp.message);
+                    }
+                });
+            }
+        });
+    });
+</script>
+</html>

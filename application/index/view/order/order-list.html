@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content" style="overflow: visible;">
+    <div class="table">
+        <div class="content-title">
+            <span>订单清单</span>
+        </div>
+
+        <table class="layui-hide" id="table" lay-filter="data"></table>
+    </div>
+</div>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script>
+    layui.use(['layer', 'table'], function(){
+        var table = layui.table;
+        var layer = layui.layer;
+
+        table.render({
+            elem: '#table',
+            url:'/order-table?id={$id}',
+            parseData: function(res){
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+            autoSort: false,
+//            toolbar: '#toolbar',
+            defaultToolbar: ['exports'],
+            cols: [[
+                {field: 'send_order', width: 170, title: '发货编号'},
+                {field: 'store', width: 100, title: '店铺'},
+                {field: 'express', title: '快递', width: 100 },
+                {field: 'order_number', title: '订单号',width: 100 },
+                {field: 'express_no', title: '快递单',width: 100 },
+                {field: 'goods', title: '宝贝名称',width: 100 },
+                {field: 'consignee', title: '收件人',width: 100 },
+                {field: 'phone', title: '电话',width: 120 },
+                {field: 'address', title: '地址',width: 100 },
+                {field: 'send_create',minWidth: 170,  title: '发货时间'},
+                //{field: 'created_at',minWidth: 170,  title: '下单时间'},
+                //{fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#tableTool'}
+            ]],
+            page: true,
+            limit: 10,
+        });
+    });
+</script>
+</html>
