@@ -111,7 +111,7 @@ class UserController extends \app\http\controller\IndexController
         $class->validator_sms_reset($member['phone'], $time);
 
         //发送
-        $end = $class->send_sms($member['phone'], $time, 'SMS_151990937');
+        $end = $class->send_sms($member['phone'], $time, '『交易密码找回』');
 
         //反馈
         return parent::success('', '发送成功', ['time' => $end]);

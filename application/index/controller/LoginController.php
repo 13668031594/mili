@@ -114,7 +114,7 @@ class LoginController extends \app\http\controller\IndexController
         $this->class->validator_sms_reset($phone, $time);
 
         //发送
-        $end = $this->class->send_sms($phone, $time, 'SMS_151773748');
+        $end = $this->class->send_sms($phone, $time, '『密码找回』');
 
         //反馈
         return parent::success('', '发送成功', ['time' => $end]);

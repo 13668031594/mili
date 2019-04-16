@@ -284,7 +284,7 @@ class LoginClass extends IndexClass
      * @param string $templateCode
      * @return int
      */
-    public function send_sms($phone, $time, $templateCode = 'SMS_151773743')
+    public function send_sms($phone, $time, $templateCode = '『账号注册』')
     {
         //初始化短信类
         $class = new \classes\vendor\SmsClass();

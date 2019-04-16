@@ -15,7 +15,7 @@ class SmsClass extends FirstClass
     private $helper;
     private $accessKeyId = 'LTAIMrTjpA02EVFF';
     private $accessKeySecret = '9xeqrtNFZVGpgyr8DMa5YquiFMZ5lR';
-    private $signName = '5A电商网';
+    private $signName = '米礼网';
     public $TemplateParam = null;
 
     public function __construct()
@@ -44,11 +44,13 @@ class SmsClass extends FirstClass
         $params["SignName"] = $this->signName;
 
         // fixme 必填: 短信模板Code，应严格按"模板CODE"填写, 请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/template
-        $params["TemplateCode"] = $templateCode;
+//        $params["TemplateCode"] = $templateCode;
+        $params["TemplateCode"] = 'SMS_67960044';
 
         // fixme 可选: 设置模板参数, 假如模板中存在变量需要替换则为必填项
         $params['TemplateParam'] = is_null($this->TemplateParam) ? Array(
             "code" => $code,
+            "product" => $templateCode,
         ) : $this->TemplateParam;
 
         // fixme 可选: 设置发送短信流水号
