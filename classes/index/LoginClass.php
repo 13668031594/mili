@@ -75,7 +75,7 @@ class LoginClass extends IndexClass
         $session = [
             'id' => $member->id,//管理员id
             'time' => time() + config('young.index_login_time'),//登录持续时间
-            'login_ass' => md5(time() . random_bytes(3))//登录密钥
+            'login_ass' => md5(time()  . rand(100,999))//登录密钥
         ];
 
         session('member', $session);//保存登录信息
