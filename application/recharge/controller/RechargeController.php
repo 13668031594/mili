@@ -4,6 +4,7 @@ namespace app\recharge\controller;
 
 use app\http\controller\AdminController;
 use classes\recharge\RechargeClass;
+use think\Db;
 use think\Request;
 
 class RechargeController extends AdminController
@@ -34,7 +35,11 @@ class RechargeController extends AdminController
 
     public function getStatus(Request $request)
     {
+        Db::startTrans();
+
         $this->class->status($request);
+
+        Db::commit();
 
         return parent::success('/admin/recharge/index');
     }

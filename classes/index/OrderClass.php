@@ -338,6 +338,9 @@ class OrderClass extends \classes\IndexClass
             } else if ($extension == 'xls') {
                 $objReader = \PHPExcel_IOFactory::createReader('Excel5');
                 $objPHPExcel = $objReader->load($filename);
+            } else if ($extension == 'csv') {
+                $objReader = \PHPExcel_IOFactory::createReader('CSV');
+                $objPHPExcel = $objReader->load($filename);
             } else {
                 unlink($filename);
                 parent::ajax_exception(000, '请上传excel格式的文件!');

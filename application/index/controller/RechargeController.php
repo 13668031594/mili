@@ -27,7 +27,8 @@ class RechargeController extends \app\http\controller\IndexController
     public function getRecharge()
     {
         $result = [
-            'choice' => '/recharge'
+            'choice' => '/recharge',
+            'order' => $this->class->order()
         ];
 
         return parent::view('recharge', $result);
@@ -52,7 +53,7 @@ class RechargeController extends \app\http\controller\IndexController
             'choice' => '/recharge-note'
         ];
 
-        return parent::view('recharge-note',$result);
+        return parent::view('recharge-note', $result);
     }
 
     //充值记录数据
@@ -80,7 +81,7 @@ class RechargeController extends \app\http\controller\IndexController
             'choice' => '/expense-note'
         ];
 
-        return parent::view('expense-note',$result);
+        return parent::view('expense-note', $result);
     }
 
     //余额记录数据

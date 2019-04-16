@@ -31,6 +31,7 @@
             <ul class="layui-tab-title">
                 <li class="layui-this">基础设置</li>
                 <li>充值设置</li>
+                <li>收款设置</li>
                 <li>登录注册</li>
                 <li>提示文字</li>
                 <!--<li>提现转账</li>-->
@@ -187,6 +188,59 @@
                         <div class="layui-form-mid layui-word-aux">充值金额必须为此数的整数倍</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="layui-tab-item">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收款人姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="rechargeMan" lay-verify="required" title="收款人姓名"
+                               placeholder="收款人姓名" autocomplete="off" value="{$self['rechargeMan']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">前台显示的收款人姓名</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收款人卡号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="rechargeNo" lay-verify="required" title="收款人卡号"
+                               placeholder="收款人卡号" autocomplete="off" value="{$self['rechargeNo']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">前台显示的收款人卡号</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收款人银行</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="rechargeBank" lay-verify="required" title="收款人银行"
+                               placeholder="收款人银行" autocomplete="off" value="{$self['rechargeBank']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">前台显示的收款人银行</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">收款开户行</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="rechargeAddress" lay-verify="required" title="收款开户行"
+                               placeholder="收款开户行" autocomplete="off" value="{$self['rechargeAddress']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">前台显示的收款开户行</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">审核提示</label>
+                    <div class="layui-input-block">
+                            <textarea title="审核提示" name="rechargeAudit" lay-verify="reason"
+                                      placeholder="请输入审核提示"
+                                      class="layui-textarea">{$self['rechargeAudit']}</textarea>
+                    </div>
+                </div>
+
             </div>
 
             <div class="layui-tab-item">

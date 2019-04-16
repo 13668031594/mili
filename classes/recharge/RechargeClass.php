@@ -9,6 +9,7 @@
 namespace classes\recharge;
 
 
+use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
 use app\recharge\model\RechargeModel;
@@ -32,7 +33,9 @@ class RechargeClass extends AdminClass
 
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
-        $account = $request->get('account');
+        $status = $request->get('status');
+        $keyword = $request->get('keyword');
+        $keywordType = $request->get('keywordType');
 
         if (!empty($startTime)) {
             $where[] = ['created_at', '>=', $startTime];
@@ -40,9 +43,22 @@ class RechargeClass extends AdminClass
         if (!empty($endTime)) {
             $where[] = ['created_at', '<', $endTime];
         }
-        if (!empty($account)) {
-            $where[] = ['member_account|member_phone', 'like', '%' . $account . '%'];
+        if (!empty($keyword)) {
+            switch ($keywordType) {
+                case '0':
+                    $where[] = ['member_account|member_phone', 'like', '%' . $keyword . '%'];
+                    break;
+                case '1':
+                    $where[] = ['order_number', 'like', '%' . $keyword . '%'];
+                    break;
+                default:
+                    break;
+            }
         }
+        if (!empty($status) || ($status == '0')) {
+            $where[] = ['status', '=', $status];
+        }
+
 
         return parent::page($this->model, ['where' => $where]);
     }
@@ -66,7 +82,7 @@ class RechargeClass extends AdminClass
         $status = input('value');
 
         //合法的状态码
-        $array = [1, 2];
+        $array = [1, 3];
 
         //状态码合法
         if (!in_array($status, $array)) parent::ajax_exception(0, '状态错误');
@@ -85,6 +101,7 @@ class RechargeClass extends AdminClass
         if ($status == '1') {
 
             self::integralAdd($order->getData());
+            self::levelUp($order->getData());
         }
 
         Db::commit();
@@ -149,5 +166,34 @@ class RechargeClass extends AdminClass
         $record->content = '管理员处理了您的下级『' . $member->nickname . '』的充值订单(订单号：' . $order['order_number'] . ')，您获得『佣金』' . $number;
         $record->created_at = date('Y-m-d H:i:s');
         $record->save();
+    }
+
+    //充值送会员
+    private function levelUp($order)
+    {
+        $set = new SystemClass();
+        $set = $set->index();
+
+        if ($set['rechargeGradeSwitch'] != 'on')return;
+
+        //会员寻找与家谱卷添加
+        $member = new MemberModel();
+        $member = $member->where('id', '=', $order['member_id'])->find();
+        if (is_null($member)) return;
+
+        $selfGrade = new MemberGradeModel();
+        $selfGrade = $selfGrade->find($member->grade_id);
+
+        $recharge = new RechargeModel();
+        $recharge = $recharge->where('member_id','=',$member->id)->where('status','=',1)->sum('total');
+
+        $grade = new MemberGradeModel();
+        $grade = $grade->where('sort','>',$selfGrade->sort)->where('recharge','<=',$recharge)->order('sort','desc')->find();
+        if (!is_null($grade)){
+
+            $member->grade_id = $grade->id;
+            $member->grade_name = $grade->name;
+            $member->save();
+        }
     }
 }

@@ -32,12 +32,25 @@
         </button>-->
         <form class="layui-form layui-inline layui-form-query">
 
-            <div class="layui-input-inline">
-                <label class="layui-form-label layui-form-label-mid">帐号</label>
-                <div class="layui-input-inline">
-                    <input type="text" placeholder="请填写会员账号" name="account" class="layui-input layui-input-mid" />
-                </div>
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="status" lay-verify="" style="height:30px;">
+                    <option value="">状态</option>
+                    <option value="0">待处理</option>
+                    <option value="1">已处理</option>
+                    <option value="2">已取消</option>
+                    <option value="3">已拒绝</option>
+                </select>
             </div>
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="keywordType" lay-verify="" style="height:30px;">
+                    <option value="1">订单号</option>
+                    <option value="0">账号</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" />
+            </div>
+
             <div class="layui-input-inline">
                 <label class="layui-form-label layui-form-label-mid">时间筛选</label>
 
@@ -66,7 +79,7 @@
 <script type="text/html" id="tableTool">
     <!-- 类型|标题|字段|value|按钮对应地址 -->
     {{# if ( d.status == 0 ) { }}
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="custom|取消充值|status|2|0">取消</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="custom|拒绝充值|status|3|0">拒绝</a>
     <a class="layui-btn layui-btn-xs" lay-event="custom|处理充值|status|1|0">处理</a>
     {{# }else{ }}
     -
@@ -76,15 +89,18 @@
 <script>
 
     // 非常规操作连接
-    //
+
     var tUrl = {
         0:'/admin/recharge/status', // 取消 处理
     };
+
     var transform = {
         0:'待处理',
         1:'已处理',
-        2:'已取消'
+        2:'已取消',
+        3:'已拒绝',
     };
+
     layui.config({
         base: '{$src}res/js/common/'
     }).use(['layer', 'mTable', 'jquery','element','laydate'], function () {
@@ -97,6 +113,7 @@
             elem: '#startTime',
             type:'datetime'
         });
+
         laydate.render({
             elem: '#endTime',
             type:'datetime'
@@ -121,6 +138,7 @@
                 {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#tableTool'}
             ]]
         });
+
         mTable.render();
     });
 </script>
