@@ -315,7 +315,7 @@ class LoginClass extends IndexClass
                     $error = '手机号码数量超过限制';
                     break;
                 default:
-                    $error = '请刷新重试（code）';
+                    $error = '请刷新重试（'.$result->Code.'）';
                     break;
             }
 
