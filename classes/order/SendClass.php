@@ -292,6 +292,7 @@ class SendClass extends AdminClass
         if ($info) {
 
             $filename = $url . '/' . $info->getSaveName();
+            unset($info);
             //判断版本，这里有的网上的版本没有进行判断，导致会报大概这样的错误：
             $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             if ($extension == 'xlsx') {
