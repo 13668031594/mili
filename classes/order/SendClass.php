@@ -213,7 +213,7 @@ class SendClass extends AdminClass
         $sends = $send->where('order_create', '>=', $date)->where('send_create', '=', null)->column('*');
         if (count($sends) <= 0) parent::ajax_exception(000, '没有需要发货的订单');
 
-        $name = '发货单' . date('Y-m-d');
+        $name = 'order' . date('Y-m-d');
 
         $header = [
             '发货编号',
