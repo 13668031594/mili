@@ -190,7 +190,7 @@ class GoodsController extends AdminController
 
         $this->class->stock($request);
 
-        return parent::success('/admin/goods');
+        return parent::success('/goods/index');
     }
 
     public function getRecord($id)
