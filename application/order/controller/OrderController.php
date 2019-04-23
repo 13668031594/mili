@@ -73,8 +73,7 @@ class OrderController extends AdminController
         $express = $this->class->express($order);
 
         $sends = $this->class->sends($order);
-//dump($sends);
-//exit;
+
         return parent::view('send', ['self' => $order, 'express' => $express,'sends' => $sends]);
     }
 

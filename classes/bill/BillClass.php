@@ -11,6 +11,7 @@ namespace classes\bill;
 use app\member\model\MemberModel;
 use app\order\model\OrderModel;
 use app\recharge\model\RechargeModel;
+use app\Substation\model\SubstationModel;
 use classes\AdminClass;
 
 class BillClass extends AdminClass
@@ -37,21 +38,24 @@ class BillClass extends AdminClass
         $begin = $times['begin'];
         $end = $times['end'];
 
+
+        $substation = parent::substation_ids();
+
         //今日注册
-        $today_member = $member_model->where('created_at', '>=', $today . ' 00:00:00')->where('created_at', '<=', $today . ' 23:59:59')->count();
+        $today_member = $member_model->whereIn('substation', $substation)->where('created_at', '>=', $today . ' 00:00:00')->where('created_at', '<=', $today . ' 23:59:59')->count();
 
         //昨日注册
-        $yesterday_member = $member_model->where('created_at', '>=', $yesterday . ' 00:00:00')->where('created_at', '<=', $yesterday . ' 23:59:59')->count();
+        $yesterday_member = $member_model->whereIn('substation', $substation)->where('created_at', '>=', $yesterday . ' 00:00:00')->where('created_at', '<=', $yesterday . ' 23:59:59')->count();
 
         //今日订单
-        $today_order = $order_model->where('created_at', '>=', $today . ' 00:00:00')->where('created_at', '<=', $today . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
+        $today_order = $order_model->whereIn('substation', $substation)->where('created_at', '>=', $today . ' 00:00:00')->where('created_at', '<=', $today . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
 
         //昨日订单
-        $yesterday_order = $order_model->where('created_at', '>=', $yesterday . ' 00:00:00')->where('created_at', '<=', $yesterday . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
+        $yesterday_order = $order_model->whereIn('substation', $substation)->where('created_at', '>=', $yesterday . ' 00:00:00')->where('created_at', '<=', $yesterday . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
 
         //今日充值
         $recharge_model = new RechargeModel();
-        $today_recharge = $recharge_model->where('change_date', '>=', $yesterday . ' 00:00:00')->where('change_date', '<=', $yesterday . ' 23:59:59')->where('status', '=', '1')->sum('total');
+        $today_recharge = $recharge_model->whereIn('substation', $substation)->where('change_date', '>=', $yesterday . ' 00:00:00')->where('change_date', '<=', $yesterday . ' 23:59:59')->where('status', '=', '1')->sum('total');
 
         //今日办理次数
         $today_buy_number = 0;
@@ -60,19 +64,19 @@ class BillClass extends AdminClass
         $today_in = $today_recharge;
 
         //全部会员
-        $all_member = $member_model->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->count();
+        $all_member = $member_model->whereIn('substation', $substation)->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->count();
 
         //全部订单
-        $all_order = $order_model->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
+        $all_order = $order_model->whereIn('substation', $substation)->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total');
 
         //全部快递费
-        $all_express = $order_model->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total_express');
+        $all_express = $order_model->whereIn('substation', $substation)->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total_express');
 
         //商品总额
-        $all_goods = $order_model->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total_goods');
+        $all_goods = $order_model->whereIn('substation', $substation)->where('created_at', '>=', $begin . ' 00:00:00')->where('created_at', '<=', $end . ' 23:59:59')->where('pay_status', '=', '1')->sum('total_goods');
 
         //总充值
-        $all_recharge = $recharge_model->where('change_date', '>=', $begin . ' 00:00:00')->where('change_date', '<=', $end . ' 23:59:59')->where('status', '=', '1')->sum('total');
+        $all_recharge = $recharge_model->whereIn('substation', $substation)->where('change_date', '>=', $begin . ' 00:00:00')->where('change_date', '<=', $end . ' 23:59:59')->where('status', '=', '1')->sum('total');
 
         //总办理次数
         $all_buy_number = 0;

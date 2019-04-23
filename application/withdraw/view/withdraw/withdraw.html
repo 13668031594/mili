@@ -32,6 +32,19 @@
         </button>-->
         <form class="layui-form layui-inline layui-form-query">
 
+            {if $sub['is']}
+
+                <div class="layui-input-inline layui-query-select" style="width:70px;">
+                    <select name="the_substation" lay-verify="" style="height:30px;">
+                        <option value="all">全站</option>
+                        {foreach $sub['array_con'] as $k => $v}
+                        <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+
+            {/if}
+
             <div class="layui-input-inline">
                 <label class="layui-form-label layui-form-label-mid">帐号</label>
                 <div class="layui-input-inline">
@@ -92,6 +105,7 @@
         var layer = layui.layer;
         var mTable = layui.mTable;
         var laydate = layui.laydate ;
+        var sub = {php}echo $sub['json'];{/php}
 
         laydate.render({
             elem: '#startTime',
@@ -107,6 +121,11 @@
                 table: '/admin/withdraw/table',
             },
             cols: [[
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {fixed: 'left',field: 'id', width:70,title: '编号'},
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];

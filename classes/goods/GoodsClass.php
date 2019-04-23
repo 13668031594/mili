@@ -37,7 +37,9 @@ class GoodsClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        $where = [];
+        $where = [
+            //['substation', '=', SUBSTATION],
+        ];
 
         $goods_class = input('goodsClass');
         if (!empty($goods_class)) $where[] = ['goods_class_id', '=', $goods_class];
@@ -84,6 +86,7 @@ class GoodsClass extends AdminClass implements ListInterface
         $model->express_number = $request->post('express_number');
         $model->weight = $request->post('weight');
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
 
         $content = $this->content;
@@ -376,7 +379,7 @@ class GoodsClass extends AdminClass implements ListInterface
     public function image_content(Request $request)
     {
         $dir = 'goods_content';
-        if (!is_dir($dir))mkdir($dir);
+        if (!is_dir($dir)) mkdir($dir);
 
         // 获取表单上传文件 例如上传了001.jpg
         $file = $request->file('file');

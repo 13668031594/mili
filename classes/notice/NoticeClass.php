@@ -24,11 +24,17 @@ class NoticeClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        $column = 'id,title,sort,show,author,created_at';
+        $where = [
+            //['substation','=', SUBSTATION]
+        ];
+
+        $column = 'id,title,sort,show,author,created_at,substation';
 
         $other = [
             'order_name' => 'sort',
             'column' => $column,
+            'where' => $where,
+            'substation' => '1',
         ];
 
         return parent::page($this->model, $other);
@@ -48,6 +54,7 @@ class NoticeClass extends AdminClass implements ListInterface
         $model->show = $request->post('show');
         $model->author = $request->post('author');
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
     }
 

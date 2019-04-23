@@ -86,6 +86,7 @@ class AgentClass extends \classes\IndexClass
         $draw->member_bank_no = $member['bank_no'];
         $draw->member_bank_name = $member['bank_name'];
         $draw->created_at = $date;
+        $draw->substation = SUBSTATION;
         $draw->save();
 
         //扣除会员余额

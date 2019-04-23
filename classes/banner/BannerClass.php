@@ -32,8 +32,14 @@ class BannerClass extends AdminClass implements ListInterface
 
     public function index()
     {
+        $where = [
+            //['substation', '=', SUBSTATION]
+        ];
+
         $other = [
-            'order_name' => 'sort'
+            'order_name' => 'sort',
+            'where' => $where,
+            'substation' => '1',
         ];
 
         $result = parent::page($this->model, $other);
@@ -63,6 +69,7 @@ class BannerClass extends AdminClass implements ListInterface
         $model->sort = $request->post('sort');
         $model->show = $request->post('show');
         $model->link = $request->post('link');
+        $model->substation = SUBSTATION;
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
 

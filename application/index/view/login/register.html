@@ -169,6 +169,8 @@
                     var error = '' ;
 
                     if( data.code == '001' ){ // 下次发送时间
+
+                        console.log(currentTime)
                         sendSuccess(_this,data.message ) ;
                         return false ;
                     }else{
@@ -192,7 +194,7 @@
 
         function sendSuccess( obj , current  ){
 
-            current = current || nextSend ;
+            current = current|| nextSend ;
 
             var timer = setInterval(function(){
                 if( current <= 0 ){

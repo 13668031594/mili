@@ -60,6 +60,8 @@ class LoginController extends AdminController
 
         $master = $this->class->master();
 
-        return parent::view('index', ['master' => $master, 'set' => $set]);
+        $is_substation = $this->class->is_substation();
+
+        return parent::view('index', ['master' => $master, 'set' => $set,'is_substation' => $is_substation]);
     }
 }

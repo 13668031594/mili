@@ -14,7 +14,6 @@ use app\order\model\OrderSendModel;
 use classes\AdminClass;
 use classes\system\SystemClass;
 use classes\vendor\SmsClass;
-use think\Loader;
 use think\Request;
 
 class SendClass extends AdminClass
@@ -41,40 +40,51 @@ class SendClass extends AdminClass
 
         $where = [];//初始化筛选
 
-        if (!empty($id)) $where[] = ['order_id', '=', $id];//id筛选
+        if (!empty($id)) $where[] = ['a.order_id', '=', $id];//id筛选
         if (!empty($keyword)) switch ($keywordType) {
             case '1':
-                $where[] = ['order_number', 'like', '%' . $keyword . '%'];
+                $where[] = ['a.order_number', 'like', '%' . $keyword . '%'];
                 break;
             case '2':
-                $where[] = ['express_no', 'like', '%' . $keyword . '%'];
+                $where[] = ['a.express_no', 'like', '%' . $keyword . '%'];
                 break;
             default:
                 break;
         }
         if (!empty($startTime)) switch ($timeType) {
             case '1':
-                $where[] = ['order_create', '>=', $startTime];
+                $where[] = ['a.order_create', '>=', $startTime];
                 break;
             case '2':
-                $where[] = ['send_create', '>=', $startTime];
+                $where[] = ['a.send_create', '>=', $startTime];
                 break;
             default:
                 break;
         }
         if (!empty($endTime)) switch ($timeType) {
             case '1':
-                $where[] = ['order_create', '<=', $endTime];
+                $where[] = ['a.order_create', '<=', $endTime];
                 break;
             case '2':
-                $where[] = ['send_create', '<=', $endTime];
+                $where[] = ['a.send_create', '<=', $endTime];
                 break;
             default:
                 break;
         }
 
+        $whereIn = ['o.substation' => parent::substation_ids()];
+
+        $leftJoin = [
+            'order o',
+            'o.id = a.order_id'
+        ];
+
         $result = [
-            'where' => $where
+            'whereIn' => $whereIn,
+            'where' => $where,
+            'alias' => 'a',
+            'leftJoin' => $leftJoin,
+            'column' => 'a.*',
         ];
 
         return parent::page($this->model, $result);
@@ -97,7 +107,7 @@ class SendClass extends AdminClass
         //寻找需要生成发货单的订单
         $order = new OrderModel();
         if (!empty($send_id)) $order = $order->whereNotIn('id', $send_id);
-        $order = $order->where('created_at', '>=', $date)->where('order_status', '=', '10')->column('*');
+        $order = $order->whereIn('substation', parent::substation_ids())->where('created_at', '>=', $date)->where('order_status', '=', '10')->column('*');
 
         //没有需要生成的
         if (count($order) <= 0) return;
@@ -149,7 +159,7 @@ class SendClass extends AdminClass
      */
     private function excelExport($fileName = '', $headArr = [], $data = [])
     {
-        $fileName = $this->dir.'/' . $fileName . "_" . time() . ".xls";
+        $fileName = $this->dir . '/' . $fileName . "_" . time() . ".xls";
 
         $objPHPExcel = new \PHPExcel();
 
@@ -210,7 +220,13 @@ class SendClass extends AdminClass
 //        $date = date('Y-m-d') . ' 00:00:00';
 
         $send = new OrderSendModel();
-        $sends = $send->where('order_create', '>=', $date)->where('send_create', '=', null)->column('*');
+        $sends = $send->alias('a')
+            ->leftJoin('order o', 'o.id = a.order_id')
+            ->where('o.substation', 'in', parent::substation_ids())
+            ->where('a.order_create', '>=', $date)
+            ->where('a.send_create', '=', null)
+            ->column('a.*');
+
         if (count($sends) <= 0) parent::ajax_exception(000, '没有需要发货的订单');
 
         $name = 'order' . date('Y-m-d');
@@ -248,7 +264,7 @@ class SendClass extends AdminClass
 
         //修改订单状态
         $model = new OrderModel();
-        $model->whereIn('order_number',$order_numbers)->update(['order_status' => '15']);
+        $model->whereIn('order_number', $order_numbers)->update(['order_status' => '15']);
 
         return self::excelExport($name, $header, $data);
     }

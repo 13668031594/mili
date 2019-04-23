@@ -28,6 +28,7 @@ class RechargeClass extends \classes\IndexClass
             $order = new RechargeOrderModel();
             $order->member_id = $member['id'];
             $order->created_at = date('Y-m-d H:i:s');
+            $order->substation = SUBSTATION;
             $order->save();
             $order->order_number = 'R' . (37957 + $order->id);
             $order->save();

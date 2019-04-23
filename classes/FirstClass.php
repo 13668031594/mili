@@ -10,6 +10,8 @@ namespace classes;
 
 use app\http\exceptions\AjaxException;
 use app\http\exceptions\RedirectException;
+use app\member\model\MemberGradeModel;
+use app\Substation\model\SubstationModel;
 use think\Db;
 use think\Model;
 use think\Validate;
@@ -26,6 +28,7 @@ class FirstClass
     protected function page(\think\Model $model, $other = [])
     {
         $where = isset($other['where']) ? $other['where'] : [];//筛选
+        $whereIn = isset($other['whereIn']) ? $other['whereIn'] : [];//筛选
         $order_name = isset($other['order_name']) ? $other['order_name'] : 'created_at';//排序字段
         $order_type = isset($other['order_type']) ? $other['order_type'] : 'desc';//排序类型
         $column = isset($other['column']) ? $other['column'] : '*';//查询字段
@@ -50,6 +53,12 @@ class FirstClass
         }
 
         $model = self::others($model, $other);
+
+        if (isset($other['substation'])) $model = self::substation($model);
+
+        foreach ($whereIn as $k => $v) {
+            $model = $model->whereIn($k, $v);
+        }
 
         //计算数据总数
         $number = $model->where($where)->count();
@@ -79,6 +88,44 @@ class FirstClass
     {
         if (isset($other['alias'])) $model = $model->alias($other['alias']);
         if (isset($other['leftJoin'])) $model = $model->leftJoin($other['leftJoin'][0], $other['leftJoin'][1]);
+
+        return $model;
+    }
+
+    private function substation(Model $model)
+    {
+        $test = $model->find();
+
+        if (isset($test['substation'])) {
+
+            $substation = request()->get('the_substation');
+
+            if ($substation == 'all') {
+
+                $sub = new SubstationModel();
+                $sub = $sub->where('id', '=', SUBSTATION)
+                    ->whereOr('pid', '=', SUBSTATION)
+                    ->whereOr('top', '=', SUBSTATION)
+                    ->column('id');
+
+                if (SUBSTATION == '0')$sub[] = '0';
+
+            } elseif (!is_null($substation)) {
+
+                $sub = $substation;
+            } else {
+
+                if (SUBSTATION != '0') {
+                    $sub = new SubstationModel();
+                    $sub = $sub->where('id', '=', SUBSTATION)->column('id');
+                } else {
+
+                    $sub = [0];
+                }
+            }
+
+            $model = $model->whereIn('substation', $sub);
+        }
 
         return $model;
     }

@@ -31,7 +31,7 @@ class UserClass extends \classes\IndexClass
     {
         $model = new AvatarModel();
 
-        $covers = $model->where('show', '=', 'on')->order('sort', 'desc')->column('location');
+        $covers = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('location');
 
         return $covers;
     }
@@ -286,10 +286,10 @@ class UserClass extends \classes\IndexClass
     {
         $member = parent::member();
         $member_grade = new MemberGradeModel();
-        $member_grade = $member_grade->where('id', '=', $member['grade_id'])->find();
+        $member_grade = $member_grade->where('substation','=',SUBSTATION)->where('id', '=', $member['grade_id'])->find();
 
         $grades = new MemberGradeModel();
-        $grades = $grades->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
+        $grades = $grades->where('substation','=',SUBSTATION)->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
 
         $express = new MemberGradeExpressModel();
         foreach ($grades as &$v) {

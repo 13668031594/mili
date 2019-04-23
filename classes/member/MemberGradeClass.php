@@ -30,8 +30,14 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
     public function index()
     {
+        $where = [
+//            ['substation'  , '=' , SUBSTATION],
+        ];
+
         $other = [
+            'substation' => '1',
             'order_name' => 'sort',
+            'where' => $where,
         ];
 
         return parent::page($this->model, $other);
@@ -52,6 +58,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
         $model->recharge = $request->post('recharge');
         $model->buy_total = $request->post('buy_total');
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
 
         self::save_model_1($model, $request->post('expressAmount'));
@@ -104,7 +111,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
     public function delete($id)
     {
         $this->model->whereIn('id', $id)->delete();
-        Db::table('young_member_grade_express')->whereIn('grade', $id)->delete();
+        Db::table('young_member_grade_express')->where('change','=','success')->whereIn('grade', $id)->delete();
 
     }
 
@@ -152,7 +159,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
     public function validator_delete($id)
     {
-        if (in_array(1, $id)) parent::ajax_exception(000, '无法删除初始会员等级');
+//        if (in_array(1, $id)) parent::ajax_exception(000, '无法删除初始会员等级');
     }
 
     //验证独立快递费字段
@@ -216,6 +223,6 @@ class MemberGradeClass extends AdminClass implements ListInterface
     public function change_member_grade(MemberGradeModel $gradeModel)
     {
         $model = new MemberModel();
-        $model->where('grade_id','=',$gradeModel->id)->update(['grade_name' => $gradeModel->name]);
+        $model->where('grade_id', '=', $gradeModel->id)->update(['grade_name' => $gradeModel->name]);
     }
 }

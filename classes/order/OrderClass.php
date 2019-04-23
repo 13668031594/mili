@@ -35,7 +35,10 @@ class OrderClass extends AdminClass
         $keywordType = input('keywordType');
         $keyword = input('keyword');
 
-        $where = [];
+        $where = [
+            //['substation','=', SUBSTATION]
+
+        ];
 
         if (!empty($keyword)) switch ($keywordType) {
             case '1':
@@ -48,8 +51,7 @@ class OrderClass extends AdminClass
                 break;
         }
 
-
-        return parent::page($this->model, ['where' => $where]);
+        return parent::page($this->model, ['where' => $where,'substation' => '1',]);
     }
 
     //详情

@@ -25,11 +25,17 @@ class ArticleClass extends AdminClass implements ListInterface
 
     public function index()
     {
+        $where = [
+            //['substation','=',SUBSTATION]
+        ];
+
         $column = 'id,title,sort,show,author,describe,created_at';
 
         $other = [
             'order_name' => 'sort',
             'column' => $column,
+            'where' => $where,
+            'substation' => '1',
         ];
 
         return parent::page($this->model, $other);
@@ -49,6 +55,7 @@ class ArticleClass extends AdminClass implements ListInterface
         $model->show = $request->post('show');
         $model->author = $request->post('author');
         $model->describe = $request->post('describe');
+        $model->substation = SUBSTATION;
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
     }

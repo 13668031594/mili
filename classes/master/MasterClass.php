@@ -24,7 +24,17 @@ class MasterClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        return parent::page($this->model);
+        $whereIn = [
+//            'substation' => [SUBSTATION]
+        ];
+
+        $other = [
+//            'whereIn' => $whereIn,
+            //'substation' => SUBSTATION,
+            'substation' => '1',
+        ];
+
+        return parent::page($this->model, $other);
     }
 
     public function create()
@@ -38,6 +48,7 @@ class MasterClass extends AdminClass implements ListInterface
         $master->nickname = $request->post('nickname');
         $master->account = $request->post('account');
         $master->password = md5($request->post('password'));
+        $master->substation = SUBSTATION;
         $master->created_at = date('Y-m-d H:i:s');
         $master->save();
     }

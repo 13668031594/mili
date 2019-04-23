@@ -26,8 +26,13 @@ class GoodsClassClass extends AdminClass implements ListInterface
 
     public function index()
     {
+        $where = [
+            //['substation'  , '=' , SUBSTATION],
+        ];
+
         $other = [
             'order_name' => 'sort',
+            'where' => $where,
         ];
 
         return parent::page($this->model, $other);
@@ -43,6 +48,7 @@ class GoodsClassClass extends AdminClass implements ListInterface
         $model = $this->model;
         $model->name = $request->post('name');
         $model->sort = $request->post('sort');
+        $model->substation = SUBSTATION;
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
     }

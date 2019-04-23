@@ -9,6 +9,7 @@
 namespace classes\master;
 
 use app\master\model\MasterModel;
+use app\Substation\model\SubstationModel;
 use classes\AdminClass;
 use think\Request;
 
@@ -49,15 +50,38 @@ class LoginClass extends AdminClass
         $master = new MasterModel();
 
         //尝试获取管理员信息
-        $master = $master->where('account', '=', $request->post('account'))
+        $masters = $master->where('account', '=', $request->post('account'))
             ->where('password', '=', md5($request->post('password')))
             ->find();
 
         //获取失败，账密错误
-        if (is_null($master)) parent::ajax_exception(000, '账号或密码错误');
+        if (is_null($masters)) parent::ajax_exception(000, '账号或密码错误');
+
+        //安全路径
+        $safe_path = include 'safe_path.php';
+
+        //获取访问域名
+        $localhost = $_SERVER['SERVER_NAME'];
+
+        if (!in_array($localhost, $safe_path)) {
+
+            //该域名不是主站域名，寻找站点id
+            $substation_model = new SubstationModel();
+            $substation_model = $substation_model->where('localhost', '=', $localhost)->where('status', '=', 'on')->find();
+
+            //没找到该分站或者该分站与管理员分站不符
+            if (is_null($substation_model) || (($substation_model['id'] != $masters['substation']) &&
+                    ($substation_model['pid'] != $masters['substation']) &&
+                    ($substation_model['top'] != $masters['substation']))) parent::ajax_exception(000, '你无权登录此站点');
+        } elseif (($masters['substation'] != 0)) {
+
+            //若该域名为主站域名
+            //且管理员并非主站管理员
+            parent::ajax_exception(000, '你无权登录此站点');
+        }
 
         //返回管理员信息
-        return $master;
+        return $masters;
     }
 
     /**
@@ -70,7 +94,7 @@ class LoginClass extends AdminClass
         $session = [
             'id' => $master->id,//管理员id
             'time' => time() + config('young.admin_login_time'),//登录持续时间
-            'login_ass' => md5(time() . rand(100,999))//登录密钥
+            'login_ass' => md5(time() . rand(100, 999))//登录密钥
         ];
 
         session('master', $session);//保存登录信息
@@ -113,7 +137,7 @@ class LoginClass extends AdminClass
         //更新操作时间
         $master['time'] = time() + config('young.admin_login_time');
 
-        session('master',$master);
+        session('master', $master);
 
         return $masters;
     }

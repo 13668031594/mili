@@ -15,6 +15,7 @@
 return [
     // 默认中间件命名空间
     'default_namespace' => 'app\\http\\middleware\\',
+    'substation' => \app\http\middleware\SubstationMiddleware::class,
     'master_login' => \app\http\middleware\MasterLoginMiddleware::class,
     'member_login' => \app\http\middleware\MemberLoginMiddleware::class,
     'member_logout' => \app\http\middleware\MemberLogoutMiddleware::class,

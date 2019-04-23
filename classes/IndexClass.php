@@ -89,7 +89,7 @@ class IndexClass extends FirstClass
     {
         $model = new LinkModel();
 
-        $result = $model->where('show','=','on')->order('sort','desc')->column('*');
+        $result = $model->where('substation','=',SUBSTATION)->where('show','=','on')->order('sort','desc')->column('*');
 
         return $result;
     }

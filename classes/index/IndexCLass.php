@@ -22,7 +22,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new BannerModel();
 
-        $banner = $model->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
+        $banner = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
 
         $result = [];
         $i = 0;
@@ -43,7 +43,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new AdvModel();
 
-        $banner = $model->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
+        $banner = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
 
         $result = [];
         $i = 0;
@@ -64,7 +64,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new NoticeModel();
 
-        return $model->where('show', '=', 'on')->limit(3)->page(1)->order('sort', 'desc')->column('id,title');
+        return $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->limit(3)->page(1)->order('sort', 'desc')->column('id,title');
     }
 
     //文章-首页
@@ -72,7 +72,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new ArticleModel();
 
-        $article = $model->where('show', '=', 'on')->limit(6)->page(1)->order('sort', 'desc')->column('id,title,describe,created_at,author');
+        $article = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->limit(6)->page(1)->order('sort', 'desc')->column('id,title,describe,created_at,author');
 
         $result =  array_chunk($article, 3);
 
@@ -87,6 +87,7 @@ class IndexCLass extends \classes\IndexClass
         $model = new ArticleModel();
 
         $where[] = ['show', '=', 'on'];
+        $where[] = ['substation', '=', SUBSTATION];
 
         $result = [
             'where' => $where,
@@ -102,7 +103,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new ArticleModel();
 
-        $article = $model->where('show', '=', 'on')->where('id', '=', $id)->find();
+        $article = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
 
         if (is_null($article)) parent::redirect_exception('/', '该文章已被删除或隐藏');
 
@@ -115,6 +116,7 @@ class IndexCLass extends \classes\IndexClass
         $model = new NoticeModel();
 
         $where[] = ['show', '=', 'on'];
+        $where[] = ['substation', '=', SUBSTATION];
 
         $result = [
             'where' => $where,
@@ -130,7 +132,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new NoticeModel();
 
-        $result = $model->where('show', '=', 'on')->where('id', '=', $id)->find();
+        $result = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
 
         if (is_null($result)) parent::redirect_exception('/', '该公告已被删除或隐藏');
 

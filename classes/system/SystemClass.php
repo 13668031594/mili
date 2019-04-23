@@ -8,6 +8,7 @@
 
 namespace classes\system;
 
+use app\Substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\vendor\StorageClass;
 use think\Request;
@@ -19,7 +20,35 @@ class SystemClass extends AdminClass
 
     public function __construct()
     {
-        $this->storage = new StorageClass('sysSetting.txt');
+        $name = 'sysSetting.txt';
+
+        if (defined('SUBSTATION')) {
+
+            if (!empty(SUBSTATION)){
+
+                $name = 'sysSetting_' . SUBSTATION . '.txt';
+                $this->dir .= '_' . SUBSTATION;
+            }
+        }else{
+
+            //安全路径
+            $safe_path = include_once 'safe_path.php';
+
+            //获取访问域名
+            $localhost = $_SERVER['SERVER_NAME'];
+
+            if (!in_array($localhost, $safe_path)) {
+
+                //该域名不是主站域名，寻找站点id
+                $substation_model = new SubstationModel();
+                $substation_model = $substation_model->where('localhost', '=', $localhost)->where('status', '=', 'on')->find();
+
+                //没找到该分站或者该分站与管理员分站不符
+                if (is_null($substation_model)) exit('你无权登录此站点');
+            }
+        }
+
+        $this->storage = new StorageClass($name);
         if (!is_dir($this->dir)) mkdir($this->dir);
     }
 
@@ -127,10 +156,10 @@ class SystemClass extends AdminClass
     private function defaults()
     {
         return [
-            'webName' => '5A礼品网',
-            'webTitle' => '5A礼品网',
-            'webKeyword' => '5A礼品网',
-            'webDesc' => '5A礼品网',
+            'webName' => '米礼网',
+            'webTitle' => '米礼网',
+            'webKeyword' => '米礼网',
+            'webDesc' => '米礼网',
             'webSwitch' => 'on',
             'webCloseReason' => '网站维护中',
             'fwb-content' => '请谨慎下单',

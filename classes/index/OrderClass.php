@@ -62,7 +62,7 @@ class OrderClass extends \classes\IndexClass
     {
         $model = new ExpressModel();
 
-        $express = $model->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name');
+        $express = $model->where('substation','=',SUBSTATION)->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name');
 
         $member = parent::member();
 
@@ -528,6 +528,7 @@ class OrderClass extends \classes\IndexClass
         $insert->store_created = $store['created_at'];
 
         $insert->created_at = $date;
+        $insert->substation = SUBSTATION;
 
         $insert->save();
         //正式下单结束

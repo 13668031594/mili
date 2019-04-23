@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>分站信息</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">系统管理</a>
+          <a href="javascript:;">分站列表</a>
+          <a><cite>{if isset($self)}编辑{else}添加{/if}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/substation/save">
+        <!-- 编辑时写入id -->
+        {if isset($self)}
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        {else}
+        <input type='hidden' name='substation' value='{$id}'/>
+        {/if}
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级站</label>
+                <div class="layui-input-block">
+                    {if isset($self)}
+                    <div class="layui-form-mid">{$self["pname"]}</div>
+                    {else/}
+                    <div class="layui-form-mid">{$sub["array"][$id]}</div>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" lay-verify="required" placeholder="名称" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">域名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="localhost" lay-verify="required" placeholder="域名" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["localhost"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" lay-filter="show"
+                           lay-skin="switch"
+                           lay-text="开启|关闭" {if !isset($self) || $self['status'] == 'on'}checked{/if}/>
+                    <!-- 显示开关 嵌套填充 -->
+                    <input type="hidden" id='show' name="status" value="{if !isset($self) || $self['status'] == 'on'}on{else/}off{/if}"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+                <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element','form'],function(){
+        var form = layui.form;
+        form.on('switch(show)', function (data) {
+            if (data.elem.checked) {
+                $('#show').prop('value', 'on');
+            } else {
+                $('#show').prop('value', 'off');
+            }
+        });
+    }); //加载入口
+</script>
+</body>
+
+</html>

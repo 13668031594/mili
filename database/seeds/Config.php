@@ -80,6 +80,7 @@ class Config extends Seeder
                 'sort' => 50,
                 'amount' => '10',
                 'mode' => 'on',
+                'change' => 'fail',
                 'created_at' => $this->date,
             ];
 

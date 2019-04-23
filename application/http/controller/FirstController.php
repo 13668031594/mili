@@ -9,6 +9,9 @@
 namespace app\http\controller;
 
 
+use app\Substation\model\SubstationModel;
+use classes\AdminClass;
+
 class FirstController
 {
     protected $url;//文件夹与路由路径变量
@@ -57,10 +60,33 @@ class FirstController
             $data['success'] = session('success');
             session('success', null);
         }
-//dump($data);
-//        exit;
+
+        $data['sub'] = self::substation();
+        $data['the_substation'] = input('the_substation');
+
         //渲染视图
         return view($view, $data);
+    }
+
+    private function substation()
+    {
+        $class = new AdminClass();
+        $ids = $class->my_substation();
+
+        $substation = new SubstationModel();
+        $substation = $substation->whereIn('id',$ids)->column('id,name');
+        if (SUBSTATION == 0)$substation[0] = '主站';
+
+        $substations = new SubstationModel();
+        $substations = $substations->column('id,name');
+        $substations[0] = '主站';
+
+        return [
+            'array' => $substations,
+            'json' => json_encode($substation),
+            'array_con' => $substation,
+            'is' => $class->is_substation(),
+        ];
     }
 
     /**

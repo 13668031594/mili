@@ -40,6 +40,19 @@
         </button>
 
         <form class="layui-form layui-inline layui-form-query">
+
+            {if $sub['is']}
+
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="the_substation" lay-verify="" style="height:30px;">
+                    <option value="all">全站</option>
+                    {foreach $sub['array_con'] as $k => $v}
+                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+            {/if}
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="grade" lay-verify="" style="height:30px;">
                     <option value="">全部</option>
@@ -98,6 +111,7 @@
 
         var layer = layui.layer;
         var mTable = layui.mTable;
+        var sub = {php}echo $sub['json'];{/php}
 
         mTable.init({
             url: {
@@ -108,6 +122,11 @@
             },
             cols: [[
                 {field: 'id', width: 50, type: 'checkbox'},
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {
                     field: 'status', width: 70, title: '状态', templet: function (d) {
                     if (d.status == 0) {

@@ -29,7 +29,9 @@ class MemberClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        $where = [];
+        $where = [
+//            ['substation'  , '=' , SUBSTATION],
+        ];
 
         $account = input('account');
         $status = input('status');
@@ -39,9 +41,9 @@ class MemberClass extends AdminClass implements ListInterface
         if (!empty($status)) $where[] = ['status', '=', $status];
         if (!empty($grade)) $where[] = ['grade_id', '=', $grade];
 
-        $column = 'id,status,grade_name,account,phone,nickname,remind,commis,created_at,recharge';
+        $column = 'id,status,grade_name,account,phone,nickname,remind,commis,created_at,recharge,substation';
 
-        return parent::page($this->member, ['where' => $where, 'column' => $column]);
+        return parent::page($this->member, ['where' => $where, 'column' => $column,'substation' => '1',]);
     }
 
     public function create()
@@ -71,6 +73,7 @@ class MemberClass extends AdminClass implements ListInterface
         $model->status = $request->post('status');
         $model->bank_no = $request->post('bank_no');
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
     }
 
@@ -119,8 +122,8 @@ class MemberClass extends AdminClass implements ListInterface
     {
         $rule = [
             'referee|推荐号' => 'min:5|max:20',
-            'phone|联系电话' => 'require|length:11|unique:member,phone',
-            'account|账号' => 'require|min:6|max:20|regex:^\d{6,20}$|unique:member,account',
+            'phone|联系电话' => 'require|length:11',
+            'account|账号' => 'require|min:6|max:20|regex:^\d{6,20}$',
             'nickname|昵称' => 'require|min:2|max:48',
             'password|密码' => 'require|min:6|max:20',
             'pay_pass|支付密码' => 'require|min:6|max:20',
@@ -131,6 +134,12 @@ class MemberClass extends AdminClass implements ListInterface
 
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(502, $result);
+
+        $test = new MemberModel();
+        $test_phone = $test->where('substation','=',SUBSTATION)->where('phone','=',$request->post('phone'))->find();
+        if (!is_null($test_phone))parent::ajax_exception(000, '联系电话已存在');
+        $test_account = $test->where('substation','=',SUBSTATION)->where('account','=',$request->post('account'))->find();
+        if (!is_null($test_account))parent::ajax_exception(000, '账号已存在');
     }
 
     public function validator_update($id, Request $request)
@@ -170,6 +179,7 @@ class MemberClass extends AdminClass implements ListInterface
         $test = new MemberModel();
         $referee = $test->where('id', '=', $request->post('referee'))->find();
         if (is_null($referee)) parent::ajax_exception(503, '上级不存在');
+        if ($referee['substation'] != SUBSTATION) parent::ajax_exception(503, '该上级属于其他分站');
 
         $referee = $referee->getData();
 

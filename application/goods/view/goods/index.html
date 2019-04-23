@@ -32,14 +32,27 @@
     </div>
 
     <div class="toolTable">
+        {if $sub['is']}
         <button class="layui-btn layui-btn-sm" data-type="addData">
             <i class="layui-icon">&#xe654;</i>添加商品
         </button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>
+        {/if}
 
         <form class="layui-form layui-inline layui-form-query">
+
+
+            <!--<div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="the_substation" lay-verify="" style="height:30px;">
+                    <option value="all">全站</option>
+                    {foreach $sub['array_con'] as $k => $v}
+                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    {/foreach}
+                </select>
+            </div>-->
+
             <div class="layui-input-inline layui-query-select" style="width:100px;">
                 <select name="goodsClass" lay-verify="" style="height:30px;">
                     <option value="">全部分类</option>

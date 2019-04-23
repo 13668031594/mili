@@ -61,6 +61,8 @@ class LoginClass extends IndexClass
         //获取失败，账密错误
         if (is_null($member)) parent::back('账号或密码错误');
 
+        if ($member['substation'] != SUBSTATION) parent::back('您在本站还未注册账号');
+
         //返回管理员信息
         return $member;
     }
@@ -75,7 +77,7 @@ class LoginClass extends IndexClass
         $session = [
             'id' => $member->id,//管理员id
             'time' => time() + config('young.index_login_time'),//登录持续时间
-            'login_ass' => md5(time()  . rand(100,999))//登录密钥
+            'login_ass' => md5(time() . rand(100, 999))//登录密钥
         ];
 
         session('member', $session);//保存登录信息
@@ -104,7 +106,7 @@ class LoginClass extends IndexClass
     {
         $rule = [
             'referee|推荐号' => 'min:5|max:20',
-            'account|用户名' => 'require|min:6|max:20|regex:^\d{6,20}$|unique:member,account',
+            'account|用户名' => 'require|min:6|max:20|regex:^\d{6,20}$',
             'phone|手机号码' => 'require|length:11|unique:member,phone',
             'pass|密码' => 'require|min:6|max:20',
 //            'again|确认密码' => 'require|min:6|max:20',
@@ -112,6 +114,13 @@ class LoginClass extends IndexClass
 
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        $test = new MemberModel();
+        $test = $test->where('substation','=',SUBSTATION)->where(function ($query)use($request){
+            $query->where('phone','=',$request->post('phone'))
+                ->whereOr('account','=',$request->post('account'));
+        })->find();
+        if (is_null($test))parent::ajax_exception(000, '你在本站注册过会员了');
 
         self::validator_phone($request);//短信验证
 
@@ -126,7 +135,7 @@ class LoginClass extends IndexClass
     public function reg(Request $request)
     {
         $grade = new MemberGradeModel();
-        $grade = $grade->order('id', 'asc')->find();
+        $grade = $grade->where('substation','=',SUBSTATION)->where('change','=','fail')->find();
         if (is_null($grade)) parent::ajax_exception(000, '注册失败，请联系管理员');
 
         $class = new MemberClass();
@@ -162,6 +171,10 @@ class LoginClass extends IndexClass
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
+        $test = new MemberModel();
+        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
+        if (is_null($test))parent::ajax_exception(000, '你在本站尚未注册过会员');
+
         self::validator_phone($request);//短信验证
 
         if ($request->post('pass') != $request->post('again')) parent::ajax_exception(000, '确认密码有误');
@@ -182,7 +195,6 @@ class LoginClass extends IndexClass
     }
 
 
-
     /**
      * 发送验证码前验证
      *
@@ -192,7 +204,7 @@ class LoginClass extends IndexClass
     public function validator_sms_reg($phone, $time)
     {
         $term = [
-            'phone' => 'require|length:11|unique:member,phone',//联系电话，必填
+            'phone' => 'require|length:11',//联系电话，必填
         ];
 
         $errors = [
@@ -204,6 +216,10 @@ class LoginClass extends IndexClass
         //参数判断
         $result = parent::validator(['phone' => $phone], $term, $errors);
         if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        $test = new MemberModel();
+        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
+        if (!is_null($test))parent::ajax_exception(000, '你在本站已经注册过会员了');
 
         //验证上次发送验证码时间
         self::validator_sms_time($phone, $time);
@@ -230,6 +246,10 @@ class LoginClass extends IndexClass
         //参数判断
         $result = parent::validator(['phone' => $phone], $term, $errors);
         if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        $test = new MemberModel();
+        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
+        if (is_null($test))parent::ajax_exception(000, '你在本站尚未注册过会员');
 
         //验证上次发送验证码时间
         self::validator_sms_time($phone, $time);
@@ -315,7 +335,7 @@ class LoginClass extends IndexClass
                     $error = '手机号码数量超过限制';
                     break;
                 default:
-                    $error = '请刷新重试（'.$result->Code.'）';
+                    $error = '请刷新重试（' . $result->Code . '）';
                     break;
             }
 

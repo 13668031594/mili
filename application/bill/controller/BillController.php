@@ -18,7 +18,6 @@ class BillController extends AdminController
     {
         $result = $this->class->all_bill();
 
-//dump($result['type']);
         return parent::view('bill',$result);
     }
 

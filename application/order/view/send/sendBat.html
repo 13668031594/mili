@@ -34,9 +34,23 @@
                 <input type="radio" name="type" lay-filter="type" value="1" title="导出需发货的订单" checked/>
                 <input type="radio" name="type" lay-filter="type" value="0" title="批量导入快递单号"/>
             </div>
+            {if $sub['is']}
+
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="the_substation" lay-verify="" style="height:30px;">
+                    <option value="all">全站</option>
+                    {foreach $sub['array_con'] as $k => $v}
+                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+            {/if}
         </div>
+
         <!-- 导出 -->
         <div id="export">
+
             <div class="layui-form-item">
                 <label class="layui-form-label">导出时间</label>
                 <div class="layui-input-inline">
@@ -110,6 +124,7 @@
         var laydate = layui.laydate;
         var form = layui.form;
         var upload = layui.upload;
+        var sub = {php}echo $sub['json'];{/php}
 
         laydate.render({
             elem: '#startTime',

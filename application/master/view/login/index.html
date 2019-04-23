@@ -51,11 +51,12 @@
                         <dd><a href="javascript:;" data-menu='/admin/system/index'><i class="layui-icon layui-icon-set-sm"></i> 系统设置</a></dd>
                         <dd><a href="javascript:;" data-menu='/admin/express/index'><i class="layui-icon layui-icon-engine"></i> 快递列表</a></dd>
                         <dd><a href="javascript:;" data-menu='/admin/avatar/index'><i class="layui-icon layui-icon-theme"></i> 头像列表</a></dd>
-                        <!--<dd><a href="javascript:;" data-menu='bank/index'><i class="layui-icon layui-icon-file"></i> 银行列表</a></dd>-->
+                        {if $sub['is']}
+                        <dd><a href="javascript:;" data-menu='/admin/substation/index'><i class="layui-icon layui-icon-file"></i> 分站管理</a></dd>
+                        {/if}
                         <dd><a href="javascript:;" data-menu='/admin/master/index'><i class="layui-icon layui-icon-face-smile-fine"></i> 管理员列表</a></dd>
                     </dl>
                 </li>
-
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;"><i class="layui-icon layui-icon-tabs"></i> 页面设置</a>
                     <dl class="layui-nav-child">

@@ -32,6 +32,17 @@
         </button>-->
         <form class="layui-form layui-inline layui-form-query">
 
+            {if $sub['is']}
+                <div class="layui-input-inline layui-query-select" style="width:70px;">
+                    <select name="the_substation" lay-verify="" style="height:30px;">
+                        <option value="all">全站</option>
+                        {foreach $sub['array_con'] as $k => $v}
+                        <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            {/if}
+
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="status" lay-verify="" style="height:30px;">
                     <option value="">状态</option>
@@ -93,6 +104,7 @@
     var tUrl = {
         0:'/admin/recharge/status', // 取消 处理
     };
+    var sub = {php}echo $sub['json'];{/php}
 
     var transform = {
         0:'待处理',
@@ -125,6 +137,11 @@
             },
             cols: [[
 //                {field: 'id', width: 50, type:'checkbox'},
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {fixed: 'left',field: 'order_number', width:110,title: '充值编号'},
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];

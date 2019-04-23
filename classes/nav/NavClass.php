@@ -18,7 +18,13 @@ class NavClass extends AdminClass
 
     public function __construct()
     {
-        $this->storage = new StorageClass('nav.txt');
+        $name = 'nav.txt';
+        if (!empty(SUBSTATION)){
+
+            $name = 'nav_'.SUBSTATION.'.txt';
+        }
+
+        $this->storage = new StorageClass($name);
     }
 
     public function index()

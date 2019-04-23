@@ -27,7 +27,10 @@ class WithdrawClass extends AdminClass
 
     public function index(Request $request)
     {
-        $where = [];
+        $where = [
+            //['substation','=', SUBSTATION]
+
+        ];
 
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
@@ -43,7 +46,7 @@ class WithdrawClass extends AdminClass
             $where[] = ['member_account|member_phone', 'like', '%' . $account . '%'];
         }
 
-        return parent::page($this->model, ['where' => $where]);
+        return parent::page($this->model, ['substation' => '1','where' => $where]);
     }
 
     public function status(Request $request)

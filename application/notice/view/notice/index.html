@@ -32,6 +32,23 @@
         <button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>
+        {if $sub['is']}
+        <form class="layui-form layui-inline layui-form-query">
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="the_substation" lay-verify="" style="height:30px;">
+                    <option value="all">全站</option>
+                    {foreach $sub['array_con'] as $k => $v}
+                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-sm" lay-submit lay-filter="query">
+                    <i class="layui-icon ">&#xe615;</i>搜索
+                </button>
+            </div>
+        </form>
+        {/if}
     </div>
 
     <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
@@ -51,6 +68,7 @@
 
         var layer = layui.layer;
         var mTable = layui.mTable;
+        var sub = {php}echo $sub['json'];{/php}
 
         mTable.init({
             url: {
@@ -62,6 +80,11 @@
             isPage: true,
             cols: [[
                 {field: 'id', width: 50, type:'checkbox'},
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {field: 'sort', width: 60, title:'排序'},
                 {field: 'show', width: 70, title:'状态',templet:function(d){
                     if(d.show == 'on' ){

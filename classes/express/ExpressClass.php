@@ -27,7 +27,10 @@ class ExpressClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        $other['order_name'] = 'sort';
+        $other = [
+            'order_name' => 'sort',
+            'substation' => '1',
+        ];
 
         return parent::page($this->model, $other);
     }
@@ -43,6 +46,7 @@ class ExpressClass extends AdminClass implements ListInterface
         $express->name = $request->post('name');
         $express->sort = $request->post('sort');
         $express->disabled = $request->post('disabled');
+        $express->substation = SUBSTATION;
         $express->created_at = date('Y-m-d H:i:s');
         $express->save();
     }
@@ -77,7 +81,7 @@ class ExpressClass extends AdminClass implements ListInterface
     public function delete($id)
     {
         $this->model->whereIn('id', $id)->delete();
-        Db::table('young_member_grade_express')->whereIn('express',$id)->delete();
+        Db::table('young_member_grade_express')->whereIn('express', $id)->delete();
     }
 
     public function validator_save(Request $request)
@@ -106,8 +110,20 @@ class ExpressClass extends AdminClass implements ListInterface
 
     public function validator_delete($id)
     {
-        $count = $this->model->count();
+        /*$substation = $this->model->column('id,substation');
 
-        if (count($id) >= $count) parent::ajax_exception(000, '至少保留一种快递');
+        $sub = [];
+
+        foreach ($substation as $k => $v) {
+
+            if (!isset($sub[$v])) $sub[$v] = 0;
+            $sub[$v]++;
+        }
+
+        foreach ($sub as $ke => $va) {
+
+            $count = $this->model->where('substation','=',$ke)->count();
+            if ($count <= $va)parent::ajax_exception(000, '至少保留一种快递');
+        }*/
     }
 }

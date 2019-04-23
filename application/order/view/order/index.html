@@ -40,6 +40,18 @@
                     <option value="1">未付</option>
                 </select>
             </div>-->
+            {if $sub['is']}
+
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="the_substation" lay-verify="" style="height:30px;">
+                    <option value="all">全站</option>
+                    {foreach $sub['array_con'] as $k => $v}
+                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    {/foreach}
+                </select>
+            </div>
+
+            {/if}
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="keywordType" lay-verify="" style="height:30px;">
                     <option value="1">帐号</option>
@@ -47,7 +59,7 @@
                 </select>
             </div>
             <div class="layui-input-inline">
-                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" />
+                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid"/>
             </div>
             <div class="layui-input-inline">
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="query">
@@ -67,9 +79,11 @@
 <script type="text/html" id="tableTool">
     <a class="layui-btn layui-btn-xs" href="/admin/order/edit?id={{d.id}}"><i class="layui-icon layui-icon-search"></i>查看</a>
     {{# if ( d.order_status == 10 || d.order_status == 15) { }}
-    <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/order/send?id={{d.id}}"><i class="layui-icon layui-icon-release"></i>发货</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/order/send?id={{d.id}}"><i
+            class="layui-icon layui-icon-release"></i>发货</a>
     {{# }else if ( d.order_status == 20 ) { }}
-    <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/send/index?id={{d.id}}"><i class="layui-icon layui-icon-list"></i>清单</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/send/index?id={{d.id}}"><i
+            class="layui-icon layui-icon-list"></i>清单</a>
     {{# } }}
 </script>
 
@@ -80,6 +94,7 @@
 
         var layer = layui.layer;
         var mTable = layui.mTable;
+        var sub = {php}echo $sub['json'];{/php}
 
         mTable.init({
             url: {
@@ -90,6 +105,11 @@
             },
             cols: [[
                 {field: 'id', width: 50, type: 'checkbox'},
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {
                     field: 'pay_status', width: 80, title: '付款', templet: function (d) {
                     if (d.pay_status != 0) {
@@ -105,7 +125,7 @@
                         return '<span class="layui-badge layui-bg-blue">已取消</span>'
                     } else if (d.order_status == 30) {
                         return '<span class="layui-badge layui-bg-blue">已撤销</span>'
-                    } else if (d.order_status == 20){
+                    } else if (d.order_status == 20) {
                         return '<span class="layui-badge-rim">已发货</span>';
                     } else if (d.order_status == 15) {
                         return '<span class="layui-badge-rim">已导出，待发货</span>'
@@ -118,11 +138,11 @@
                 {field: 'member_account', width: 120, title: '账号'},
                 {field: 'member_phone', width: 120, title: '手机号'},
                 {field: 'member_nickname', width: 100, title: '昵称'},
-                {field: 'total', title: '金额', width: 100, sort:true},
-                {field: 'express_number', title: '发货单数',width: 100 },
-                {field: 'express_amount', title: '快递单价',width: 100 },
-                {field: 'goods_number', title: '每单发货',width: 100 },
-                {field: 'goods_amount', title: '商品单价',width: 100 },
+                {field: 'total', title: '金额', width: 100, sort: true},
+                {field: 'express_number', title: '发货单数', width: 100},
+                {field: 'express_amount', title: '快递单价', width: 100},
+                {field: 'goods_number', title: '每单发货', width: 100},
+                {field: 'goods_amount', title: '商品单价', width: 100},
                 /*{
                     field: 'payType', width: 100, title: '付款类型', templet: function (d) {
                     if (d.payType == 1) {
@@ -141,7 +161,7 @@
                         return d.payTime ;
                     }
                 }},*/
-                {field: 'created_at',minWidth: 170,  title: '下单时间'},
+                {field: 'created_at', minWidth: 170, title: '下单时间'},
                 {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#tableTool'}
             ]]
         });
