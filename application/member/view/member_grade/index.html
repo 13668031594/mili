@@ -71,6 +71,7 @@
 
         var layer = layui.layer;
         var mTable = layui.mTable;
+        var sub = {php}echo $sub['json'];{/php}
 
         mTable.init({
             url: {
@@ -82,6 +83,11 @@
             isPage: false,
             cols: [[
                 {field: 'id', width: 50, type: 'checkbox'},
+                {
+                    field: 'substation', width: 130, title: '站点', templet: function (d) {
+                    return sub[d.substation];
+                }
+                },
                 {field: 'sort', width: 60, title: '排序'},
                 {
                     field: 'mode', width: 70, title: '模式', templet: function (d) {
