@@ -87,7 +87,7 @@ class ExpressClass extends AdminClass implements ListInterface
     public function validator_save(Request $request)
     {
         $rule = [
-            'name|快递名称' => 'require|min:1|max:48|unique:express,name',
+            'name|快递名称' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'disabled|状态' => 'require',
         ];
@@ -99,7 +99,7 @@ class ExpressClass extends AdminClass implements ListInterface
     public function validator_update($id, Request $request)
     {
         $rule = [
-            'name|快递名称' => 'require|min:1|max:48|unique:express,name,' . $id . ',id',
+            'name|快递名称' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'disabled|状态' => 'require',
         ];

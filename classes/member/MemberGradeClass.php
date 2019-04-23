@@ -94,6 +94,9 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
         if (is_null($model)) parent::ajax_exception(000, '等级不存在');
 
+        $test = $this->model->where('substation','=',$model->substation)->where('id','<>',$model->id)->where('name','=',$request->post('name'))->find();
+        if (!is_null($test))parent::ajax_exception(000, '名称重复');
+
         $model->name = $request->post('name');
         $model->sort = $request->post('sort');
         $model->mode = $request->post('mode');
@@ -118,7 +121,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
     public function validator_save(Request $request)
     {
         $rule = [
-            'name|名称' => 'require|min:1|max:255|unique:member_grade,name',
+            'name|名称' => 'require|min:1|max:255',
             'sort|排序' => 'require|integer|between:1,999',
             'amount|统一快递费' => 'require|float|between:0,100000000',
             'mode|模式' => 'require',
@@ -134,12 +137,15 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
         //验证独立快递费字段
         self::validator_mode_1($request);
+
+        $test = $this->model->where('substation','=',SUBSTATION)->where('name','=',$request->post('name'))->find();
+        if (!is_null($test))parent::ajax_exception(000, '名称重复');
     }
 
     public function validator_update($id, Request $request)
     {
         $rule = [
-            'name|名称' => 'require|min:1|max:255|unique:member_grade,name,' . $id . ',id',
+            'name|名称' => 'require|min:1|max:255',
             'sort|排序' => 'require|integer|between:1,999',
             'amount|统一快递费' => 'require|float|between:0,100000000',
             'mode|模式' => 'require',
@@ -152,6 +158,8 @@ class MemberGradeClass extends AdminClass implements ListInterface
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         if (!in_array($request->post('mode'), ['on', 'off'])) parent::ajax_exception(000, '模式错误');
+
+
 
         //验证独立快递费字段
         self::validator_mode_1($request);

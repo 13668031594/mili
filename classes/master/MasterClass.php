@@ -87,7 +87,7 @@ class MasterClass extends AdminClass implements ListInterface
     public function validator_save(Request $request)
     {
         $rule = [
-            'nickname|昵称' => 'require|min:1|max:48|unique:master,nickname',
+            'nickname|昵称' => 'require|min:1|max:48',
             'account|账号' => 'require|min:6|max:20|unique:master,account',
             'password|密码' => 'require|min:6|max:20',
         ];
@@ -99,7 +99,7 @@ class MasterClass extends AdminClass implements ListInterface
     public function validator_update($id, Request $request)
     {
         $rule = [
-            'nickname|昵称' => 'require|min:1|max:48|unique:master,nickname,' . $id . ',id',
+            'nickname|昵称' => 'require|min:1|max:48',
             'password|密码' => 'require|min:6|max:20',
         ];
 

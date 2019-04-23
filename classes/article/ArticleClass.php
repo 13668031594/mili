@@ -113,7 +113,7 @@ class ArticleClass extends AdminClass implements ListInterface
     public function validator_update($id, Request $request)
     {
         $rule = [
-            'title|标题' => 'require|min:1|max:48|unique:notice,title,' . $id . ',id',
+            'title|标题' => 'require|min:1|max:48',
             'describe|描述' => 'require|min:1|max:255',
             'sort|排序' => 'require|integer|between:1,999',
             'show|状态' => 'require',

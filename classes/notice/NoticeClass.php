@@ -95,7 +95,7 @@ class NoticeClass extends AdminClass implements ListInterface
     public function validator_save(Request $request)
     {
         $rule = [
-            'title|标题' => 'require|min:1|max:48|unique:notice,title',
+            'title|标题' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'show|状态' => 'require',
             'author|发布人' => 'require|min:1|max:40',
@@ -109,7 +109,7 @@ class NoticeClass extends AdminClass implements ListInterface
     public function validator_update($id, Request $request)
     {
         $rule = [
-            'title|标题' => 'require|min:1|max:48|unique:notice,title,' . $id . ',id',
+            'title|标题' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'show|状态' => 'require',
             'author|发布人' => 'require|min:1|max:40',
