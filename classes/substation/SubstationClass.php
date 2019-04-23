@@ -67,7 +67,7 @@ class SubstationClass extends AdminClass implements ListInterface
             'amount' => '10',
             'mode' => 'on',
             'change' => 'fail',
-            'substation' => SUBSTATION,
+            'substation' => $substation->id,
             'created_at' => $substation->created_at,
         ];
 
