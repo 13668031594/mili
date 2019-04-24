@@ -120,6 +120,7 @@
         var layer = layui.layer;
         var mTable = layui.mTable;
         var laydate = layui.laydate ;
+        var sub = {php}echo $sub['json'];{/php}
 
         laydate.render({
             elem: '#startTime',
@@ -136,13 +137,12 @@
                 table: '/admin/recharge/table',
             },
             cols: [[
-//                {field: 'id', width: 50, type:'checkbox'},
+                {fixed: 'left',field: 'order_number', width:140,title: '编号'},
                 {
                     field: 'substation', width: 130, title: '站点', templet: function (d) {
                     return sub[d.substation];
                 }
                 },
-                {fixed: 'left',field: 'order_number', width:110,title: '充值编号'},
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];
                 }},

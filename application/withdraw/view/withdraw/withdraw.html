@@ -121,12 +121,12 @@
                 table: '/admin/withdraw/table',
             },
             cols: [[
+                {fixed: 'left',field: 'order_number', width:140,title: '编号'},
                 {
                     field: 'substation', width: 130, title: '站点', templet: function (d) {
                     return sub[d.substation];
                 }
                 },
-                {fixed: 'left',field: 'id', width:70,title: '编号'},
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];
                 }},
