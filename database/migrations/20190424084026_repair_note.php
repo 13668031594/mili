@@ -19,6 +19,6 @@ class RepairNote extends Migrator
 
     public function down()
     {
-        $this->dropTable('repair');
+        $this->dropTable('repair_note');
     }
 }

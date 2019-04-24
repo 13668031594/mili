@@ -39,21 +39,34 @@ class AdminClass extends FirstClass
 
     public function substation_ids()
     {
+
         $substation = request()->get('the_substation');
 
-        if (!empty($substation)) {
-
-            $substation = [$substation];
-        } else {
+        if ($substation == 'all') {
 
             $sub = new SubstationModel();
-            $substation = $sub->where('id', '=', SUBSTATION)
+            $sub = $sub->where('id', '=', SUBSTATION)
                 ->whereOr('pid', '=', SUBSTATION)
                 ->whereOr('top', '=', SUBSTATION)
                 ->column('id');
+
+            if (SUBSTATION == '0')$sub[] = '0';
+
+        } elseif (!is_null($substation)) {
+
+            $sub = $substation;
+        } else {
+
+            if (SUBSTATION != '0') {
+                $sub = new SubstationModel();
+                $sub = $sub->where('id', '=', SUBSTATION)->column('id');
+            } else {
+
+                $sub = [0];
+            }
         }
 
-        return $substation;
+        return $sub;
     }
 
     public function my_substation()

@@ -328,18 +328,25 @@ class OrderClass extends \classes\IndexClass
         $info = $file->move($url, $filename);
 
         if ($info) {
+
             $filename = $url . '/' . $info->getSaveName();
+
             unset($info);
+
             //判断版本，这里有的网上的版本没有进行判断，导致会报大概这样的错误：
             $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
             if ($extension == 'xlsx') {
+
                 $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
                 //加载文件内容,编码utf-8
                 $objPHPExcel = $objReader->load($filename);
             } else if ($extension == 'xls') {
+
                 $objReader = \PHPExcel_IOFactory::createReader('Excel5');
                 $objPHPExcel = $objReader->load($filename);
             } else if ($extension == 'csv') {
+
                 $objReader = \PHPExcel_IOFactory::createReader('CSV');
                 if (input('platform') == 'pinduoduo'){
 
@@ -349,6 +356,7 @@ class OrderClass extends \classes\IndexClass
                     $objPHPExcel = $objReader->setInputEncoding('GBK')->load($filename);
                 }
             } else {
+
                 unlink($filename);
                 parent::ajax_exception(000, '请上传excel格式的文件!');
             }

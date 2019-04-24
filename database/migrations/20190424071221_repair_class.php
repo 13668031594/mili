@@ -7,7 +7,7 @@ class RepairClass extends Migrator
 {
     public function up()
     {
-        $table = $this->table('repair');
+        $table = $this->table('repair_class');
         $table->setId('id');
         $table->addColumn(Column::string('name')->setComment('分类名称'));
         $table->addColumn(Column::integer('sort')->setComment('分类排序'));
@@ -19,6 +19,6 @@ class RepairClass extends Migrator
 
     public function down()
     {
-        $this->dropTable('repair');
+        $this->dropTable('repair_class');
     }
 }

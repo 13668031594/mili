@@ -226,7 +226,8 @@ class SendClass extends AdminClass
             ->where('a.order_create', '>=', $date)
             ->where('a.send_create', '=', null)
             ->column('a.*');
-
+//        dump(parent::substation_ids());
+//        exit('end');
         if (count($sends) <= 0) parent::ajax_exception(000, '没有需要发货的订单');
 
         $name = 'order' . date('Y-m-d');
@@ -334,11 +335,13 @@ class SendClass extends AdminClass
             $date = date('Y-m-d H:i:s');
             foreach ($excel_array as $k => $v) {
 
-                if (count($v) != 2) {
+                if (count($v) != 10) {
                     unlink($filename);
                     parent::ajax_exception(000, '导入文件格式有误');
                 }
-                list($id, $no) = $v;
+                $id = $v[0];
+                $no = $v[9];
+//                list($id, $no) = $v;
 
                 if (in_array($id, $ids)) {
                     unlink($filename);

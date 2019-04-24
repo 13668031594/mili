@@ -44,22 +44,23 @@ class OrderFileClass
     {
         //格式化并验证
         $result = [];
+        $select_name = input('select_name');
+        $select_value = input('select_value');
+        $value = is_null($select_value) ? [] : explode("\r\n", $select_value);
+        foreach ($value as $key => $val) if (empty($val)) unset($value[$key]);
+
         foreach ($files as $k => $v) {
 
-            if (!isset($v[14]) || !isset($v[15]) || !isset($v[17])|| !isset($v[18])|| !isset($v[19])|| !isset($v[20])) {
+            if (!isset($v[14]) || !isset($v[15]) || !isset($v[17]) || !isset($v[18]) || !isset($v[19]) || !isset($v[20])) {
 
                 return '导入文件格式有误';
             }
 
             $name = $v[14];
             $phone = $v[15];
-            $address = $v[17].$v[18].$v[19].$v[20];
+            $address = $v[17] . $v[18] . $v[19] . $v[20];
 
-            $select_name = input('select_name');
-            $select_value = input('select_value');
-            if (!is_null($select_value)) {
-
-                $value = explode("\r\n", $select_value);
+            if (!empty($value)) {
 
                 switch ($select_name) {
                     case 'order';
@@ -99,6 +100,10 @@ class OrderFileClass
     {
         //格式化并验证
         $result = [];
+        $select_name = input('select_name');
+        $select_value = input('select_value');
+        $value = is_null($select_value) ? [] : explode("\r\n", $select_value);
+        foreach ($value as $key => $val) if (empty($val)) unset($value[$key]);
         foreach ($files as $k => $v) {
 
             if (!isset($v[14]) || !isset($v[15]) || !isset($v[16])) {
@@ -110,11 +115,8 @@ class OrderFileClass
             $phone = $v[16];
             $address = $v[15];
 
-            $select_name = input('select_name');
-            $select_value = input('select_value');
-            if (!is_null($select_value)) {
 
-                $value = explode("\r\n", $select_value);
+            if (!empty($value)) {
 
                 switch ($select_name) {
                     case 'order';
@@ -157,6 +159,10 @@ class OrderFileClass
     {
         //格式化并验证
         $result = [];
+        $select_name = input('select_name');
+        $select_value = input('select_value');
+        $value = is_null($select_value) ? [] : explode("\r\n", $select_value);
+        foreach ($value as $key => $val) if (empty($val)) unset($value[$key]);
         foreach ($files as $k => $v) {
 
             if (!isset($v[14]) || !isset($v[15]) || !isset($v[18])) {
@@ -168,11 +174,7 @@ class OrderFileClass
             $phone = substr($v[18], 1);
             $address = $v[15];
 
-            $select_name = input('select_name');
-            $select_value = input('select_value');
-            if (!is_null($select_value)) {
-
-                $value = explode("\r\n", $select_value);
+            if (!empty($value)) {
 
                 switch ($select_name) {
                     case 'order';

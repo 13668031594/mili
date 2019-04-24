@@ -20,6 +20,6 @@ class RepairDefault extends Migrator
 
     public function down()
     {
-        $this->dropTable('repair');
+        $this->dropTable('repair_default');
     }
 }
