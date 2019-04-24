@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>我是确认订单</title>
     <link type="text/css" rel="stylesheet" href="../index/css/confirm.css">
+    <link type="text/css" rel="stylesheet" href="../index/js/layui-v2.4.5/layui/css/layui.css"/>
+    <script src="../index/js/layui-v2.4.5/layui/layui.js"></script>
+    <script src="../index/js/jquery.1.12.4.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -40,9 +43,9 @@
     </div>
 
     <div class="item-container">
-        <span>收货人信息 <a href="###" class="consignee">查看</a></span>
+        <span>收货人信息 <a id='view' href="###" class="consignee">查看</a></span>
         <div class="right">
-            <h3>12</h3>
+            <h3 id='expressNumber'>12</h3>
             <div class="name">包裹数量</div>
         </div>
     </div>
@@ -65,6 +68,17 @@
     <div class="prompt" style="text-align: right;">
         支付密码<input type="password" id="payPass" value=""/>
     </div>
+    <div id='preview' style="display:none">
+
+    </div>
 </div>
 </body>
+<script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer ;
+        $("#view").click(function(){
+            layer.msg('ddddd') ;
+        });
+    });
+</script>
 </html>

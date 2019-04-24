@@ -2,6 +2,7 @@
 
 namespace app\test\controller;
 
+use classes\index\OrderClass;
 use classes\system\SystemClass;
 use classes\vendor\SmsClass;
 use think\Controller;
@@ -11,17 +12,15 @@ class TestController extends Controller
 {
     public function index()
     {
-        $setting = new SystemClass();
-        $set = $setting->index();
-        $class = new SmsClass();
-        $class->TemplateParam = [
-            'username' =>'超级无敌洋',
-            'order' => 'abcdefg',
-            'web' => $set['webName']
-        ];
-        $result = $class->sendSms('13608302076', '123321123', 'SMS_151996093');
-
-        dump($result);
+        return view('file');
     }
 
+    public function file(Request $request){
+
+        $class = new OrderClass();
+
+        $a = $class->file($request);
+        dump($a);
+        exit('end');
+    }
 }

@@ -62,7 +62,7 @@ class OrderClass extends \classes\IndexClass
     {
         $model = new ExpressModel();
 
-        $express = $model->where('substation','=',SUBSTATION)->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name');
+        $express = $model->where('substation', '=', SUBSTATION)->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name');
 
         $member = parent::member();
 
@@ -318,7 +318,7 @@ class OrderClass extends \classes\IndexClass
      * @param Request $request
      * @return array
      */
-    private function file(Request $request)
+    public function file(Request $request)
     {
         $filename = 'member_file_excel' . time();
         $url = 'uploads';
@@ -326,6 +326,7 @@ class OrderClass extends \classes\IndexClass
         //获取表单上传文件
         $file = $request->file('file');
         $info = $file->move($url, $filename);
+
         if ($info) {
             $filename = $url . '/' . $info->getSaveName();
             unset($info);
@@ -340,7 +341,13 @@ class OrderClass extends \classes\IndexClass
                 $objPHPExcel = $objReader->load($filename);
             } else if ($extension == 'csv') {
                 $objReader = \PHPExcel_IOFactory::createReader('CSV');
-                $objPHPExcel = $objReader->load($filename);
+                if (input('platform') == 'pinduoduo'){
+
+                    $objPHPExcel = $objReader->setInputEncoding('UTF-8')->load($filename);
+                }else{
+
+                    $objPHPExcel = $objReader->setInputEncoding('GBK')->load($filename);
+                }
             } else {
                 unlink($filename);
                 parent::ajax_exception(000, '请上传excel格式的文件!');
@@ -350,42 +357,13 @@ class OrderClass extends \classes\IndexClass
 
             array_shift($excel_array);//去表头
 
-            //格式化并验证
-            $result = [];
-            foreach ($excel_array as $k => $v) {
+            $files = new OrderFileClass($excel_array);
 
-                if (count($v) != 3) {
-                    unlink($filename);
-                    parent::ajax_exception(000, '导入文件格式有误');
-                }
-
-                list($name, $phone, $address) = $v;
-
-                if (empty($name)) {
-                    unlink($filename);
-                    parent::ajax_exception(000, '第' . ($k + 2) . '行收货人格式错误');
-                }
-                if (!preg_match("/^1[34578]\d{9}$/", $phone)) {
-                    unlink($filename);
-                    parent::ajax_exception(000, '第' . ($k + 1) . '行收货电话格式错误');
-                }
-                if (empty($address)) {
-                    unlink($filename);
-                    parent::ajax_exception(000, '第' . ($k + 1) . '行收货地址格式错误');
-                }
-                if (strlen($address) > 255) {
-                    unlink($filename);
-                    parent::ajax_exception(000, '第' . ($k + 1) . '行收货地址超长');
-                }
-
-                $result[] = [
-                    'name' => $name,
-                    'phone' => $phone,
-                    'address' => $address,
-                ];
-            }
+            $result = $files->file;
 
             unlink($filename);
+
+            if (!is_array($result))parent::ajax_exception(000,$result);
 
             return $result;
         }
@@ -751,9 +729,9 @@ class OrderClass extends \classes\IndexClass
     {
         $id = $request->get('id');
         $note = $request->get('value');
-        if (strlen($note) > 255)parent::ajax_exception(000,'备注太长了~~');
+        if (strlen($note) > 255) parent::ajax_exception(000, '备注太长了~~');
         $member = parent::member();
         $order = new OrderModel();
-        $order->where('id','=',$id)->where('member_id','=',$member['id'])->update(['note' => $note]);
+        $order->where('id', '=', $id)->where('member_id', '=', $member['id'])->update(['note' => $note]);
     }
 }

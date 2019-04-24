@@ -88,6 +88,14 @@
                 <div class="layui-form-mid layui-word-aux">电话号码</div>
             </div>
 
+                <div class="layui-form-item">
+                    <label class="layui-form-label">发货地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="address" lay-verify="required" placeholder="发货地址" autocomplete="off"
+                               class="layui-input" value='{if isset($self)}{$self["address"]}{/if}' maxlength="20"/>
+                    </div>
+                </div>
+
         </div>
         <!--<hr>
         <div class="layui-form-min">

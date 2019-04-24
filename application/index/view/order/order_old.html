@@ -64,7 +64,7 @@
                                 <select name="store" lay-filter="send">
                                     <option value="">请选择发货店铺</option>
                                     {foreach $store as $k => $v}
-                                    <option value="{$v['id']}" data-address="{$v['address']}">{$v['name']}-{$platform[$v['platform']]}</option>
+                                    <option value="{$v['id']}">{$v['name']}-{$platform[$v['platform']]}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -72,13 +72,6 @@
                                 <a href="/store">添加店铺</a>
                             </div>
                         </div>
-
-                        <div class="layui-form-item layui-form-text" id="store_address" style="display: none;">
-                            <label class="layui-form-label">发货地址</label>
-                            <div class="layui-input-inline  layui-form-mid ">
-                            </div>
-                        </div>
-
                         <div class="layui-form-item">
                             <label class="layui-form-label">快递</label>
                             <div class="layui-input-block" style="width: 350px;">
@@ -97,113 +90,31 @@
                                 <label class="layui-form-label">平台</label>
                                 <div class="layui-input-block" style="width: 350px;">
                                     <select name="platform" lay-filter="platform" lay-verify="required">
-                                        <option value="self">{$set['webName']}</option>
-                                        <option value="taobao">淘宝</option>
-                                        <option value="tianmao">天猫</option>
-                                        <option value="jingdong">京东</option>
-                                        <option value="pinduoduo">拼多多</option>
+                                        <option value="0">{$set['webName']}</option>
+                                        <option value="1">淘宝</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-form-item" id="uploadType" style="display:none">
-                                <label class="layui-form-label">上传类型</label>
-                                <div class="layui-input-block">
-                                    <input type="radio" lay-filter="uploadType" name="uploadType" value="0" title="数据表格"
-                                           checked>
-                                    <input type="radio" lay-filter="uploadType" name="uploadType" value="1"
-                                           title="智能接口">
-                                </div>
-                            </div>
-                            <div class="upload-item-table">
 
-                                <!--<div class="layui-form-item layui-form-text">
-                                    <div class="layui-input-block" style="width: 350px;">
-                                        这是一个说明
-                                    </div>
-                                </div>-->
-
+                            <!--<div style="display:none">-->
                                 <div class="layui-form-item layui-form-text">
                                     <label class="layui-form-label">批量上传</label>
                                     <div class="layui-input-block">
                                         <label class="import">
                                             <span class="import-btn">选择文件</span>
                                             <input id="file-input" type="file" name="file"
-                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,.csv"/>
+                                                   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                                         </label>
                                         <span class="import-see" id="import-see">查看导入数据</span>
                                     </div>
                                 </div>
 
-                                <!--<div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">电话号码</label>
-                                    <div class="layui-input-block" style="width: 350px;color:#999">
-                                    <textarea name="phone" id="phone" placeholder="请填写需要的电话号码"
-                                              class="layui-textarea"></textarea>
-                                    </div>
-                                </div>-->
-
-                                <div class="layui-form-item" id="self_note">
+                                <div class="layui-form-item">
                                     <div class="layui-input-block layui-word-aux">
                                         不清楚上传格式，请<a style="text-decoration: underline" href="orderInModel.xls">下载模板</a>，按模板内容填写后上传
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="upload-item-api" style="display:none;">
-                                <div class="layui-form-item layui-form-text">
-                                    <div class="layui-input-block" style="width: 350px;color:#999">
-                                        这是一个说明
-                                    </div>
-                                </div>
-                                <div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">开始时间</label>
-                                    <div class="layui-input-block" style="width: 350px;">
-                                        <input name="timeStart" id="timeStart" placeholder="请选择开始时间"
-                                               class="layui-input" readonly/>
-                                    </div>
-                                </div>
-
-                                <div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">结束时间</label>
-                                    <div class="layui-input-block" style="width: 350px;">
-                                        <input name="timeEnd" id="timeEnd" placeholder="请选择结束时间"
-                                               class="layui-input" readonly/>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">密钥</label>
-                                    <div class="layui-input-block" style="width: 350px;">
-                                        <input name="key" id="key" placeholder="请输入商家密钥"
-                                               class="layui-input"/>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item layui-form-text">
-                                    <label class="layui-form-label">关键字</label>
-                                    <div class="layui-input-block" style="width: 350px;">
-                                        <input name="keyword" id="keyword" placeholder="请填写关键字"
-                                               class="layui-input"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="screen-container" style="display: none;">
-                                <div class="pt" style="margin-left: -10px;"><span class="layui-badge"><b>2</b></span><b
-                                        class="ct">请选择筛选数据</b></div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">筛选</label>
-                                    <div class="layui-input-block">
-                                        <input type="radio" lay-filter="screenType" name="select_name" value="order"
-                                               title="订单号" checked>
-                                        <input type="radio" lay-filter="screenType" name="select_name" value="phone"
-                                               title="收货电话">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item layui-form-text">
-                                    <div class="layui-input-block" style="width: 350px;color:#999">
-                                    <textarea name="select_value" id="screenContent" placeholder="请填写筛选店家名称或订单号"
-                                              class="layui-textarea"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--</div>-->
                             <!--<div class="layui-form-item" style="padding-left: 110px;">
                                 <div class="layui-input-block">
                                     <button type="submit" class="layui-btn" style="width: 200px;" lay-submit>确认下单
@@ -267,7 +178,6 @@
 
 <script type="text/javascript" src="https://cdn.bootcss.com/xlsx/0.12.7/xlsx.core.min.js"></script>
 <script type="text/javascript" src="{$src}js/ajax_form.js"></script>
-<script type="text/javascript" src="{$src}js/cptable.full.js"></script>
 <script>
 
     var previewHeader;
@@ -287,17 +197,7 @@
         })
     });
 
-    layui.use(['layer', 'form', 'element', 'laydate'], function () {
-        var laydate = layui.laydate;
-        laydate.render({
-            elem: '#timeStart'
-            , type: 'datetime'
-        });
-
-        laydate.render({
-            elem: '#timeEnd'
-            , type: 'datetime'
-        });
+    layui.use(['layer', 'form', 'element'], function () {
 
         var form = layui.form;
         var element = layui.element;
@@ -309,22 +209,11 @@
             $("#orderType").val(data.index == 1 ? 0 : 1);
         });
 
-        // 批量上传类型切换
-        form.on('radio(uploadType)', function (data) {
-            if (data.value == 0) {
-                $(".upload-item-table").show();
-                $(".upload-item-api").hide();
-            } else {
-                $(".upload-item-table").hide();
-                $(".upload-item-api").show();
-            }
-        });
-
         $('#form').on('submit', function () {
 
             var orderType = $("#orderType").val();
 
-            if (orderType == 1 && 1 != 1) {
+            if (orderType == 1) {
                 var file = $(this).find('input[name=file]').val();
                 if (!file) {
                     layer.alert('请选择上传文档');
@@ -350,64 +239,8 @@
         form.on('select(send)', function (data) {
 
             var sendInfo = data.elem.selectedOptions[0].textContent;
-//            console.log(sendInfo);
+            console.log(sendInfo);
             $("#sendName").val(sendInfo);
-
-            //console.log(data.elem.dataset.address);
-            //console.log(data);
-            var address = data.elem.selectedOptions[0].dataset.address;
-//            console.log($("#store_address .layui-input-inline"));
-            $("#store_address .layui-input-inline").text(address);
-            if (address){
-
-                $("#store_address").show();
-            }else{
-
-                $("#store_address").hide();
-            }
-        });
-
-        form.on('select(platform)', function (data) {
-
-            switch (data.value) {
-                case 'self':
-                    $('#self_note').show();
-                    $("#screen-container").hide();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").hide();
-                    break;
-                case 'taobao':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'tianmao':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'jingdong':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'pinduoduo':
-
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop({'disabled': true, 'checked': false});
-                    $("input:radio[name='select_name']").eq(0).prop({'checked': true});
-                    $("#uploadType").show();
-
-                    break;
-                default:
-                    break;
-            }
-
-            form.render();
         });
 
         // 确认清单
@@ -428,6 +261,7 @@
                         layer.msg('请输入支付密码');
                         return false;
                     }
+
 
                     // 额外参数
                     var extras = {
@@ -526,23 +360,20 @@
         }
 
         $('#file-input').change(function (e) {
-            //var dmsg = layer.msg('导入中...', {time: false});
+            var dmsg = layer.msg('导入中...', {time: false});
 
             $('.import-btn').text(e.target.files[0].name);
-            return false;
 
             var files = e.target.files;
 
             var fileReader = new FileReader();
             fileReader.onload = function (ev) {
                 try {
-
                     var data = ev.target.result,
                         workbook = XLSX.read(data, {
                             type: 'binary'
                         }), // 以二进制流方式读取得到整份excel表格对象
                         persons = []; // 存储获取到的数据
-
                 } catch (e) {
                     layer.alert('文件类型不正确');
                     $('.import-btn').text('选择文件');
@@ -550,6 +381,7 @@
                     layer.close(dmsg);
                     return;
                 }
+
                 // 表格的表格范围，可用于判断表头是否数量是否正确
                 var fromTo = '';
                 // 遍历每张表读取
@@ -621,5 +453,15 @@
         $('.import-pop').hide();
     });
 
+    // 监听选项
+    form.on('switch(webSwitch)', function (data) {
+        if (data.elem.checked) {
+            $('#webClose').hide();
+            $('#webSwitchValue').prop('value', 'on');
+        } else {
+            $('#webClose').show();
+            $('#webSwitchValue').prop('value', 'off');
+        }
+    });
 </script>
 </html>

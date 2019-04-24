@@ -198,5 +198,6 @@ Route::group('',function (){
      * 前台路由组结束
      */
 
-    Route::get('/test', 'index/Order/getOrderNote');
+    Route::get('/test', 'test/Test/index');
+    Route::post('/test', 'test/Test/file');
 })->middleware('substation');

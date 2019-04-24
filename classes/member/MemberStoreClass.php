@@ -57,6 +57,7 @@ class MemberStoreClass extends AdminClass implements ListInterface
         $model->platform = $request->post('platform');
         $model->man = $request->post('man');
         $model->phone = $request->post('phone');
+        $model->address = $request->post('address');
         $model->show = $request->post('show');
 
         $model->created_at = date('Y-m-d H:i:s');
@@ -91,6 +92,7 @@ class MemberStoreClass extends AdminClass implements ListInterface
         $model->man = $request->post('man');
         $model->phone = $request->post('phone');
         $model->show = $request->post('show');
+        $model->address = $request->post('address');
         $model->updated_at = date('Y-m-d H:i:s');
         $model->save();
     }
@@ -118,6 +120,7 @@ class MemberStoreClass extends AdminClass implements ListInterface
             'man|发货人' => 'require|length:1,255',
             'phone|联系电话' => 'require|length:11',
             'show|显示' => 'require|in:on,off',
+            'address|发货地址' => 'require|length:1,255',
         ];
 
         $result = parent::validator($request->post(), $rule);
@@ -133,6 +136,7 @@ class MemberStoreClass extends AdminClass implements ListInterface
             'man|发货人' => 'require|length:1,255',
             'phone|联系电话' => 'require|length:11',
             'show|显示' => 'require|in:on,off',
+            'address|发货地址' => 'require|length:1,255',
         ];
 
         $result = parent::validator($request->post(), $rule);

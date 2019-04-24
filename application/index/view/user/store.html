@@ -63,6 +63,14 @@
                 </div>
             </div>
 
+            <div class="layui-form-item">
+                <label class="layui-form-label">发货地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" required lay-verify="required" placeholder="请输入发货地址" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
             <div class="layui-form-item" style="text-align: right; padding-top: 30px;">
                 <button type="button" class="layui-btn layui-btn-primary" onclick="closePop()">取消</button>
                 <button type="submit" class="layui-btn" lay-submit>确认保存</button>
@@ -150,7 +158,8 @@
                     }
                 }
                 },
-                {field: 'name', title: '店铺名称'},
+                {field: 'name',width: 120, title: '店铺名称'},
+                {field: 'address', width: 120, title: '发货地址'},
                 {
                     field: 'platform', width: 150, title: '平台', templet: function (d) {
                     return transform[d.platform];
