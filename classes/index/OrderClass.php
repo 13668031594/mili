@@ -357,6 +357,8 @@ class OrderClass extends \classes\IndexClass
 
             array_shift($excel_array);//去表头
 
+            if (count($excel_array) > 2000)parent::ajax_exception(000,'单次上传表单内数据不得超过2000条');
+
             $files = new OrderFileClass($excel_array);
 
             $result = $files->file;
