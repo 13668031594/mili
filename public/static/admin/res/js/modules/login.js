@@ -1,4 +1,4 @@
-layui.define(['layer', 'form','jquery'], function (exports) {
+layui.define(['layer', 'form', 'jquery'], function (exports) {
     //var $ = jQuery = layui.$;
     var layer = layui.layer
         , form = layui.form;
@@ -42,27 +42,27 @@ layui.define(['layer', 'form','jquery'], function (exports) {
 
         var loading = layer.load(2);
 
-        $.post('/admin/login', data.field, function(data){
-            console.log(data) ;
-            layer.close(loading) ;
-            if( data.status == 'success'){
+        $.post('/admin/login', data.field, function (data) {
+            console.log(data);
+            layer.close(loading);
+            if (data.status == 'success') {
                 layer.msg('登录成功');
-                window.location.href=data.url ;
-            }else{
+                window.location.href = '/admin';
+            } else {
                 layer.msg(data.message);
             }
 
-        }).error(function(error){
+        }).error(function (error) {
             //console.log(error);
-            if( error.status == 404 ){
+            if (error.status == 404) {
                 layer.msg('地址错误');
             }
 
-            if( error.status == 500 ){
+            if (error.status == 500) {
                 layer.msg('服务器错误');
             }
 
-            layer.close(loading) ;
+            layer.close(loading);
         });
         /* $.ajax({
             type: "post",
