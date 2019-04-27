@@ -60,7 +60,7 @@ class LoginClass extends IndexClass
             ->find();
 
         //获取失败，账密错误
-        if (is_null($member)) parent::back('账号或密码错误');
+        if (is_null($member)) parent::back('账号或密码错误'.SUBSTATION);
 
 //        if ($member['substation'] != SUBSTATION) parent::back('您在本站还未注册账号');
 
