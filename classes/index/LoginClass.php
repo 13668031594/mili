@@ -121,7 +121,7 @@ class LoginClass extends IndexClass
             $query->where('phone','=',$request->post('phone'))
                 ->whereOr('account','=',$request->post('account'));
         })->find();
-        if (is_null($test))parent::ajax_exception(000, '你在本站注册过会员了');
+        if (!is_null($test))parent::ajax_exception(000, '你在本站注册过会员了');
 
         self::validator_phone($request);//短信验证
 
