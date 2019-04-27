@@ -37,7 +37,6 @@ body {
 .clear {
   clear: both !important; }
 
-/* 上 */
 .header-out {
   background: white;
   border-bottom: 1px solid #ff6600; }
@@ -1137,7 +1136,7 @@ body {
   position: fixed;
   z-index: 2000;
   width: 500px;
-  height: 400px;
+  height: 500px;
   padding: 0 50px 50px 50px;
   top: 0;
   left: 0;
@@ -1286,11 +1285,11 @@ body {
   -webkit-border-radius: 5px;
   border-radius: 5px; }
 
-#import-see {
+#import-see, .import-see {
   display: none;
   color: #64bb79;
   cursor: pointer; }
-  #import-see:hover {
+  #import-see:hover, .import-see:hover {
     color: #ff8939;
     text-decoration: underline; }
 
@@ -1880,8 +1879,6 @@ body {
         line-height: 40px;
         overflow: hidden; }
         .table-out-d tbody tr .d-header > span:last-child {
-           padding-right:20px;
-          overflow:hidden;
           float: right;
           text-align: right; }
           .table-out-d tbody tr .d-header > span:last-child i {
@@ -1988,7 +1985,7 @@ body {
 .my-steps {
   width: 100%; }
   .my-steps .layui-timeline-item {
-    padding-right: 20px;
+    padding-right: 40px;
     float: left; }
     .my-steps .layui-timeline-item:before {
       content: " ";
@@ -2004,5 +2001,341 @@ body {
   margin: 10px 0px; }
   .pt > .ct {
     padding-left: 10px; }
+
+.work-container {
+  background-color: #fcfcfc;
+  height: 100px; }
+
+.my-steps-container {
+  border-bottom: #eee solid 1px; }
+
+.work-class-container {
+  margin: 20px 0px; }
+  .work-class-container .bg-blue {
+    background: -webkit-linear-gradient(180deg, #65b2f4, #5d80e2);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(180deg, #65b2f4, #5d80e2);
+    /* Opera 11.6 - 12.0 */
+    background: -moz-linear-gradient(180deg, #65b2f4, #5d80e2);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(180deg, #65b2f4, #5d80e2);
+    /* 标准的语法 */ }
+  .work-class-container .bg-orange {
+    background: -webkit-linear-gradient(180deg, #f8ad68, #e39462);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(180deg, #f8ad68, #e39462);
+    /* Opera 11.6 - 12.0 */
+    background: -moz-linear-gradient(180deg, #f8ad68, #e39462);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(180deg, #f8ad68, #e39462);
+    /* 标准的语法 */ }
+  .work-class-container .bg-green {
+    background: -webkit-linear-gradient(180deg, #59da9e, #2aa56e);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(180deg, #59da9e, #2aa56e);
+    /* Opera 11.6 - 12.0 */
+    background: -moz-linear-gradient(180deg, #59da9e, #2aa56e);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(180deg, #59da9e, #2aa56e);
+    /* 标准的语法 */ }
+  .work-class-container .bg-white > h1 {
+    color: #000 !important; }
+  .work-class-container .bg-white > span {
+    color: #333; }
+  .work-class-container .work-class-item {
+    width: 265px;
+    height: 280px;
+    border: #ccc solid 1px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 10px;
+    float: left; }
+    .work-class-container .work-class-item .item-label {
+      height: 80px;
+      text-align: center;
+      padding-top: 40px;
+      overflow: hidden; }
+      .work-class-container .work-class-item .item-label h1 {
+        font-size: 24px;
+        color: white; }
+      .work-class-container .work-class-item .item-label span {
+        background-color: #ececec;
+        height: 3px;
+        width: 15px;
+        display: inline-block;
+        border-radius: 1.5px; }
+    .work-class-container .work-class-item ul {
+      padding: 5px 10px; }
+      .work-class-container .work-class-item ul li {
+        padding: 1px 0px;
+        border-bottom: #eee dashed 1px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap; }
+        .work-class-container .work-class-item ul li a {
+          font-size: 13px;
+          color: #999; }
+          .work-class-container .work-class-item ul li a:hover {
+            color: red; }
+
+.not-find {
+  margin: 20px 0px;
+  padding: 20px 0px;
+  height: 80px;
+  line-height: 40px; }
+
+.create-order {
+  padding: 10px 15px;
+  color: white;
+  border-radius: 5px;
+  background-color: #c03638; }
+  .create-order:hover {
+    color: white; }
+
+.work-class-menu {
+  margin-top: 30px;
+  width: 260px;
+  float: left;
+  overflow: hidden; }
+  .work-class-menu .work-menu-item {
+    padding-left: 10px; }
+    .work-class-menu .work-menu-item.active > a::before {
+      position: absolute;
+      content: '';
+      margin-left: -10px;
+      margin-top: 10px;
+      width: 4px;
+      height: 10px;
+      border-radius: 2px;
+      background-color: red; }
+    .work-class-menu .work-menu-item.active ul {
+      display: block; }
+    .work-class-menu .work-menu-item > a {
+      height: 30px;
+      line-height: 30px;
+      display: block;
+      font-size: 13px;
+      font-weight: bold; }
+    .work-class-menu .work-menu-item ul {
+      display: none;
+      padding-bottom: 10px; }
+      .work-class-menu .work-menu-item ul a {
+        font-size: 12px;
+        color: #999; }
+        .work-class-menu .work-menu-item ul a.active {
+          color: red; }
+
+.work-menu-right {
+  margin-top: 30px;
+  float: left;
+  padding-left: 40px;
+  width: 750px;
+  overflow: hidden;
+  border-left: #eee solid 1px; }
+
+.work-table .layui-table-cell {
+  height: auto;
+  line-height: 28px;
+  overflow: visible;
+  text-overflow: inherit;
+  white-space: normal; }
+
+.work-detail-title {
+  margin: 10px 0px;
+  font-size: 16px; }
+
+.work-detail {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 5px; }
+  .work-detail .code {
+    height: 50px;
+    color: #999; }
+    .work-detail .code > span:first-child {
+      float: left; }
+    .work-detail .code > span:last-child {
+      float: right; }
+  .work-detail .item {
+    color: #666;
+    padding: 3px 0px; }
+    .work-detail .item > span {
+      color: #333; }
+  .work-detail .other {
+    margin-top: 10px;
+    margin-left: 70px; }
+    .work-detail .other > div {
+      float: left;
+      margin-right: 10px; }
+    .work-detail .other .images {
+      height: 80px;
+      width: 90px;
+      background-color: red; }
+      .work-detail .other .images > img {
+        height: 100%;
+        width: 100%; }
+    .work-detail .other .attach {
+      padding: 10px;
+      width: 130px;
+      border: #ccc solid 1px;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 60px;
+      background-color: white; }
+      .work-detail .other .attach > h5 {
+        height: 40px;
+        color: #999;
+        text-overflow: ellipsis;
+        overflow: hidden; }
+      .work-detail .other .attach > span {
+        font-size: 12px;
+        color: #ccc; }
+    .work-detail .other .reply {
+      margin-top: 50px;
+      float: right; }
+      .work-detail .other .reply > a {
+        color: #c17171;
+        border-radius: 5px;
+        padding: 8px 15px;
+        border: #c17171 solid 1px; }
+
+.work-message-list {
+  margin-top: 20px;
+  padding: 5px; }
+  .work-message-list > h3 {
+    height: 40px;
+    border-bottom: #ccc solid 1px;
+    line-height: 40px;
+    text-indent: 10px;
+    margin-bottom: 10px; }
+  .work-message-list .time {
+    font-size: 12px;
+    color: #999;
+    padding-left: 20px; }
+  .work-message-list .message-item {
+    position: relative;
+    padding-right: 300px; }
+    .work-message-list .message-item .message-user {
+      font-size: 16px;
+      margin-bottom: 10px; }
+      .work-message-list .message-item .message-user.self {
+        color: red; }
+    .work-message-list .message-item .message-right {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      width: 255px;
+      bottom: 0px; }
+      .work-message-list .message-item .message-right .images-list {
+        height: 100%;
+        width: 150px;
+        padding-right: 10px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        -moz-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        align-items: center; }
+        .work-message-list .message-item .message-right .images-list .images {
+          height: 50px;
+          width: 50px;
+          flex: 1;
+          background-color: #00F7DE; }
+          .work-message-list .message-item .message-right .images-list .images > img {
+            height: 100%;
+            width: 100%; }
+      .work-message-list .message-item .message-right .other {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        width: 105px;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        -moz-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        align-items: center;
+        border-left: #eee solid 1px;
+        text-align: center; }
+        .work-message-list .message-item .message-right .other > a {
+          padding: 3px 5px;
+          border-radius: 5px;
+          border: red solid 1px;
+          color: red; }
+
+.replay-message {
+  /* 图片的背景层 */ }
+  .replay-message .images-item {
+    height: 122px;
+    width: 122px;
+    display: inline-block;
+    position: relative; }
+  .replay-message .images-item-img {
+    vertical-align: middle;
+    height: 110px;
+    width: 110px;
+    border: #ccc solid 1px;
+    padding: 5px;
+    display: table-cell; }
+  .replay-message .images-item-img img {
+    height: 100%;
+    width: 100%; }
+  .replay-message .images-item .layui-block {
+    margin-bottom: 10px; }
+  .replay-message .images-bg {
+    position: absolute;
+    height: 122px;
+    width: 122px;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 10; }
+  .replay-message .images-button-container {
+    position: absolute;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    height: 80px;
+    margin: auto;
+    text-align: center; }
+  .replay-message .file-preview {
+    height: 40px;
+    max-width: 100px;
+    margin-top: 5px;
+    border-radius: 2px;
+    border: #ccc solid 1px;
+    padding: 5px 8px; }
+  .replay-message .file-preview a {
+    color: #999; }
+  .replay-message .file-preview .name {
+    margin-bottom: 3px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  .replay-message .attach-item {
+    display: inline-block;
+    height: 120px;
+    width: 140px;
+    padding-top: 8px; }
 
 /*# sourceMappingURL=style.css.map */

@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
     <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
-            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-            crossorigin="anonymous"></script>
+    <script src="{$src}res/js/jquery.min.js"
+
+             ></script>
 </head>
 
 <div class="layui-fluid">
@@ -90,8 +90,12 @@
 <script type="text/html" id="tableTool">
     <!-- 类型|标题|字段|value|按钮对应地址 -->
     {{# if ( d.status == 0 ) { }}
+    {if SUBSTATION == '0'}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="custom|拒绝充值|status|3|0">拒绝</a>
     <a class="layui-btn layui-btn-xs" lay-event="custom|处理充值|status|1|0">处理</a>
+    {else}
+    -
+    {/if}
     {{# }else{ }}
     -
     {{# } }}

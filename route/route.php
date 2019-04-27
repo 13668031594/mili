@@ -16,12 +16,14 @@ use think\facade\Route;
  * 后台路由组
  */
 
-Route::group('',function (){
+Route::group('', function () {
 
     Route::get('admin/login', 'master/Login/getLogin');//后台登录页面
     Route::post('admin/login', 'master/Login/postLogin');//后台登录方法
     Route::get('admin/', 'master/Login/getIndex')->middleware('master_login');//后台首页
     Route::group('admin', function () {
+
+        Route::controller('files', 'files/FilesLocation');
 
         Route::get('/', 'master/Login/getIndex');//后台首页
         Route::get('', 'master/Login/getIndex');//后台首页
@@ -34,6 +36,7 @@ Route::group('',function (){
 
         //系统设置
         Route::controller('system', 'system/System');
+        Route::controller('bank', 'system/Bank');
 
         //站点栏目
         Route::controller('site', 'system/Site');
@@ -94,6 +97,11 @@ Route::group('',function (){
         //分站列表
         Route::controller('substation', 'substation/Substation');
 
+        //工单
+        Route::controller('repair_class', 'repair/RepairClass');//分类
+        Route::controller('repair_default', 'repair/RepairDefault');//推荐方案
+        Route::controller('repair', 'repair/Repair');//推荐方案
+
     })->middleware(['master_login']);//验证管理员登录中间件
     /**
      * 后台路由组结束
@@ -118,6 +126,7 @@ Route::group('',function (){
 //登录后才能访问的权限组，若未登录，重定向到登录页面
     Route::group([], function () {
 
+        Route::controller('files-index', 'files/FilesLocation');
         Route::get('logout', 'index/Login/getLogout');//前台注销方法
 
         //订单模块
@@ -176,6 +185,15 @@ Route::group('',function (){
         Route::get('commis', 'index/Agent/getCommis');//佣金记录页面
         Route::get('commis-table', 'index/Agent/getCommisTable');//佣金记录数据
 
+        //工单管理
+        Route::get('repair-store', 'index/Repair/getStore');//添加工单页面
+        Route::post('repair-store', 'index/Repair/postStore');//添加工单页面
+        Route::get('repair-my', 'index/Repair/getMy');//我的工单
+        Route::get('repair-my-table', 'index/Repair/getMyTable');//工单数据
+        Route::get('repair-repair', 'index/Repair/getRepair');//工单详情
+        Route::get('repair-note', 'index/Repair/getNote');//交流记录
+        Route::post('repair-note', 'index/Repair/postNote');//交流记录
+        Route::get('repair-success', 'index/Repair/getSuccess');//完结订单
     })->middleware('member_login');//验证会员登录中间件
 
 //游客页面，无需登录即可访问
@@ -193,6 +211,8 @@ Route::group('',function (){
         Route::get('notice-info/:id', 'index/Index/getNoticeInfo');//公告详情
         Route::get('goods', 'index/Index/getGoods');//礼品页面
         Route::get('goods-table', 'index/Index/getGoodsTable');//礼品数据
+        Route::get('repair-list', 'index/Repair/getIndex');//提交工单首页
+        Route::get('repair-default', 'index/Repair/getDefault');//推荐方案
     });
     /**
      * 前台路由组结束

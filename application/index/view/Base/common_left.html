@@ -60,6 +60,16 @@
             <a href="/expense-note" {if isset($choice) && ($choice== '/expense-note')}class="choice"{/if}>余额记录</a>
         </dd>
     </dl>
+    <dl class="left-menu-item">
+        <dt>工单管理</dt>
+        <dd>
+            <a href="/repair-list" {if isset($choice) && ($choice== '/repair-list')}class="choice"{/if}>提交工单</a>
+        </dd>
+
+        <dd>
+            <a href="/repair-my" {if isset($choice) && ($choice== '/repair-my')}class="choice"{/if}>我的工单</a>
+        </dd>
+    </dl>
 
 
     <!--<ul>

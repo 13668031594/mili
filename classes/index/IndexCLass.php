@@ -11,6 +11,7 @@ namespace classes\index;
 use app\adv\model\AdvModel;
 use app\article\model\ArticleModel;
 use app\banner\model\BannerModel;
+use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsClassModel;
 use app\goods\model\GoodsModel;
 use app\notice\model\NoticeModel;
@@ -164,9 +165,15 @@ class IndexCLass extends \classes\IndexClass
 
         $result = parent::page(new GoodsModel(), $other);
 
+        $amount = new GoodsAmountModel();
         foreach ($result['message'] as &$v) {
 
             if (is_null($v['location']) || !file_exists(substr($v['location'], 1))) $v['location'] = config('young.image_not_found');
+            if (SUBSTATION != '0') {
+
+                $a = $amount->where('goods_id', '=', $v['id'])->where('substation', '=', SUBSTATION)->find();
+                if (!is_null($a)) $v['amount']= $a->amount;
+            }
         }
 
         return $result;

@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="{$src}layui/css/layui.css">
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
     <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
-            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-            crossorigin="anonymous"></script>
+    <script src="{$src}res/js/jquery.min.js"
+
+             ></script>
     <style type="text/css">
         .images-item {
             height: 212px;
@@ -199,6 +199,7 @@
                     <div class="images-item-img">
                         <img class="images-preview" src="{if isset($self)}{$self['location']}{/if}"/>
                     </div>
+                    {if SUBSTATION == '0'}
                     <div class="images-button-container">
                         <div>
                             <button type="button" data-id="0"
@@ -216,6 +217,7 @@
                             </button>
                         </div>
                     </div>
+                    {/if}
                     {if isset($self)}
                     <input type='hidden' name='imageId[]' value='{$self["cover"]}'/>
                     {else}
@@ -235,6 +237,7 @@
                         <div class="images-item-img">
                             <img class="images-preview" src="{$v['location']}"/>
                         </div>
+                        {if SUBSTATION == '0'}
                         <div class="images-button-container">
                             <div>
                                 <button type="button" data-id="{$k}"
@@ -252,6 +255,7 @@
                                 </button>
                             </div>
                         </div>
+                        {/if}
                         <input type='hidden' name='imageId[]' value='{$v["id"]}'/>
                     </div>
                 </div>

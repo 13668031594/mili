@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+        <div class="data-right">
+            <div class="data-right-container container-shadow" style="width:1100px;">
+                <div style="width:1100px;">
+                    <div class="layui-tab" lay-filter="screen">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">待处理 <span class="layui-badge layui-bg-gray">{$_10}</span></li>
+                            <li>处理中 <span class="layui-badge layui-bg-gray">{$_20}</span></li>
+                            <li>待确认 <span class="layui-badge layui-bg-gray">{$_30}</span></li>
+                            <li>已完结 <span class="layui-badge layui-bg-gray">{$_40}</span></li>
+                            <li>全部</li>
+                        </ul>
+                    </div>
+                    <div class="work-table">
+                        <table class="layui-hide" id="table" lay-filter="table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<script src="{$src}js/ajax.js"></script>
+<script>
+
+    var screenType = 0;
+
+    // 需要隐藏字段
+    var hideField = {
+        // 待处理
+        0: ['handle_time', 'is_handle_time', 'resolve_time', 'finish_time', 'hold_time','wait_time'],
+        1: ['handle_time', 'is_handle_time', 'resolve_time', 'finish_time', 'hold_time','wait_time'],
+        2: ['handle_time', 'is_handle_time', 'resolve_time', 'finish_time', 'hold_time','wait_time'],
+        3: ['handle_time', 'is_handle_time', 'resolve_time', 'finish_time', 'hold_time','wait_time'],
+        4: ['handle_time', 'is_handle_time', 'resolve_time', 'finish_time', 'hold_time','wait_time'],
+        // 处理中
+//        1: ['wait_time', 'resolve_time', 'finish_time', 'created_at'],
+        // 待确认
+//        2: ['wait_time', 'handle_time', 'is_handle_time', 'finish_time', 'created_at'],
+        // 已完结
+//        3: ['wait_time', 'handle_time', 'is_handle_time', 'resolve_time', 'created_at'],
+        // 全部
+//        4: ['wait_time', 'handle_time', 'is_handle_time', 'resolve_time', 'finish_time',],
+    };
+
+    // 筛选传参 筛选关键字screen 默认为0
+    var transform = {
+        screen: {0: '10', 1: '20', 2: '30', 3: '40', 4: ''},
+        status: {10: '待处理', 20: '处理中', 30: '待确认', 40: '已完结'}
+    };
+
+    // 表格获取地址
+    var url = '/repair-my-table';
+    // 查看详情地址 单击行 查看详情 默认?id=id
+    var vUrl = '/repair-repair';
+
+    // 默认0
+    function createScreenParams() {
+        return url + '?status=' + transform.screen[screenType];
+    }
+
+    layui.use(['layer', 'table', 'element'], function () {
+
+        var table = layui.table;
+        var layer = layui.layer;
+        var element = layui.element;
+
+        element.on('tab(screen)', function (data) {
+            // 切换当前筛选类型，并刷新table
+//            createScreenParams()
+            screenType = data.index;
+            console.log(screenType);
+            var url = {};
+            url.url = createScreenParams();
+            tableObj.reload(url);
+        });
+
+        table.on('row(table)', function (obj) {
+            var data = obj.data;
+            location.href = vUrl + '?id=' + data.id;
+//            layer.alert(JSON.stringify(data), {
+//                title: '当前行数据：'
+//            });
+//
+//            //标注选中样式
+//            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+        });
+
+        var tableObj = table.render({
+            id: '___table',
+            elem: '#table',
+            url: createScreenParams(),
+            parseData: function (res) {
+                //console.log(res);
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+
+            autoSort: false,
+//            toolbar: '#toolbar',
+            cols: [[
+                {field: 'order_number', width: 173, title: '工单编号'},
+                {
+                    field: 'content', width: 600, title: '问题', templet: function (d) {
+                    return '<a href="' + vUrl + '?id=' + d.id + '" style="color: #000;text-decoration: underline">' + d.content + '</a>';
+                }
+                },
+                {field: 'repair_class_name', title: '类型', width: 100},
+                {
+                    field: 'status', title: '状态', width: 100, templet: function (d) {
+                    return '<span style="color: #c00;">' + transform.status[d.status] + '</span>';
+                }
+                },
+                {field: 'updated_at', title: '处理时间', width: 120},
+                {field: 'hold_time', title: '已处理时长', width: 120},
+                {field: 'wait_time', title: '客户等待时长', width: 120},
+                /*{
+                    field: 'last_reply', title: '最近回复', width: 300, templet: function (d) {
+                    return '<a href="' + vUrl + '?id=' + d.id + '" style="color: #000;text-decoration: underline">' + d.last_reply + '</a>';
+                }
+                },*/
+                {field: 'resolve_time', title: '解决时间', width: 120},
+                {field: 'finish_time', title: '完结时间', width: 120},
+                {field: 'created_at', minWidth: 120, title: '创建时间'},
+            ]],
+            page: true,
+            limit: 10,
+            done: tDoneCallback
+        });
+
+        // 表格加载回调
+        function tDoneCallback() {
+            //console.log('ddd');
+            hideField[screenType].forEach(function (item) {
+                $(".layui-table-box").find("[data-field='" + item + "']").css('display', 'none');
+            });
+
+            tableObj.resize("___table");
+            //$(".layui-table-box").find("[data-field='question']").css('display', 'none');
+        }
+    });
+</script>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+
+</html>

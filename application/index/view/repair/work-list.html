@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+        <div class="data-right" style="width:1100px;">
+            <div class="data-right-container container-shadow">
+                <div class="my-steps-container">
+                    <div class="my-steps clearfix" style="margin:20px auto 10px; width:600px;">
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item active">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <div class="layui-timeline-title"><span>选择问题</span></div>
+                                    <p>请选择您需要的问题</p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item ">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title"><span>推荐解决方案</span></h3>
+                                    <p>精准定位推荐方案</p>
+                                </div>
+                            </li>
+
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <div class="layui-timeline-title">创建工单</div>
+                                    <p>创建符合问题的工单</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 步骤条结束 -->
+                <div>
+                    <div class="work-class-menu">
+                        {foreach $classes as $v}
+                        <div class="work-menu-item active">
+                            <a href="#">{$v['name']}</a>
+                            <ul>
+                                {foreach $v['child'] as $ke => $va}
+                                <li><a href="/repair-default?id={$ke}" {if $ke == $default['id']}class="active"{/if}>{$va}</a></li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                        {/foreach}
+                    </div>
+                    <div class="work-menu-right">
+                        <div class="work-menu-content">
+                            {php}echo $default['content'];{/php}
+                        </div>
+
+                        <div class="not-find" style="border-top:#eee solid 1px;">
+                            <h2>如果不存在我遇到的问题，怎么办？</h2>
+                            <a href="/repair-store" class="create-order">创建工单</a>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $(".work-class-menu .work-menu-item>a").on('click', function () {
+            var p = $(this).parents('.work-menu-item');
+            if (!p.hasClass('active')) {
+                p.addClass('active')
+            } else {
+                p.removeClass('active')
+            }
+        })
+    })
+
+</script>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+<script src="{$src}js/ajax.js"></script>
+<script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+    });
+</script>
+</html>

@@ -13,7 +13,8 @@ class MasterLoginMiddleware
     {
         //尝试获取session中的master信息
         $master = session('master');
-
+//dump($master);
+//exit;
         //验证session中的信息格式与过期时间
         if (is_null($master) || !is_array($master) || !isset($master['id']) || !isset($master['login_ass']) || !isset($master['time']) || ($master['time'] < time())) self::errors();
 

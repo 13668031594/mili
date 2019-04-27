@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
     <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"
-            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-            crossorigin="anonymous"></script>
+    <script src="{$src}res/js/jquery.min.js"
+
+             ></script>
     <style type="text/css">
         .images {
             height: 30px;
@@ -32,7 +32,7 @@
     </div>
 
     <div class="toolTable">
-        {if $sub['is']}
+        {if SUBSTATION == '0'}
         <button class="layui-btn layui-btn-sm" data-type="addData">
             <i class="layui-icon">&#xe654;</i>添加商品
         </button>

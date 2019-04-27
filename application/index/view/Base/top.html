@@ -184,6 +184,20 @@
                     <li><a href="/article">文章</a></li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:;" {if $nav['repair']['flash'] == 'on'}class="change-color"{/if}>
+                {if $nav['repair']['tilt'] == 'on'}<i>{/if}
+                工单管理
+                {if $nav['repair']['tilt']}</i>{/if}
+                </a>
+                {if $nav['repair']['hot'] == 'on'}
+                <img class="hot" src="{$src}images/hot.gif"/>
+                {/if}
+                <ul>
+                    <li><a href="/repair-list">提交工单</a></li>
+                    <li><a href="/repair-my">我的工单</a></li>
+                </ul>
+            </li>
             <div class="clear"></div>
         </ul>
   	</div>

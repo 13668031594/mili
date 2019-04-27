@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>工单详情</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="{$src}res/js/jquery.min.js"></script>
+    <style>
+        .images-item {
+            height: 122px;
+            width: 122px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .images-item-img {
+
+            vertical-align: middle;
+            height: 110px;
+            width: 110px;
+            border: #ccc solid 1px;
+            padding: 5px;
+            display: table-cell;
+
+        }
+
+        .images-item-img img {
+
+            max-width: 110px;
+            height: auto;
+        }
+
+        .images-item .layui-block {
+            margin-bottom: 10px;
+        }
+
+        /* 图片的背景层 */
+        .images-bg {
+            position: absolute;
+            height: 122px;
+            width: 122px;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .images-button-container {
+            position: absolute;
+            z-index: 11;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100px;
+            height: 80px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .file-preview {
+            height: 40px;
+            max-width: 100px;
+            margin-top: 5px;
+            border-radius: 2px;
+            border: #ccc solid 1px;
+            padding: 5px 8px;
+        }
+
+        .file-preview a {
+            color: #999;
+        }
+
+        .file-preview .name {
+            margin-bottom: 3px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attach-item {
+            display: inline-block;
+            height: 120px;
+            width: 140px;
+            padding-top: 8px;
+        }
+
+        .work-message-list {
+            margin-top: 20px;
+            padding: 5px;
+        }
+
+        .work-message-list > h3 {
+            height: 40px;
+            border-bottom: #ccc solid 1px;
+            line-height: 40px;
+            text-indent: 10px;
+            margin-bottom: 10px;
+        }
+
+        .work-message-list .time {
+            font-size: 12px;
+            color: #999;
+            padding-left: 20px;
+        }
+
+        .work-message-list .message-item {
+            position: relative;
+            padding-right: 300px;
+        }
+
+        .work-message-list .message-item .message-user {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .work-message-list .message-item .message-user.self {
+            color: red;
+        }
+
+        .work-message-list .message-item .message-right {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 255px;
+            bottom: 0px;
+        }
+
+        .work-message-list .message-item .message-right .images-list {
+            height: 100%;
+            width: 150px;
+            padding-right: 10px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            -moz-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            align-items: center;
+        }
+
+        .work-message-list .message-item .message-right .images-list .images {
+            height: 50px;
+            width: 50px;
+            flex: 1;
+            background-color: #00F7DE;
+        }
+
+        .work-message-list .message-item .message-right .images-list .images > img {
+            height: 100%;
+            width: 100%;
+        }
+
+        .work-message-list .message-item .message-right .other {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 105px;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            -moz-justify-content: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            align-items: center;
+            border-left: #eee solid 1px;
+            text-align: center;
+        }
+
+        .work-message-list .message-item .message-right .other > a {
+            padding: 3px 5px;
+            border-radius: 5px;
+            border: red solid 1px;
+            color: red;
+        }
+
+        .layui-table-cell {
+            height: auto;
+            line-height: 28px;
+            overflow: visible;
+            text-overflow: inherit;
+            white-space: normal;
+        }
+
+    </style>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">工单列表</a>
+          <a href="javascript:;">工单详情</a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/repair/note" method="post">
+        <div class="layui-row">
+            <div class="layui-col-sm5">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="200">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td>站点</td>
+                        <td>{$sub['array_con'][$self['substation']]}</td>
+                    </tr>
+                    <tr>
+                        <td>手机</td>
+                        <td>{$self['phone']}</td>
+                    </tr>
+                    <tr>
+                        <td>昵称</td>
+                        <td>{$self['nickname']}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>{$status[$self['status']]}</td>
+                    </tr>
+                    <tr>
+                        <td>问题分类</td>
+                        <td>{$self['repair_class_name']}</td>
+                    </tr>
+                    <tr>
+                        <td>问题</td>
+                        <td>
+                            {$self['content']}
+                        </td>
+                    </tr>
+                    {if count($self['images']) > 0}
+                    <tr>
+                        <td>图片</td>
+                        <td>
+                            {foreach $self['images'] as $v}
+                            <img src="{$v['location']}">
+                            {/foreach}
+                        </td>
+                    </tr>
+                    {/if}
+                    {if count($self['files']) > 0}
+                    <tr>
+                        <td>附件</td>
+                        <td>
+                            {foreach $self['files'] as $k => $v}
+                            <a href="{$v['location']}">附件{$k+1}</a>
+                            {/foreach}
+                        </td>
+                    </tr>
+                    {/if}
+                    <tr>
+                        <td>提交时间</td>
+                        <td>{$self['created_at']}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-col-sm7 layui-anim layui-anim-upbit">
+                <div style="max-width:800px;margin-top:10px;">
+
+                    <!-- 编辑时写入id -->
+                    <input type='hidden' id='id' name="id" value='{$self["id"]}'/>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">回复</label>
+                        <div class="layui-input-block">
+                            <textarea name="content" placeholder="请输入回复内容" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <a href="javascript:;" id="addGoodsImage"
+                               class="layui-btn layui-btn-sm layui-btn-primary"><i
+                                    class="layui-icon layui-icon-add-1"></i> 新增图片</a>
+                        </div>
+                    </div>
+                    <!-- 隐藏的上传 -->
+                    <button type="button" id="upload-images"
+                            lay-data="{literal}{url: '/admin/files/image', accept: 'image',field:'images'}{/literal}"
+                            class="layui-btn layui-btn-primary layui-btn-xs images-item-button layui-hide upload">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+
+                    <button type="button" id="upload-attach"
+                            lay-data="{literal}{url: '/admin/files/file', accept: 'file',field:'files'}{/literal}"
+                            class="layui-btn layui-btn-primary layui-btn-xs images-item-button layui-hide upload">
+                        <i class="layui-icon">&#xe67c;</i>上传附件
+                    </button>
+
+                    <div id="extendImages">
+                        <div id="defaultImage" class="layui-inline" style="margin-right:5px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"><span>图片上传</span></label>
+                                <div class="images-item">
+                                    <div class="images-bg"></div>
+                                    <div class="images-item-img">
+                                        <img class="images-preview"
+                                             src="http://www.baidu.com/img/bd_logo1.png?qua=high"/>
+                                    </div>
+                                    <div class="images-button-container">
+                                        <div>
+                                            <button type="button" data-id="0"
+                                                    onclick="javascript:clickUpload(this);"
+                                                    class="layui-btn layui-btn-primary layui-btn-xs images-item-button">
+                                                <i class="layui-icon">&#xe67c;</i>上传
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button type="button" data-id="0"
+                                                    class="layui-btn layui-btn-xs layui-btn-danger uploadDelete"
+                                                    style="margin-top:10px;"
+                                                    onclick="javascript:removeImage(this)">
+                                                <i class="layui-icon layui-icon-delete"></i>删除
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type='hidden' name='imageId[]' value=''/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <a href="javascript:;" id="addGoodsAttach"
+                               class="layui-btn layui-btn-sm layui-btn-primary"><i
+                                    class="layui-icon layui-icon-add-1"></i> 新增附件</a>
+                        </div>
+                    </div>
+
+                    <div id="extendsAttach">
+
+                        <div id="defaultAttach" class="layui-inline">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"><span>附件</span></label>
+                                <div class="attach-item">
+                                    <div>
+                                        <button type="button" data-id="0"
+                                                onclick="javascript:clickUploadAttach(this);"
+                                                class="layui-btn layui-btn-primary layui-btn-xs images-item-button">
+                                            <i class="layui-icon">&#xe67c;</i>上传
+                                        </button>
+
+                                        <button type="button" data-id="0"
+                                                class="layui-btn layui-btn-xs layui-btn-danger uploadDelete"
+                                                onclick="javascript:removeAttach(this)">
+                                            <i class="layui-icon layui-icon-delete"></i>删除
+                                        </button>
+
+                                        <input type='hidden' name='attachId[]' value=''/>
+                                    </div>
+                                    <div class="file-preview" style="display:none">
+                                        <a href="#">
+                                            <div class="name"></div>
+                                            <div class="size"></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="work-message-list">
+        <h3>沟通记录</h3>
+        <div class="work-table">
+            <table class="layui-hide" id="table" lay-filter="data"></table>
+        </div>
+    </div>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+
+    var url = {
+        status: '/',
+        table: '/admin/repair/note?id={$self["id"]}'
+    };
+
+    // 上传序号
+    var uploadIndex = 0;
+
+    // 图片最大数量
+    var maxAlbum = 3;
+
+    // 附件最大数量
+    var maxAttach = 2;
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element', 'form', 'upload', 'table'], function () {
+
+        var upload = layui.upload;
+        var form = layui.form;
+        var table = layui.table;
+        form.on('select(type)', function (data) {
+            console.log(data);
+            if (data.value == 0) {
+                $("#assetTypeContainer").show();
+            } else {
+                $("#assetTypeContainer").hide();
+            }
+        });
+        // 路径 id="upload-images" 这个地方去改
+        var uploadPms = {
+            elem: '.upload'
+            , size: 500//kb
+            , number: 1
+            , data: { // 动态参数
+                index: function () {
+                    return uploadIndex;
+                }
+            }
+            , done: function (res, index, upload) {
+                //console.log($(this.item).prop('id'));
+                var itemId = $(this.item).prop('id');
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      url : , 成功以后的地址
+                 *      id : , 成功以后的id
+                 *      index : 0 序号，我会传一个index给你，你原路返回给我
+                 * }
+                 */
+
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    if (itemId == 'upload-images') {
+                        $(".images-preview").eq(res.index).prop('src', res.image);
+                        $("input[name='imageId[]']").eq(res.index).prop('value', res.imageId);
+                    } else {
+                        $(".file-preview").eq(res.index).show();
+                        var attachPreview = $(".file-preview").eq(res.index);
+                        attachPreview.show();
+                        attachPreview.find('a').prop('href', res.image);
+                        attachPreview.find('.name').html(res.name);
+                        attachPreview.find('.size').html(res.size + 'kb');
+                        $("input[name='attachId[]']").eq(res.index).prop('value', res.id);
+                    }
+
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        };
+
+        upload.render(uploadPms);
+
+
+        var tableObj = table.render({
+            id: '___table',
+            elem: '#table',
+            url: url.table,
+            parseData: function (res) {
+                console.log(res);
+                return {
+                    "code": res.status == 'success' ? 0 : 1, //解析接口状态
+                    //"msg": '', //解析提示文本
+                    "count": res.total, //解析数据长度
+                    "data": res.message //解析数据列表
+                };
+            },
+            autoSort: false,
+//            toolbar: '#toolbar',
+            cols: [[
+                {
+                    field: 'content', templet: function (d) {
+                    console.log(d);
+                    var name;
+                    if(d.type == '0'){
+                        name = '客服';
+                    }else{
+                        name = '用户';
+                    }
+                    var string = '';
+                    // self 样式表示自己
+                    string += '<div class="message-item">';
+                    string += '<div class="message-user self">' + name + '<span class="time">' + d.created_at + '</span></div>';
+                    string += '<div>' + d.content + '</div>';
+                    string += '<div class="message-right">';
+                    // 图片地址
+                    string += '<div class="images-list">';
+                    if (!(typeof(d.images[0]) == "undefined")) {
+
+                        string += '<a href="' + d.images[0]['location'] + '"><div class="images"><img src="' + d.images[0]['location'] + '"/></div></a>'
+                    }
+                    if (!(typeof(d.images[1]) == "undefined")) {
+
+                        string += '<a href="' + d.images[1]['location'] + '"><div class="images"><img src="' + d.images[1]['location'] + '"/></div></a>'
+                    }
+                    if (!(typeof(d.images[2]) == "undefined")) {
+
+                        string += '<a href="' + d.images[2]['location'] + '"><div class="images"><img src="' + d.images[2]['location'] + '"/></div></a>'
+                    }
+                    string += '</div>';
+                    //
+                    string += '<div class="other">';
+
+                    if (!(typeof(d.files[0]) == "undefined")) {
+
+                        string += '<a href="' + d.files[0]['location'] + '">附件1</a>'
+                    }
+                    if (!(typeof(d.files[1]) == "undefined")) {
+
+                        string += '<a href="' + d.files[1]['location'] + '">附件2</a>'
+                    }
+                    string += '</div>';
+                    string += '</div>';
+                    string += '</div>';
+
+                    return string;
+                }
+                },
+
+            ]],
+            page: true,
+            limit: 10,
+            done: function () {
+                $(".layui-table-header").css('display', 'none');
+            }
+        });
+
+    });
+
+    $(".work-status").on('click', function () {
+        var status = $(this).data('status');
+        layer.confirm('确定要把工单设为【' + $(this).text() + '】吗？', function (index) {
+            layer.close(index);
+            $.getJSON(url.status, {status: status}, function (data) {
+                if (data.status == 'success') {
+                    //window.location.reload();
+                    layer.msg('操作成功');
+                } else {
+                    layer.msg('操作失败');
+                }
+            });
+        });
+    })
+
+    // 附件
+    $("#addGoodsAttach").on('click', function () {
+
+        if ($("#extendsAttach .layui-inline").length == maxAttach) {
+            layer.msg('最多只能上传' + maxAttach + '个附件');
+            return false;
+        }
+
+        $("#extendsAttach").append($("#defaultAttach").clone().prop('id', ''));
+        //$("#extendImages .layui-inline:last").find('span').html("预览");
+        var lastItem = $("#extendsAttach .layui-inline:last");
+        lastItem.find('label').remove();
+        lastItem.find('button').data("id", $("#extendsAttach .layui-inline").length - 1);
+        lastItem.find('input').prop('value', '');
+        lastItem.find('.file-preview').hide();
+        lastItem.find('a').prop('href', '#');
+        lastItem.find('.name').html('');
+        lastItem.find('.size').html('');
+        lastItem.find('.uploadDelete').show();
+    });
+
+    // 图片
+    $("#addGoodsImage").on('click', function () {
+        if ($("#extendImages .layui-inline").length == maxAlbum) {
+            layer.msg('最多只能增加' + maxAlbum + '张图片');
+            return false;
+        }
+        $("#extendImages").append($("#defaultImage").clone().prop('id', ''));
+        var lastItem = $("#extendImages .layui-inline:last");
+        lastItem.find('label').remove();
+        lastItem.find('button').data("id", $("#extendImages .layui-inline").length - 1);
+        lastItem.find('img').prop('src', '');
+        lastItem.find('input').prop('value', '');
+        lastItem.find('.uploadDelete').show();
+    });
+
+    // 触发上传
+    function clickUpload(obj) {
+        uploadIndex = $(obj).data('id');
+        //console.log('上传', uploadIndex);
+        $("#upload-images").click();
+    }
+
+    function clickUploadAttach(obj) {
+        uploadIndex = $(obj).data('id');
+        //console.log('上传', uploadIndex);
+        $("#upload-attach").click();
+    }
+
+    // 附件删除
+    function removeAttach(obj) {
+        if (!$(obj).data('id')) {
+            var item = $(obj).parents('.layui-inline');
+            //item.find('label').remove();
+            //item.find('button').data("id", $("#extendsAttach .layui-inline").length - 1);
+            item.find('input').prop('value', '');
+            item.find('.file-preview').hide();
+            item.find('a').prop('href', '#');
+            item.find('.name').html('');
+            item.find('.size').html('');
+            item.find('.uploadDelete').show();
+            return false;
+        }
+        $(obj).parents('.layui-inline').remove();
+        $("#extendsAttach .layui-inline").each(function (i) {
+            $(this).find('button').data('id', i);
+        });
+    }
+
+    // 移除相册图片
+    function removeImage(obj) {
+        console.log($(obj).data('id'));
+        if (!$(obj).data('id')) {
+            var item = $(obj).parents('.layui-inline');
+            item.find('img').prop('src', '');
+            item.find('input').prop('value', '');
+            item.find('.uploadDelete').show();
+            return false;
+        }
+        $(obj).parents('.layui-inline').remove();
+        // 刷新
+        $("#extendImages .layui-inline").each(function (i) {
+            $(this).find('button').data('id', i);
+        });
+    }
+
+
+</script>
+</body>
+</html>

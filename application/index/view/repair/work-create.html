@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {include file="index@Base/head"}
+</head>
+
+<body style="background: #f4f4f4;">
+{include file="index@Base/top"}
+
+<!-- 中 -->
+<div class="content">
+    <div class="data">
+        {include file="index@Base/common_left"}
+        <div class="data-right">
+            <div class="data-right-container container-shadow" style="width:1200px;">
+                <!-- 某个步骤，标题标签替换为 h3即可 -->
+                <div class="my-steps-container">
+                    <div class="my-steps clearfix" style="margin:20px auto 10px; width:600px;">
+                        <ul class="layui-timeline">
+                            <li class="layui-timeline-item active">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <h3 class="layui-timeline-title"><span>选择问题</span></h3>
+                                    <p>请选择您需要的问题</p>
+                                </div>
+                            </li>
+                            <li class="layui-timeline-item ">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <div class="layui-timeline-title"><span>推荐解决方案</span></div>
+                                    <p>精准定位推荐方案</p>
+                                </div>
+                            </li>
+
+                            <li class="layui-timeline-item">
+                                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                                <div class="layui-timeline-content layui-text">
+                                    <div class="layui-timeline-title">创建工单</div>
+                                    <p>创建符合问题的工单</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <form class="layui-form" id="forms" action="/repair-store" method="post" style="margin-top:30px; width:600px;">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">工单类型</label>
+                        <div class="layui-input-inline" style="width: 350px;">
+                            <select name="repair_class" lay-filter="send">
+                                <option value="">请选择工单类型</option>
+                                {foreach $classes as $k => $v}
+                                <option value="{$v['id']}">{$v['name']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">问题描述</label>
+                        <div class="layui-input-block" style="width: 350px;color:#999">
+                                    <textarea name="content" id="screenContent" placeholder="请填写问题描述"
+                                              class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">手机号</label>
+                        <div class="layui-input-block" style="width: 350px;">
+                            <input name="phone" id="phone" placeholder="请填写手机号" value="{$member['phone']}"
+                                   class="layui-input"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">附件1</label>
+                        <div class="layui-input-block">
+                            <label class="import">
+                                <span class="import-btn">选择附件</span>
+                                <input type="file" name="files[]" style="display:none;"/>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">附件2</label>
+                        <div class="layui-input-block">
+                            <label class="import">
+                                <span class="import-btn">选择附件</span>
+                                <input type="file" name="files[]" style="display:none;"/>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">图片1</label>
+                        <div class="layui-input-block">
+                            <label class="import">
+                                <span class="import-btn img">选择图片1</span>
+                                <input type="file" name="images[]" style="display:none;"/>
+                            </label>
+                            <span class="import-see">图片预览</span>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">图片2</label>
+                        <div class="layui-input-block">
+                            <label class="import">
+                                <span class="import-btn img">选择图片2</span>
+                                <input type="file" name="images[]" style="display:none;"/>
+                            </label>
+                            <span class="import-see">图片预览</span>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">图片3</label>
+                        <div class="layui-input-block">
+                            <label class="import">
+                                <span class="import-btn img">选择图片3</span>
+                                <input type="file" name="images[]" style="display:none;"/>
+                            </label>
+                            <span class="import-see">图片预览</span>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item sub-btn">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn layui-btn-fluid" lay-submit>提交工单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="{$src}js/ajax.js"></script>
+<script>
+    layui.use(['layer', 'form', 'element', 'laydate'], function () {
+
+        $("input[type=file]").on('change', function () {
+            var name = $(this).val().split("\\").pop();
+            $(this).prev().html(name);
+        });
+
+
+        var form = layui.form;
+        var element = layui.element;
+
+        $('#form').on('submit', function () {
+            ajax_submit_func($(this), function () {
+                // 提交后callback
+                location.href = '/';
+            });
+            return false;
+        });
+    });
+</script>
+
+{include file="index@Base/copyright"}
+
+</body>
+
+
+</html>

@@ -9,6 +9,7 @@
 namespace classes\goods;
 
 
+use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsContentModel;
 use app\goods\model\GoodsImagesModel;
 use app\goods\model\GoodsClassModel;
@@ -53,9 +54,16 @@ class GoodsClass extends AdminClass implements ListInterface
 
         $result = parent::page($this->model, $other);
 
+        $amount = new GoodsAmountModel();
+
         foreach ($result['message'] as &$v) {
 
             if (is_null($v['location']) || !file_exists(substr($v['location'], 1))) $v['location'] = config('young.image_not_found');
+            if (SUBSTATION != '0') {
+
+                $a = $amount->where('goods_id', '=', $v['id'])->where('substation', '=', SUBSTATION)->find();
+                if (!is_null($a)) $v['amount'] = $a->amount;
+            }
         }
 
         return $result;
@@ -73,6 +81,11 @@ class GoodsClass extends AdminClass implements ListInterface
         $class = new GoodsClassModel();
         $class = $class->where('id', '=', $request->post('goods_class'))->find();
         if (is_null($class)) parent::ajax_exception(000, '分类不存在');
+
+        if (SUBSTATION != '0') {
+
+            parent::ajax_exception(000, '无权添加商品');
+        }
 
         $model = $this->model;
         $model->goods_class_id = $class['id'];
@@ -105,6 +118,14 @@ class GoodsClass extends AdminClass implements ListInterface
         if (is_null($model)) parent::redirect_exception('/admin/goods/index', '商品不存在');
 
         $model->location = is_null($model->location) ? config('young.image_not_found') : $model->location;
+
+
+        if (SUBSTATION != '0') {
+
+            $amount = new GoodsAmountModel();
+            $a = $amount->where('goods_id', '=', $model->id)->where('substation', '=', SUBSTATION)->find();
+            if (!is_null($a)) $model->amount = $a->amount;
+        }
 
         return $model->getData();
     }
@@ -146,23 +167,45 @@ class GoodsClass extends AdminClass implements ListInterface
         $class = $class->where('id', '=', $request->post('goods_class'))->find();
         if (is_null($class)) parent::ajax_exception(000, '分类不存在');
 
-        $model->goods_class_id = $class['id'];
-        $model->goods_class_name = $class['name'];
-        $model->name = $request->post('name');
-        $model->code = $request->post('code');
-        $model->describe = $request->post('describe');
-        $model->amount = number_format($request->post('amount'), 2, '.', '');
-        $model->sort = $request->post('sort');
-        $model->status = $request->post('status');
-        $model->express_number = $request->post('express_number');
-        $model->weight = $request->post('weight');
-        $model->updated_at = date('Y-m-d H:i:s');
-        $model->save();
+        if (SUBSTATION != '0') {
 
-        $content = $this->content->where('goods', '=', $model->id)->find();
-        $content->content = $request->post('fwb-content');
-        $content->updated_at = $model->updated_at;
-        $content->save();
+            $amount = new GoodsAmountModel();
+            $a = $amount->where('goods_id', '=', $model->id)->where('substation', '=', SUBSTATION)->find();
+            if (!is_null($a)) {
+
+                $a->amount = number_format($request->post('amount'), 2, '.', '');
+                $a->updated_at = date('Y-m-d H:i:s');
+                $a->save();
+            } else {
+
+                $amount->goods_id = $model->id;
+                $amount->substation = SUBSTATION;
+                $amount->amount = number_format($request->post('amount'), 2, '.', '');
+                $amount->created_at = date('Y-m-d H:i:s');
+                $amount->updated_at = date('Y-m-d H:i:s');
+                $amount->save();
+            }
+        } else {
+
+            $model->goods_class_id = $class['id'];
+            $model->goods_class_name = $class['name'];
+            $model->name = $request->post('name');
+            $model->code = $request->post('code');
+            $model->describe = $request->post('describe');
+            $model->amount = number_format($request->post('amount'), 2, '.', '');
+            $model->sort = $request->post('sort');
+            $model->status = $request->post('status');
+            $model->express_number = $request->post('express_number');
+            $model->weight = $request->post('weight');
+            $model->updated_at = date('Y-m-d H:i:s');
+            $model->save();
+
+            $content = $this->content->where('goods', '=', $model->id)->find();
+            $content->content = $request->post('fwb-content');
+            $content->updated_at = $model->updated_at;
+            $content->save();
+        }
+
 
         self::image_save($model, $request);
     }
@@ -214,7 +257,7 @@ class GoodsClass extends AdminClass implements ListInterface
 
     public function validator_delete($id)
     {
-        // TODO: Implement validator_delete() method.
+        if (SUBSTATION != '0') parent::ajax_exception(000, '你无权这样做');
     }
 
     //保存商品与图片关系

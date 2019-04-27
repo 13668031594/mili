@@ -142,6 +142,12 @@ class NavClass extends AdminClass
                 'flash' => 'off',//闪烁
                 'tilt' => 'off',//加斜
             ],
+            'repair' => [
+                'name' => '工单管理',
+                'hot' => 'off',//加热
+                'flash' => 'off',//闪烁
+                'tilt' => 'off',//加斜
+            ],
         ];
     }
 }

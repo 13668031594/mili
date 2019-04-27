@@ -10,6 +10,7 @@ namespace classes\index;
 
 
 use app\express\model\ExpressModel;
+use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsContentModel;
 use app\goods\model\GoodsModel;
 use app\goods\model\GoodsRecordModel;
@@ -44,6 +45,13 @@ class OrderClass extends \classes\IndexClass
         if (is_null($result)) parent::redirect_exception('/', '商品已下架');
 
         $result['location'] = (!is_null($result['location']) && file_exists(substr($result['location'], 1))) ? $result['location'] : config('young.image_not_found');
+//exit('123');
+        if (SUBSTATION != '0') {
+
+            $amount = new GoodsAmountModel();
+            $a = $amount->where('goods_id', '=', $result['id'])->where('substation', '=', SUBSTATION)->find();
+            if (!is_null($a)) $result['amount'] = $a->amount;
+        }
 
         return $result;
     }
@@ -72,8 +80,7 @@ class OrderClass extends \classes\IndexClass
 
             if ($grade->mode == 'on') $v .= '/' . $grade->amount;
             else {
-//                dump($k);
-//                exit;
+
                 $model = new MemberGradeExpressModel();
                 $model = $model->where('express', '=', $k)->where('grade', '=', $grade->id)->find();
                 $v .= '/' . ($model ? $model->amount : config('young.default_express_amount'));
@@ -399,6 +406,12 @@ class OrderClass extends \classes\IndexClass
         $goods = new GoodsModel();
         $goods = $goods->where('status', '=', 'on')->where('id', '=', $request->post('goods'))->find();
         if (is_null($goods)) parent::ajax_exception(000, '该礼品已下架');
+        if (SUBSTATION != '0') {
+
+            $amount = new GoodsAmountModel();
+            $a = $amount->where('goods_id', '=', $goods->id)->where('substation', '=', SUBSTATION)->find();
+            if (!is_null($a)) $goods->amount = $a->amount;
+        }
 
         //库存验证
         $number = $request->post('number');//每单数量

@@ -56,12 +56,13 @@ class LoginClass extends IndexClass
         //尝试获取管理员信息
         $member = $member->where('account|phone', '=', $request->post('account'))
             ->where('password', '=', md5($request->post('password')))
+            ->where('substation', '=', SUBSTATION)
             ->find();
 
         //获取失败，账密错误
         if (is_null($member)) parent::back('账号或密码错误');
 
-        if ($member['substation'] != SUBSTATION) parent::back('您在本站还未注册账号');
+//        if ($member['substation'] != SUBSTATION) parent::back('您在本站还未注册账号');
 
         //返回管理员信息
         return $member;
@@ -172,7 +173,7 @@ class LoginClass extends IndexClass
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         $test = new MemberModel();
-        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
+        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$request->post('phone'))->find();
         if (is_null($test))parent::ajax_exception(000, '你在本站尚未注册过会员');
 
         self::validator_phone($request);//短信验证

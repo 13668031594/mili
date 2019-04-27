@@ -23,7 +23,8 @@
                             <label class="layui-form-label">汇款备注</label>
                             <div class="layui-input-block">
                                 <input type="text" name="order" required lay-verify="required" placeholder="请输入充值金额"
-                                       autocomplete="off" class="layui-input" value="{$order}" readonly style="color: red">
+                                       autocomplete="off" class="layui-input" value="{$order}" readonly
+                                       style="color: red">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -42,50 +43,16 @@
                     </form>
                 </div>
                 <div class="layui-form-item">
-                    <span>请在银行</span>
-                    <span style="color: red">汇款备注/附言/摘要</span>
-                    <span>中严格按要求填写汇款备注：如</span>
-                    <span style="color: red">R13142</span>
-                    <span style="color: blue">不要填写除此以外的其他字符（刷///单，SD，平台名称等）</span>
-                    <span style="color: red">，否则不能正确到账！</span>
+                    {php}echo $bank['fwb-content']{/php}
                 </div>
-                <br>
-                <div class="layui-form-item">
-                    <span style="color: blue">提交充值后，请打款至以下银行</span><br>
-                    <span>收款人姓名：</span>
-                    <span style="color: red">{$set['rechargeMan']}</span><br>
-                    <span>收款人卡号：</span>
-                    <span style="color: red">{$set['rechargeNo']}</span><br>
-                    <span>收款人银行：</span>
-                    <span style="color: red">{$set['rechargeBank']}</span><br>
-                    <span>收款开户行：</span>
-                    <span style="color: red">{$set['rechargeAddress']}</span>
-                </div>
-                <br>
-                <div class="layui-form-item">
-                    <strong>银行卡不定期更换！请转账前注意核对！</strong>
-                </div>
-                <br>
-                <div class="layui-form-item" style="background-color: blanchedalmond">
-                    银行卡注意事项：<br>
-                    1，人工审核对账，免手续费，审核时间大约30分钟<br>
-                    2，建议使用手机银行APP转账，绝大多数手机银行APP都免手续费<br>
-                    3，由于银行间转账存在一定时间差，建议您使用实时到账，联系客服确认到账<br>
-                    4，<span style="color: blue">禁止使用支付宝转账，将会增加风险</span>，建议使用银行对银行转账！
-                </div>
-                <br>
-                <div class="layui-form-item">
-                    <span style="color: red">{$set['rechargeAudit']}</span>
             </div>
 
         </div>
 
+        <input id="hint" value="" type="hidden"/>
     </div>
 
-    <input id="hint" value="" type="hidden"/>
-</div>
-
-{include file="index@Base/copyright"}
+    {include file="index@Base/copyright"}
 
 </body>
 
