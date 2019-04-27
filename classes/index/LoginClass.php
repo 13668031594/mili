@@ -152,6 +152,7 @@ class LoginClass extends IndexClass
         $model->grade_id = $grade['id'];
         $model->grade_name = $grade['name'];
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
     }
 
