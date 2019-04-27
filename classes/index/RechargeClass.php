@@ -93,6 +93,7 @@ class RechargeClass extends \classes\IndexClass
         $recharge->member_create = $member['created_at'];
         $recharge->created_at = date('Y-m-d H:i:s');
         $recharge->updated_at = date('Y-m-d H:i:s');
+        $recharge->substation = SUBSTATION;
         $recharge->save();
     }
 

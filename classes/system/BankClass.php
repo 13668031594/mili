@@ -85,7 +85,7 @@ class BankClass extends AdminClass
     public function save_validator()
     {
         $rule = [
-            'fwb-content|收款内容' => 'require|min:1|max:100000',
+            'file|收款内容' => 'require|min:1|max:100000',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -103,7 +103,7 @@ class BankClass extends AdminClass
     private function defaults()
     {
         return [
-            'fwb-content' => '收款设置',
+            'file' => '收款设置',
         ];
     }
 }

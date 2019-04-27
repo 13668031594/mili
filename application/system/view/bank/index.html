@@ -7,6 +7,10 @@
     <title>收款设置</title>
     <link rel="stylesheet" href="{$src}layui/css/layui.css">
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <link rel="stylesheet" href="{$src}res/editor/styles/app.css">
+    <link rel="stylesheet" href="{$src}res/editor/styles/mobile.css">
+    <link rel="stylesheet" href="{$src}res/editor/styles/simditor.css">
+
     <!--[if lt IE 9]>
     <script src="{$src}res/js/html5.min.js"></script>
     <script src="{$src}res/js/respond.min.js"></script>
@@ -30,7 +34,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea id="fwb-content" name="fwb-content" style="display: none;">{if isset($self)}{$self["fwb-content"]}{/if}</textarea>
+                <textarea id="editor" name="file" style="display: none;">{if isset($self)}{$self["file"]}{/if}</textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -42,7 +46,15 @@
     </form>
 </div>
 <script src="{$src}layui/layui.js"></script>
+<script src="{$src}res/editor/js/module.js"></script>
+<script src="{$src}res/editor/js/uploader.js"></script>
+<script src="{$src}res/editor/js/hotkeys.js"></script>
+<script src="{$src}res/editor/js/simditor.js"></script>
+<script src="{$src}res/editor/index.js"></script>
 <script>
+
+    createEditor();
+
     layui.config({
         base: '{$src}res/js/common/'
     }).use(['mForm', 'layer', 'layedit', 'element'], function () {
