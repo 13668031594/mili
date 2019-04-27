@@ -108,7 +108,7 @@ class LoginClass extends IndexClass
         $rule = [
             'referee|推荐号' => 'min:5|max:20',
             'account|用户名' => 'require|min:6|max:20|regex:^\d{6,20}$',
-            'phone|手机号码' => 'require|length:11|unique:member,phone',
+            'phone|手机号码' => 'require|length:11',
             'pass|密码' => 'require|min:6|max:20',
 //            'again|确认密码' => 'require|min:6|max:20',
         ];
