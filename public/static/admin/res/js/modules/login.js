@@ -42,7 +42,8 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
 
         var loading = layer.load(2);
 
-        $.postJSON('/admin/login', data.field, function (data) {
+        $.post('/admin/login', data.field, function (data) {
+            console.log('success');
             console.log(data);
             layer.close(loading);
             if (data.status == 'success') {
@@ -53,6 +54,7 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
             }
 
         }).error(function (error) {
+            console.log('error');
             console.log(error);
             if (error.status == 404) {
                 layer.msg('地址错误');
