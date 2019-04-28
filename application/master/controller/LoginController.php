@@ -42,7 +42,13 @@ class LoginController extends AdminController
         $this->class->refresh_master($master);
 
         //重定向到首页
-        return parent::success('/', '登录成功');
+        $result = [
+            'status' => 'success',
+            'url' => '/admin/',
+            'message' => '登录成功',
+        ];
+
+        return json($result);
     }
 
     public function getLogout()
