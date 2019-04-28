@@ -53,7 +53,8 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
                 layer.msg(data.message);
             }
 
-        }, 'json').error(function (error) {
+        }, 'json');
+    /*.error(function (error) {
             console.log('error');
             console.log(error);
             if (error.status == 404) {
@@ -65,7 +66,7 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
             }
 
             layer.close(loading);
-        });
+        })*/
         /* $.ajax({
             type: "post",
             url: url ,
