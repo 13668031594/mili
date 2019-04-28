@@ -42,7 +42,7 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
 
         var loading = layer.load(2);
 
-        $.post('/admin/login', data.field, function (data) {
+        $.postJSON('/admin/login', data.field, function (data) {
             console.log(data);
             layer.close(loading);
             if (data.status == 'success') {
