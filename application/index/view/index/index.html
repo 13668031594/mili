@@ -97,11 +97,6 @@
     {foreach $article as $v}
     <li>
         {foreach $v as $va}
-    <!--    <a href="/article-info/{$va['id']}" title="{$va['title']}">
-            <h3>{$va['title']}</h3>
-            <p class="article-text">{$va['describe']}</p>
-            <p>{$va['created_at']}</p>
-        </a>-->
         <a href="/article-info/{$va['id']}" title="{$va['title']}">
             <h3>{$va['title']}</h3>
             <p class="article-time"><span>作者：{$va['author']}</span><span>{$va['created_at']}</span></p>
@@ -110,26 +105,6 @@
         {/foreach}
     </li>
     {/foreach}
-  
-  	<!--<li>
-        <a href="article-info.html" title="">
-          <h3>文章标题</h3>
-          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
-          <p class="article-text">文章内容</p>
-        </a>
-
-        <a href="article-info.html" title="">
-          <h3>文章标题</h3>
-          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
-          <p class="article-text">文章内容</p>
-        </a>
-
-        <a href="article-info.html" title="">
-          <h3>文章标题</h3>
-          <p class="article-time"><span>作者：xxx</span><span>2018-11-26 14:25:21</span></p>
-          <p class="article-text">文章内容</p>
-        </a>
-    </li>-->
 </ul>
 
 {include file="index@Base/copyright"}
