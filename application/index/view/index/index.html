@@ -105,7 +105,7 @@
         <a href="/article-info/{$va['id']}" title="{$va['title']}">
             <h3>{$va['title']}</h3>
             <p class="article-time"><span>作者：{$va['author']}</span><span>{$va['created_at']}</span></p>
-            <p class="article-text">{$va['describe']}</p>
+            <p class="article-text">{php}echo $va['describe'];{/php}</p>
         </a>
         {/foreach}
     </li>
