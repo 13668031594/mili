@@ -138,7 +138,7 @@ class AdvClass extends AdminClass implements ListInterface
         if ($request->post('show') == 'on') {
 
             $model = new AdvModel();
-            $test = $model->where('show', '=', 'on')->count();
+            $test = $model->where('show', '=', 'on')->where('substation', '=', SUBSTATION)->count();
             if ($test >= $this->number) parent::ajax_exception(000, '至多只能显示『' . $this->number . '』个广告');
         }
     }
@@ -159,7 +159,9 @@ class AdvClass extends AdminClass implements ListInterface
         if ($request->post('show') == 'on') {
 
             $model = new AdvModel();
-            $test = $model->where('show', '=', 'on')->where('id','<>',$id)->count();
+            $this_adv = $model->where('id', '=', $id)->find();
+            if (is_null($this_adv)) parent::ajax_exception(000, '广告不存在');
+            $test = $model->where('show', '=', 'on')->where('substation', '=', $this_adv->substation)->where('id', '<>', $id)->count();
             if ($test >= $this->number) parent::ajax_exception(000, '至多只能显示『' . $this->number . '』个广告');
         }
     }
@@ -206,7 +208,7 @@ class AdvClass extends AdminClass implements ListInterface
 
         //寻找并删除文件
         $model = new AdvImagesModel();
-        $result = $model->where('created_at', '<', $date)->where('pid','=',null)->select();
+        $result = $model->where('created_at', '<', $date)->where('pid', '=', null)->select();
         if (count($result) > 0) foreach ($result as $v) {
 
             if (!is_null($v->location) && file_exists(substr($v->location, 1))) unlink(substr($v->location, 1));
