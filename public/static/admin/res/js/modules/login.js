@@ -53,9 +53,11 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
                 layer.msg(data.message);
             }
 
-        }, 'json');
-    /*.error(function (error) {
-            console.log('error');
+        }).error(function (error) {
+
+            window.location.href = '/admin';
+
+            /*console.log('error');
             console.log(error);
             if (error.status == 404) {
                 layer.msg('地址错误');
@@ -65,8 +67,8 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
                 layer.msg('服务器错误');
             }
 
-            layer.close(loading);
-        })*/
+            layer.close(loading);*/
+        });
         /* $.ajax({
             type: "post",
             url: url ,
