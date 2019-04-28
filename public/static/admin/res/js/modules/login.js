@@ -53,7 +53,7 @@ layui.define(['layer', 'form', 'jquery'], function (exports) {
             }
 
         }).error(function (error) {
-            //console.log(error);
+            console.log(error);
             if (error.status == 404) {
                 layer.msg('地址错误');
             }
