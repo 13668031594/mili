@@ -140,7 +140,7 @@
                     <tr>
                         <td>发货清单</td>
                         {if $self['order_status'] == '20'}
-                        <td><a href="/admin/send/index?id={$self['id']}" class="layui-badge-rim" id="orderStatus">查看清单</a></td>
+                        <td><a href="/order-list?id={$self['id']}" class="layui-badge-rim" id="orderStatus">查看清单</a></td>
                         {else/}
                         <td> 该订单未发货 </td>
                         {/if}
