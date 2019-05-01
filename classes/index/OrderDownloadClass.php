@@ -169,7 +169,7 @@ class OrderDownloadClass extends \classes\IndexClass
         $sends = $send->whereIn('order_id', $this->ids)->column('*');
         if (count($sends) <= 0) parent::ajax_exception(000, '没有找到发货单');
 
-        $name = '发货单' . date('Y-m-d');
+        $name = 'order' . date('Y-m-d');
 
         $header = [
             '发货编号',
