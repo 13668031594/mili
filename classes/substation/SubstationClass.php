@@ -27,11 +27,11 @@ class SubstationClass extends AdminClass implements ListInterface
 
     public function index()
     {
-        if (SUBSTATION != 0){
+        if (SUBSTATION != 0) {
             $whereIn = [
-                'pid'=>parent::substation_ids(),
+                'pid' => parent::substation_ids(),
             ];
-        }else{
+        } else {
 
             $whereIn = [];
         }
@@ -125,6 +125,11 @@ class SubstationClass extends AdminClass implements ListInterface
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
+        //安全路径
+        $safe_path = include 'safe_path.php';
+
+        if (in_array($request->post('localhost'), $safe_path)) parent::ajax_exception(000, '非法域名');
+
         /*$localhost = $request->post('localhost');
         $head = substr($localhost, 0, 7);
         if (($head != 'http://')) {
@@ -147,6 +152,12 @@ class SubstationClass extends AdminClass implements ListInterface
 
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        //安全路径
+        $safe_path = include 'safe_path.php';
+
+        if (in_array($request->post('localhost'), $safe_path)) parent::ajax_exception(000, '非法域名');
+
 
         /*$localhost = $request->post('localhost');
         $head = substr($localhost, 0, 7);
