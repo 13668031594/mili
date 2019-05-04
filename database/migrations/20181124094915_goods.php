@@ -16,7 +16,7 @@ class Goods extends Migrator
         $table->addColumn(Column::string('name')->setComment('名称'));
         $table->addColumn(Column::string('code')->setComment('编号'));
         $table->addColumn(Column::string('describe')->setComment('描述'));
-        $table->addColumn(Column::decimal('amount',18)->setComment('描述'));
+        $table->addColumn(Column::decimal('amount',18)->setComment('单价'));
         $table->addColumn(Column::integer('sort')->setComment('排序'));
         $table->addColumn(Column::char('status',3)->setDefault('on')->setComment('状态，off下架，on上架'));
         $table->addColumn(Column::integer('cover')->setNullable()->setComment('封面id'));

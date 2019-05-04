@@ -39,6 +39,7 @@ class SubstationMiddleware
     //报错
     private function errors()
     {
+        exit('非法域名');
         session('master', null);
 
         $errors = json_encode([
