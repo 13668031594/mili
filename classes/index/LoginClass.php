@@ -280,7 +280,7 @@ class LoginClass extends IndexClass
             //比较是否超时
             if ($time < ($test_code->end - 240)) {
 
-                $end = $test_code->end - $time;
+                $end = $test_code->end - $time - 240;
 
                 parent::ajax_exception('001', $end);
             }
