@@ -35,7 +35,7 @@
                 <select name="the_substation" lay-verify="" style="height:30px;">
                     <option value="all">全站</option>
                     {foreach $sub['array_con'] as $k => $v}
-                    <option value="{$k}" {if $the_substation == $k}selected{/if}>{$v}</option>
+                    <option value="{$k}" >{$v}</option>
                     {/foreach}
                 </select>
             </div>

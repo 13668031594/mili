@@ -15,7 +15,6 @@ use think\facade\Route;
 /**
  * 后台路由组
  */
-
 Route::group('', function () {
 
     Route::get('admin/login', 'master/Login/getLogin');//后台登录页面
@@ -110,7 +109,7 @@ Route::group('', function () {
     /**
      * 前台路由组
      */
-//未登录才能访问的权限组，若已登录，重定向到首页页面
+    //未登录才能访问的权限组，若已登录，重定向到首页页面
     Route::group([], function () {
 
         Route::get('login', 'index/Login/getLogin');//前台登录页面
@@ -123,7 +122,7 @@ Route::group('', function () {
         Route::get('resetSms/:phone', 'index/Login/getResetSms');//找回密码验证码发送
     })->middleware('member_logout');//验证会员未登录中间件
 
-//登录后才能访问的权限组，若未登录，重定向到登录页面
+    //登录后才能访问的权限组，若未登录，重定向到登录页面
     Route::group([], function () {
 
         Route::controller('files-index', 'files/FilesLocation');
@@ -196,7 +195,7 @@ Route::group('', function () {
         Route::get('repair-success', 'index/Repair/getSuccess');//完结订单
     })->middleware('member_login');//验证会员登录中间件
 
-//游客页面，无需登录即可访问
+    //游客页面，无需登录即可访问
     Route::group([], function () {
 
         Route::get('', 'index/Index/getIndex');//前台首页

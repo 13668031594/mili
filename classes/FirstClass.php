@@ -100,7 +100,7 @@ class FirstClass
 
             $substation = request()->get('the_substation');
 
-            if ($substation == 'all') {
+            if (($substation == 'all') || is_null($substation)) {
 
                 $sub = new SubstationModel();
                 $sub = $sub->where('id', '=', SUBSTATION)
@@ -110,18 +110,19 @@ class FirstClass
 
                 if (SUBSTATION == '0')$sub[] = '0';
 
-            } elseif (!is_null($substation)) {
+            } /*elseif (!is_null($substation)) {
 
                 $sub = $substation;
-            } else {
+            } */else {
 
-                if (SUBSTATION != '0') {
+                $sub = $substation;
+                /*if (SUBSTATION != '0') {
                     $sub = new SubstationModel();
                     $sub = $sub->where('id', '=', SUBSTATION)->column('id');
                 } else {
 
                     $sub = [0];
-                }
+                }*/
             }
 
             $model = $model->whereIn('substation', $sub);
