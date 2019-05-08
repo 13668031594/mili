@@ -11,9 +11,7 @@
     <script src="{$src}res/js/html5.min.js"></script>
     <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="{$src}res/js/jquery.min.js"
-
-             ></script>
+    <script src="{$src}res/js/jquery.min.js"></script>
 </head>
 
 <div class="layui-fluid">
@@ -26,6 +24,7 @@
         </span>
     </div>
 
+    {if $sub['is']}
     <div class="toolTable">
         <button class="layui-btn layui-btn-sm" data-type="addData">
             <i class="layui-icon">&#xe654;</i>添加分站
@@ -34,6 +33,7 @@
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>
     </div>
+    {/if}
 
     <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
     </table>
@@ -43,9 +43,6 @@
 
 <script type="text/html" id="tableTool">
     <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-    {if SUBSTATION == 0}
-    <a class="layui-btn layui-btn-xs layui-bg-cyan" href="/admin/substation/create?id={{d.id}}">添加分分站</a>
-    {/if}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
 </script>
 <script>
@@ -62,7 +59,7 @@
                 del: '/admin/substation/delete',
                 table: '/admin/substation/table',
                 edit: '/admin/substation/edit',
-                add: '/admin/substation/create'
+                add: '/admin/substation/create',
             },
             isPage: false,
             cols: [[

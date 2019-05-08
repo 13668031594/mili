@@ -46,9 +46,7 @@ class SubstationController extends AdminController
      */
     public function getCreate()
     {
-        $sub_id = \request()->get('id');
-
-        $sub_id = is_null($sub_id) ? 0 : $sub_id;
+        $sub_id = SUBSTATION;
 
         //视图
         return parent::view('substation',['id' => $sub_id]);
