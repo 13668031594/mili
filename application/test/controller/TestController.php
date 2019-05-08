@@ -12,15 +12,61 @@ class TestController extends Controller
 {
     public function index()
     {
-        return view('file');
+        $method = 'shops.query';
+        $partnerid = 'ywv5jGT8ge6Pvlq3FZSPol345asd';
+        $partnerkey = 'ywv5jGT8ge6Pvlq3FZSPol2323';
+        $token = '181ee8952a88f5a57db52587472c3798';
+        $ts = time();
+        $data = [
+            'page_index' => '1',
+            'page_size' => '30',
+        ];
+
+
+        $sign = md5("{$method}{$partnerid}token{$token}ts{$ts}{$partnerkey}");
+        $sign = md5('inventory.queryywv5jGT8ge6Pvlq3FZSPol345asdtoken181ee8952a88f5a57db52587472c3798ts1540370062ywv5jGT8ge6Pvlq3FZSPol2323');
+        $sign = md5("shops.queryywv5jGT8ge6Pvlq3FZSPol345asdtoken181ee8952a88f5a57db52587472c3798ts{$ts}ywv5jGT8ge6Pvlq3FZSPol2323");
+
+        $url = "http://c.sursung.com/api/open/query.aspx?method={$method}&partnerid={$partnerid}&token={$token}&ts={$ts}&sign={$sign}&partnerkey={$partnerkey}";
+
+        $result = self::url_post($url,json_encode($data));
+
+        dump(json_decode($result,true));
+
+        exit('ok');
     }
 
-    public function file(Request $request){
+    public function file(Request $request)
+    {
 
         $class = new OrderClass();
 
         $a = $class->file($request);
         dump($a);
         exit('end');
+    }
+
+    /**
+     * 访问url，post
+     *
+     * @param $url
+     * @param $post_data
+     * @return mixed
+     */
+    public function url_post($url, $post_data)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;
     }
 }

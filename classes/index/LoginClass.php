@@ -60,7 +60,7 @@ class LoginClass extends IndexClass
             ->find();
 
         //获取失败，账密错误
-        if (is_null($member)) parent::back('账号或密码错误'.SUBSTATION);
+        if (is_null($member)) parent::back('账号或密码错误' . SUBSTATION);
 
 //        if ($member['substation'] != SUBSTATION) parent::back('您在本站还未注册账号');
 
@@ -117,11 +117,11 @@ class LoginClass extends IndexClass
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         $test = new MemberModel();
-        $test = $test->where('substation','=',SUBSTATION)->where(function ($query)use($request){
-            $query->where('phone','=',$request->post('phone'))
-                ->whereOr('account','=',$request->post('account'));
+        $test = $test->where('substation', '=', SUBSTATION)->where(function ($query) use ($request) {
+            $query->where('phone', '=', $request->post('phone'))
+                ->whereOr('account', '=', $request->post('account'));
         })->find();
-        if (!is_null($test))parent::ajax_exception(000, '你在本站注册过会员了');
+        if (!is_null($test)) parent::ajax_exception(000, '你在本站注册过会员了');
 
         self::validator_phone($request);//短信验证
 
@@ -136,7 +136,7 @@ class LoginClass extends IndexClass
     public function reg(Request $request)
     {
         $grade = new MemberGradeModel();
-        $grade = $grade->where('substation','=',SUBSTATION)->where('change','=','fail')->find();
+        $grade = $grade->where('substation', '=', SUBSTATION)->where('change', '=', 'fail')->find();
         if (is_null($grade)) parent::ajax_exception(000, '注册失败，请联系管理员');
 
         $class = new MemberClass();
@@ -174,8 +174,8 @@ class LoginClass extends IndexClass
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         $test = new MemberModel();
-        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$request->post('phone'))->find();
-        if (is_null($test))parent::ajax_exception(000, '你在本站尚未注册过会员');
+        $test = $test->where('substation', '=', SUBSTATION)->where('phone', '=', $request->post('phone'))->find();
+        if (is_null($test)) parent::ajax_exception(000, '你在本站尚未注册过会员');
 
         self::validator_phone($request);//短信验证
 
@@ -190,7 +190,7 @@ class LoginClass extends IndexClass
     public function reset(Request $request)
     {
         $model = new MemberModel();
-        $model = $model->where('phone', '=', $request->post('phone'))->find();
+        $model = $model->where('phone', '=', $request->post('phone'))->where('substation', '=', SUBSTATION)->find();
         if (is_null($model)) parent::ajax_exception(000, '会员不存在');
         $model->password = md5($request->post('pass'));
         $model->save();
@@ -220,8 +220,8 @@ class LoginClass extends IndexClass
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         $test = new MemberModel();
-        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
-        if (!is_null($test))parent::ajax_exception(000, '你在本站已经注册过会员了');
+        $test = $test->where('substation', '=', SUBSTATION)->where('phone', '=', $phone)->find();
+        if (!is_null($test)) parent::ajax_exception(000, '你在本站已经注册过会员了');
 
         //验证上次发送验证码时间
         self::validator_sms_time($phone, $time);
@@ -250,8 +250,8 @@ class LoginClass extends IndexClass
         if (!is_null($result)) parent::ajax_exception(000, $result);
 
         $test = new MemberModel();
-        $test = $test->where('substation','=',SUBSTATION)->where('phone','=',$phone)->find();
-        if (is_null($test))parent::ajax_exception(000, '你在本站尚未注册过会员');
+        $test = $test->where('substation', '=', SUBSTATION)->where('phone', '=', $phone)->find();
+        if (is_null($test)) parent::ajax_exception(000, '你在本站尚未注册过会员');
 
         //验证上次发送验证码时间
         self::validator_sms_time($phone, $time);
