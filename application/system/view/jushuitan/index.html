@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css">
+    <!--[if lt IE 9]>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="{$src}res/js/jquery.min.js"></script>
+
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a><cite>系统设置</cite></a>
+        </span>
+    </div>
+    <form class="layui-form" lay-filter="form" action="/admin/jushuitan/index">
+
+        <div class="layui-tab layui-tab-card" lay-filter="tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基础设置</li>
+            </ul>
+            <div class="layui-tab-content">
+
+                <div class="layui-tab-item  layui-show" >
+
+                    <div class="layui-form-min">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">店铺id</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jushuitanShopid" title="聚水潭店铺id"
+                                       placeholder="聚水潭店铺id" autocomplete="off" value="{$self['jushuitanShopid']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">订单上传的店铺id</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-min">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Id</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jushuitanId" title="pid"
+                                       placeholder="pid" autocomplete="off" value="{$self['jushuitanId']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerId</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-min">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Key</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jushuitanKey" title="pid"
+                                       placeholder="pid" autocomplete="off" value="{$self['jushuitanKey']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerKey</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-min">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Token</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jushuitanToken" title="pid"
+                                       placeholder="pid" autocomplete="off" value="{$self['jushuitanToken']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerToken</div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">续期Token</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="jushuitanRefreshToken" name="jushuitanRefreshToken"
+                                   placeholder="续期Token" value="{{$self['jushuitanRefreshToken']}}">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">续期Token的时间</div>
+                    </div>
+
+                    <div class="layui-form-min">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">同步订单</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="jushuitanRefreshOrder" title="pid"
+                                       placeholder="pid" autocomplete="off" value="{$self['jushuitanRefreshOrder']}"
+                                       class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">同步上传订单的物流号的时间</div>
+                        </div>
+                    </div>
+
+                    <blockquote class="layui-elem-quote">Token有效期一年，请根据首次获得token的时间设置，建议提前1个月到半个月续期即可
+                    </blockquote>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id='submit' class="layui-btn" lay-filter="*" lay-submit>保存</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="{$src}layui/layui.js"></script>
+<script>
+
+    var urls = {
+        upload: '/admin/system/image', // logo上传地址
+    };
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'jquery', 'element', 'upload', 'laydate'], function () {
+
+        var element = layui.element;
+        var form = layui.form;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+
+        var upload = layui.upload;
+
+        laydate.render({
+            elem: '#jushuitanRefreshToken', //指定元素
+            format: 'MM-dd',
+            type: 'time',
+        });
+
+        upload.render({
+            elem: '#upload'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#logoUrl").prop('src', res.image);
+                    $("#logo").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        var loginImage = layui.upload;
+        loginImage.render({
+            elem: '#loginImage'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#loginUrl").prop('src', res.image);
+                    $("#login").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        var regImage = layui.upload;
+        regImage.render({
+            elem: '#regImage'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#regUrl").prop('src', res.image);
+                    $("#reg").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
+        });
+
+        form.verify({
+
+            reason: function (value, item) {
+                if (!$("#webSwitch").prop('checked') && !value) {
+                    return '请填写关闭网站理由';
+                }
+            }
+        });
+
+        // 监听开关
+        form.on('switch(webSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#webClose').hide();
+                $('#webSwitchValue').prop('value', 'on');
+            } else {
+                $('#webClose').show();
+                $('#webSwitchValue').prop('value', 'off');
+            }
+        });
+
+        // 监听开关
+        form.on('switch(rechargeSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#rechargeSwitchValue').prop('value', 'on');
+            } else {
+                $('#rechargeSwitchValue').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(userRegisterSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#userRegisterSwitch').prop('value', 'on');
+            } else {
+                $('#userRegisterSwitch').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(rechargeGradeSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#rechargeGradeSwitchValue').prop('value', 'on');
+            } else {
+                $('#rechargeGradeSwitchValue').prop('value', 'off');
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

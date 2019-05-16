@@ -15,7 +15,7 @@ class PlanController extends Controller
     {
         Db::startTrans();
         //刷新聚水潭token
-//        self::refresh_token();
+        self::refresh_token();
 
         new OrderSendClass();
 

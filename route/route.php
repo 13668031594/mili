@@ -34,6 +34,7 @@ Route::group('', function () {
         Route::controller('master', 'master/Master');
 
         //系统设置
+        Route::controller('jushuitan', 'system/Jushuitan');
         Route::controller('system', 'system/System');
         Route::controller('bank', 'system/Bank');
 
