@@ -10,9 +10,10 @@ class OrderFileClass
 
     public function __construct($files)
     {
-        $storage = new StorageClass('Region.js');
+        $storage = new StorageClass('region');
         $region = $storage->get();
         $this->region = json_decode($region, true);
+        if (is_string($this->region))$this->region = json_decode($this->region, true);
 
         if (input('type') == '0') {
 
