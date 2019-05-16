@@ -1,7 +1,6 @@
 <?php
 namespace classes\index;
 
-
 use classes\vendor\StorageClass;
 
 class OrderFileClass
