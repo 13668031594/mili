@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yangyang
- * Date: 2019/4/24
- * Time: 下午5:07
- */
-
 namespace classes\index;
 
 
