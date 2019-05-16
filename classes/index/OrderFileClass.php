@@ -13,7 +13,7 @@ class OrderFileClass
         $storage = new StorageClass('Region.js');
         $region = $storage->get();
         $this->region = json_decode($region, true);
-dump($this->region);exit;
+dump($region);dump($this->region);exit;
         if (input('type') == '0') {
 
             $result = self::text($files);
