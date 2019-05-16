@@ -8,12 +8,17 @@
 
 namespace classes\order;
 
+use app\goods\model\GoodsModel;
+use app\goods\model\GoodsRecordModel;
+use app\member\model\MemberModel;
+use app\member\model\MemberRecordModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
 use classes\AdminClass;
 use classes\system\SystemClass;
 use classes\vendor\SmsClass;
+use think\Db;
 use think\Request;
 
 class OrderClass extends AdminClass
@@ -51,7 +56,7 @@ class OrderClass extends AdminClass
                 break;
         }
 
-        return parent::page($this->model, ['where' => $where,'substation' => '1',]);
+        return parent::page($this->model, ['where' => $where, 'substation' => '1',]);
     }
 
     //详情
@@ -244,5 +249,75 @@ class OrderClass extends AdminClass
             $class->sendSms($order->member_phone, '11111', 'SMS_151996093');
 //            $class->sendSms('13608302076', '11111', 'SMS_151996093');
         }
+    }
+
+    //取消订单
+    public function order_back()
+    {
+        $id = input('id');
+
+        $master = parent::master();
+
+        $order = new OrderModel();
+
+        $order = $order->where('id', '=', $id)
+            ->where('order_status', 'in', [10, 15])
+            ->find();
+
+        if (is_null($order)) parent::ajax_exception(000, '订单已锁定');
+
+        Db::startTrans();
+
+        $order->order_status = 30;
+        $order->change_id = $master['id'];
+        $order->change_nickname = '管理员：' . $master['nickname'];
+        $order->change_date = date('Y-m-d H:i:s');
+        $order->save();
+
+        $members = new MemberModel();
+        $member = $members->where('id', '=', $order->member_id)->find();
+        if (!is_null($member)) {
+
+            $member->remind += $order->total;
+            $member->save();
+
+            //添加会员钱包记录
+            $record = new MemberRecordModel();
+            $record->member_id = $member->id;
+            $record->account = $member->account;
+            $record->nickname = $member->nickname;
+            $record->content = '礼品订单（订单号：' . $order->order_number . '）,被管理员取消了,返还余额：' . $order->total;
+            $record->remind = $order->total;
+            $record->commis_now = $member->commis;
+            $record->commis_all = $member->commis_all;
+            $record->remind_now = $member->remind;
+            $record->remind_all = $member->remind_all;
+            $record->type = 50;
+            $record->created_at = date('Y-m-d H:i:s');
+            $record->save();
+        }
+
+        $goods = new GoodsModel();
+        $goods = $goods->where('id', '=', $order->goods_id)->find();
+        if (!is_null($goods)) {
+
+            //加商品库存
+            $goods->stock += $order->goods_number;
+            $goods->save();
+
+            //加商品库存记录
+            $record = new GoodsRecordModel();
+            $record->goods_id = $goods->id;
+            $record->name = $goods->name;
+            $record->code = $goods->code;
+            $record->created_at = date('Y-m-d H:i:s');
+            $record->stock = $order->goods_number;
+            $record->content = '管理员『' . $master['nickname'] . '』,取消了礼品订单（订单号：' . $order->order_number . '），入库商品『' . $goods->name . '(编号：' . $goods->code . ')』库存：' . $order->goods_number . '件';
+            $record->stock_now = $goods->stock;
+            $record->type = '1';
+            $record->save();
+        }
+
+        Db::commit();
     }
 }

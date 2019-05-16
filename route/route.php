@@ -217,6 +217,7 @@ Route::group('', function () {
      * 前台路由组结束
      */
 
+    Route::get('/plan', 'plan/Plan/index');
     Route::get('/test', 'test/Test/index');
     Route::post('/test', 'test/Test/file');
 })->middleware('substation');

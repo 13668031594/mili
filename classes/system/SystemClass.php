@@ -24,15 +24,15 @@ class SystemClass extends AdminClass
 
         if (defined('SUBSTATION')) {
 
-            if (!empty(SUBSTATION)){
+            if (!empty(SUBSTATION)) {
 
                 $name = 'sysSetting_' . SUBSTATION . '.txt';
                 $this->dir .= '_' . SUBSTATION;
             }
-        }else{
+        } else {
 
             //安全路径
-            $safe_path = include_once 'safe_path.php';
+            $safe_path = include 'safe_path.php';
 
             //获取访问域名
             $localhost = $_SERVER['SERVER_NAME'];
@@ -138,7 +138,13 @@ class SystemClass extends AdminClass
             'goods_number|商品数量提示' => 'max:20000',
             'self_default|完善资料提示' => 'max:20000',
             'withdraw|佣金管理提示' => 'max:20000',
-            'loginReason' => 'max:20000',
+            'loginReason|图片描述' => 'max:20000',
+            'jushuitanShopid|聚水潭店铺id' => 'require|max:20',
+            'jushuitanId|聚水潭id' => 'require|max:50',
+            'jushuitanKey|聚水潭key' => 'require|max:50',
+            'jushuitanToken|聚水潭token' => 'require|max:50',
+            'jushuitanRefreshToken|聚水潭token续期时间' => 'require',
+            'jushuitanRefreshOrder|聚水潭同步订单时间' => 'require|integer|between:1,1440',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -184,6 +190,12 @@ class SystemClass extends AdminClass
             'self_default' => '请完善个人资料',
             'withdraw' => '将在24小时内处理您的提现申请',
             'loginReason' => '我们提供赠品采购、发货、一站式服务。',
+            'jushuitanShopid' => 10306045,
+            'jushuitanId' => 'c4bee67756d584195e367a8e44dc6f8c',
+            'jushuitanKey' => '0951cf9b1b392420f17d788cfd39f7c5',
+            'jushuitanToken' => '32e8833df97187b82b53f31584716876',
+            'jushuitanRefreshToken' => '05-01',
+            'jushuitanRefreshOrder' => '5',
         ];
     }
 

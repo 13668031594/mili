@@ -4,6 +4,7 @@ namespace app\test\controller;
 
 use classes\index\OrderClass;
 use classes\system\SystemClass;
+use classes\vendor\JushuitanClass;
 use classes\vendor\SmsClass;
 use think\Controller;
 use think\Request;
@@ -12,26 +13,45 @@ class TestController extends Controller
 {
     public function index()
     {
-        $method = 'shops.query';
-        $partnerid = 'ywv5jGT8ge6Pvlq3FZSPol345asd';
-        $partnerkey = 'ywv5jGT8ge6Pvlq3FZSPol2323';
-        $token = '181ee8952a88f5a57db52587472c3798';
+        $set = new SystemClass();
+        $set = $set->index();
+
+        $class = new JushuitanClass();
+
+        $result = $class->orders_single_query($set['jushuitanShopid'],['20190516000001-1']);
+
+        dump($result);
+        exit;
+    }
+
+    public function index2()
+    {
+        $method = 'inventory.query';
+        $partnerid = 'c4bee67756d584195e367a8e44dc6f8c';
+        $partnerkey = '0951cf9b1b392420f17d788cfd39f7c5';
+        $token = '32e8833df97187b82b53f31584716876';
+//        $partnerid = 'ywv5jGT8ge6Pvlq3FZSPol345asd';
+//        $partnerkey = 'ywv5jGT8ge6Pvlq3FZSPol2323';
+//        $token = '181ee8952a88f5a57db52587472c3798';
+
         $ts = time();
+
         $data = [
             'page_index' => '1',
             'page_size' => '30',
+            'modified_begin' => date('Y-m-d H:i:s', strtotime('-7 day')),
+            'modified_end' => date('Y-m-d H:i:s', strtotime('-1 day')),
+//            'sku_ids' => 'WA3699-WZ-AK048123',
         ];
 
-
         $sign = md5("{$method}{$partnerid}token{$token}ts{$ts}{$partnerkey}");
-        $sign = md5('inventory.queryywv5jGT8ge6Pvlq3FZSPol345asdtoken181ee8952a88f5a57db52587472c3798ts1540370062ywv5jGT8ge6Pvlq3FZSPol2323');
-        $sign = md5("shops.queryywv5jGT8ge6Pvlq3FZSPol345asdtoken181ee8952a88f5a57db52587472c3798ts{$ts}ywv5jGT8ge6Pvlq3FZSPol2323");
 
-        $url = "http://c.sursung.com/api/open/query.aspx?method={$method}&partnerid={$partnerid}&token={$token}&ts={$ts}&sign={$sign}&partnerkey={$partnerkey}";
+//        $url = "http://c.sursung.com/api/open/query.aspx?method={$method}&partnerid={$partnerid}&token={$token}&ts={$ts}&sign={$sign}";
+        $url = "http://open.erp321.com/api/open/query.aspx?method={$method}&partnerid={$partnerid}&token={$token}&ts={$ts}&sign={$sign}";
 
-        $result = self::url_post($url,json_encode($data));
+        $result = self::url_post($url, json_encode($data));
 
-        dump(json_decode($result,true));
+        dump(json_decode($result, true));
 
         exit('ok');
     }

@@ -11,9 +11,7 @@
     <script src="{$src}res/js/html5.min.js"></script>
     <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="{$src}res/js/jquery.min.js"
-
-             ></script>
+    <script src="{$src}res/js/jquery.min.js"></script>
 
 </head>
 
@@ -34,6 +32,7 @@
                 <!--<li>收款设置</li>-->
                 <li>登录注册</li>
                 <li>提示文字</li>
+                <li>聚水潭接口</li>
                 <!--<li>提现转账</li>-->
             </ul>
             <div class="layui-tab-content">
@@ -294,6 +293,81 @@
                 </blockquote>
             </div>
 
+            <div class="layui-tab-item">
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">店铺id</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jushuitanShopid" title="聚水潭店铺id"
+                                   placeholder="聚水潭店铺id" autocomplete="off" value="{$self['jushuitanShopid']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">订单上传的店铺id</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Id</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jushuitanId" title="pid"
+                                   placeholder="pid" autocomplete="off" value="{$self['jushuitanId']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerId</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Key</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jushuitanKey" title="pid"
+                                   placeholder="pid" autocomplete="off" value="{$self['jushuitanKey']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerKey</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">Token</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jushuitanToken" title="pid"
+                                   placeholder="pid" autocomplete="off" value="{$self['jushuitanToken']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">聚水潭发放的PartnerToken</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">续期Token</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="jushuitanRefreshToken" name="jushuitanRefreshToken"
+                               placeholder="续期Token" value="{{$self['jushuitanRefreshToken']}}">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">续期Token的时间</div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">同步订单</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="jushuitanRefreshOrder" title="pid"
+                                   placeholder="pid" autocomplete="off" value="{$self['jushuitanRefreshOrder']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">同步上传订单的物流号的时间</div>
+                    </div>
+                </div>
+
+                <blockquote class="layui-elem-quote">Token有效期一年，请根据首次获得token的时间设置，建议提前1个月到半个月续期即可
+                </blockquote>
+            </div>
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button id='submit' class="layui-btn" lay-filter="*" lay-submit>保存</button>
@@ -312,13 +386,21 @@
 
     layui.config({
         base: '{$src}res/js/common/'
-    }).use(['mForm', 'layer', 'jquery', 'element', 'upload'], function () {
+    }).use(['mForm', 'layer', 'jquery', 'element', 'upload', 'laydate'], function () {
 
         var element = layui.element;
         var form = layui.form;
         var layer = layui.layer;
+        var laydate = layui.laydate;
 
         var upload = layui.upload;
+
+        laydate.render({
+            elem: '#jushuitanRefreshToken', //指定元素
+            format: 'MM-dd',
+            type: 'time',
+        });
+
         upload.render({
             elem: '#upload'
             , url: urls.upload

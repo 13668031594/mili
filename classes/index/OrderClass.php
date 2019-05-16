@@ -277,7 +277,7 @@ class OrderClass extends \classes\IndexClass
                 break;
             default:
                 parent::ajax_exception(000, '下单类型出错');
-                break;
+                exit;
         }
 
         return $address;
@@ -291,30 +291,9 @@ class OrderClass extends \classes\IndexClass
      */
     private function address(Request $request)
     {
-        $str = $request->post('address');
-        $str = str_replace(" ", '', $str);//去空格
-//        $str = str_replace("\r\n", '', $str);//去换行符
+        $class = new OrderFileClass($request->post('address'));
 
-//        $address = explode('。', $str);
-        $address = explode("\r\n", $str);
-
-        $result = [];
-        $i = 0;
-        foreach ($address as $v) {
-
-            if (empty($v)) continue;
-
-            $a = explode('；', $v);
-            if (count($a) != 3) parent::ajax_exception(000, '第' . ($i + 1) . '行数据格式错误');
-            list($result[$i]['name'], $result[$i]['phone'], $result[$i]['address']) = $a;
-
-            if (empty($result[$i]['name'])) parent::ajax_exception(000, '第' . ($i + 1) . '行收货人格式错误');
-            if (!preg_match("/^1[34578]\d{9}$/", $result[$i]['phone'])) parent::ajax_exception(000, '第' . ($i + 1) . '行收货电话格式错误');
-            if (empty($result[$i]['address'])) parent::ajax_exception(000, '第' . ($i + 1) . '行收货地址格式错误');
-            if (strlen($result[$i]['address']) > 255) parent::ajax_exception(000, '第' . ($i + 1) . '行收货地址超长');
-
-            $i++;
-        }
+        $result = $class->file;
 
         return $result;
     }
@@ -526,6 +505,7 @@ class OrderClass extends \classes\IndexClass
         $insert->store_platform_name = $p;
         $insert->store_man = $store['man'];
         $insert->store_phone = $store['phone'];
+        $insert->store_address = $store['address'];
         $insert->store_created = $store['created_at'];
 
         $insert->created_at = $date;
@@ -541,7 +521,11 @@ class OrderClass extends \classes\IndexClass
             $name = $v['name'];//收货人
             $phone = $v['phone'];//收货人电话
             $address = $v['address'];//收货地址
-            $content[] = $name . '#$' . $phone . '#$' . $address;
+            $pro = $v['pro'];//收货地址
+            $city = $v['city'];//收货地址
+            $area = $v['area'];//收货地址
+            $add = $v['add'];//收货地址
+            $content[] = $name . '#$' . $phone . '#$' . $address. '#$' . $pro. '#$' . $city. '#$' . $area. '#$' . $add;
         }
         $insert_express['order_id'] = $insert->id;
         $insert_express['content'] = implode('#$%', $content);
@@ -600,7 +584,6 @@ class OrderClass extends \classes\IndexClass
         ];
     }
 
-
     public function insert_send(Model $order, $express)
     {
         $insert_send = [];
@@ -610,7 +593,7 @@ class OrderClass extends \classes\IndexClass
 
         foreach ($express as $ke => $va) {
 
-            list($name, $phone, $address) = explode('#$', $va);
+            list($name, $phone, $address,$pro,$city,$area,$add) = explode('#$', $va);
 
             $insert_send[$i]['send_order'] = $o['order_number'] . '-' . ($ke + 1);
             $insert_send[$i]['order_id'] = $o['id'];
@@ -623,6 +606,10 @@ class OrderClass extends \classes\IndexClass
             $insert_send[$i]['consignee'] = $name;
             $insert_send[$i]['phone'] = $phone;
             $insert_send[$i]['address'] = $address;
+            $insert_send[$i]['pro'] = $pro;
+            $insert_send[$i]['city'] = $city;
+            $insert_send[$i]['area'] = $area;
+            $insert_send[$i]['add'] = $add;
             $insert_send[$i]['created_at'] = $date;
             $i++;
         }
@@ -695,7 +682,6 @@ class OrderClass extends \classes\IndexClass
 
             $member->remind += $order->total;
             $member->save();
-
 
             //添加会员钱包记录
             $record = new MemberRecordModel();

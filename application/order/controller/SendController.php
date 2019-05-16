@@ -48,26 +48,37 @@ class SendController extends AdminController
     //发货单导出
     public function getBats()
     {
-        Db::startTrans();
 
-        //删除过期的excel文件
-        $this->class->excel_delete();
+            Db::startTrans();
 
-        //添加发货单
-        $this->class->store_send();
+            //删除过期的excel文件
+            $this->class->excel_delete();
 
-        //生成excel
-        $url = $this->class->excel();
+            //添加发货单
+            $this->class->store_send();
 
-        $result = [
-            'status' => 'success',
-            'url' => '/' . $url,
-            'message' => '生成成功',
-        ];
+        if (input('type') == '1'){
 
-        Db::commit();
+            //生成excel
+            $url = $this->class->excel();
 
-        return json($result);
+            $result = [
+                'status' => 'success',
+                'url' => '/' . $url,
+                'message' => '生成成功',
+            ];
+
+            Db::commit();
+
+            return json($result);
+        }else{
+
+            $this->class->jushuitan_order();
+
+            Db::commit();
+
+            $this->class->jushuitan_ok();
+        }
     }
 
     //导入

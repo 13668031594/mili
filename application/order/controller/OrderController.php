@@ -84,4 +84,11 @@ class OrderController extends AdminController
 
         return parent::success('/order/index');
     }
+
+    public function getBack()
+    {
+        $this->class->order_back();
+
+        return parent::view('index');
+    }
 }
