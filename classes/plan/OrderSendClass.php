@@ -12,15 +12,14 @@ namespace classes\plan;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
 use classes\FirstClass;
-use classes\system\SystemClass;
-use classes\vendor\JushuitanClass;
+use classes\system\JushuitanClass;
 use think\Db;
 
 class OrderSendClass extends FirstClass
 {
     public function __construct()
     {
-        $set = new SystemClass();
+        $set = new JushuitanClass();
         $set = $set->index();
 
         $test = self::test_time($set);

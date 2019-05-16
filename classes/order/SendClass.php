@@ -467,7 +467,7 @@ class SendClass extends AdminClass
 
         $data = [];
         $order_numbers = [];
-        $set = new SystemClass();
+        $set = new \classes\system\JushuitanClass();
         $set = $set->index();
         foreach ($sends as $k => $v) {
 
