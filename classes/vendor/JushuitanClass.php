@@ -3,7 +3,6 @@
 namespace classes\vendor;
 
 use classes\FirstClass;
-use classes\system\SystemClass;
 
 class JushuitanClass extends FirstClass
 {
@@ -15,7 +14,7 @@ class JushuitanClass extends FirstClass
 
     public function __construct()
     {
-        $set = new SystemClass();
+        $set = new \classes\system\JushuitanClass();
         $set = $set->index();
 
         $this->partnerid = $set['jushuitanId'];
