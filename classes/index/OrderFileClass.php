@@ -320,8 +320,8 @@ class OrderFileClass
 
             if (empty($v)) continue;
 
-            $a = explode('；', $v);
-            if (count($a) != 3) return '第' . ($i + 1) . '行数据格式错误';
+            $a = explode('，', $v);
+            if (count($a) < 3) return '第' . ($i + 1) . '行数据格式错误';
             list($result[$i]['name'], $result[$i]['phone'], $result[$i]['address']) = $a;
 
             if (empty($result[$i]['name'])) return '第' . ($i + 1) . '行收货人格式错误';
@@ -396,12 +396,7 @@ class OrderFileClass
                     if ($city != $city_t) {
 
                         $city_t = strstr($va['name'], '市', true);
-                        if (!$city_t) {
-
-                            $result['city'] = $va['name'];
-                            $long2 = 0;
-                            continue;
-                        }
+                        if (!$city_t) continue;
                         $long2 = strlen($city_t);
                         $city = substr($address, $long1, $long2);
                     }
@@ -411,21 +406,31 @@ class OrderFileClass
 
                 foreach ($va['child'] as $val) {
 
-                    $long3 = strlen($val['name']);
 
-                    $area = substr($address, ($long1 + $long2), $long3);
+                    if ($va['name'] == $val['name']) {
 
-                    $area_t = $val['name'];
-                    $result['area'] = $area;
+                        $result['area'] = $val['name'];
+                        $long3 = 0;
+                        $area = $area_t = $val['name'];
+                    } else {
 
-                    if ($area != $area_t) {
+                        $long3 = strlen($val['name']);
 
-                        $area_t = strstr($val['name'], '区', true);
-                        if (!$area_t) $area_t = strstr($val['name'], '县', true);
-                        if (!$area_t) $area_t = strstr($val['name'], '镇', true);
-                        if (!$area_t) continue;
-                        $long3 = strlen($area_t);
+                        $area_t = $val['name'];
+
                         $area = substr($address, ($long1 + $long2), $long3);
+
+                        $result['area'] = $area;
+
+                        if ($area != $area_t) {
+
+                            $area_t = strstr($val['name'], '区', true);
+                            if (!$area_t) $area_t = strstr($val['name'], '县', true);
+                            if (!$area_t) $area_t = strstr($val['name'], '镇', true);
+                            if (!$area_t) continue;
+                            $long3 = strlen($area_t);
+                            $area = substr($address, ($long1 + $long2), $long3);
+                        }
                     }
 
                     $add = substr($address, ($long1 + $long2 + $long3));
