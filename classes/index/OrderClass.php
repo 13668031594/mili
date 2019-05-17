@@ -295,6 +295,8 @@ class OrderClass extends \classes\IndexClass
 
         $result = $class->file;
 
+        if (!is_array($result)) parent::ajax_exception(000, $result);
+
         return $result;
     }
 
@@ -334,10 +336,10 @@ class OrderClass extends \classes\IndexClass
             } else if ($extension == 'csv') {
 
                 $objReader = \PHPExcel_IOFactory::createReader('CSV');
-                if (input('platform') == 'pinduoduo'){
+                if (input('platform') == 'pinduoduo') {
 
                     $objPHPExcel = $objReader->setInputEncoding('UTF-8')->load($filename);
-                }else{
+                } else {
 
                     $objPHPExcel = $objReader->setInputEncoding('GBK')->load($filename);
                 }
@@ -351,7 +353,7 @@ class OrderClass extends \classes\IndexClass
 
             array_shift($excel_array);//去表头
 
-            if (count($excel_array) > 2000)parent::ajax_exception(000,'单次上传表单内数据不得超过2000条');
+            if (count($excel_array) > 2000) parent::ajax_exception(000, '单次上传表单内数据不得超过2000条');
 
             $files = new OrderFileClass($excel_array);
 
@@ -359,7 +361,7 @@ class OrderClass extends \classes\IndexClass
 
             unlink($filename);
 
-            if (!is_array($result))parent::ajax_exception(000,$result);
+            if (!is_array($result)) parent::ajax_exception(000, $result);
 
             return $result;
         }
@@ -525,7 +527,7 @@ class OrderClass extends \classes\IndexClass
             $city = $v['city'];//收货地址
             $area = $v['area'];//收货地址
             $add = $v['add'];//收货地址
-            $content[] = $name . '#$' . $phone . '#$' . $address. '#$' . $pro. '#$' . $city. '#$' . $area. '#$' . $add;
+            $content[] = $name . '#$' . $phone . '#$' . $address . '#$' . $pro . '#$' . $city . '#$' . $area . '#$' . $add;
         }
         $insert_express['order_id'] = $insert->id;
         $insert_express['content'] = implode('#$%', $content);
@@ -593,7 +595,7 @@ class OrderClass extends \classes\IndexClass
 
         foreach ($express as $ke => $va) {
 
-            list($name, $phone, $address,$pro,$city,$area,$add) = explode('#$', $va);
+            list($name, $phone, $address, $pro, $city, $area, $add) = explode('#$', $va);
 
             $insert_send[$i]['send_order'] = $o['order_number'] . '-' . ($ke + 1);
             $insert_send[$i]['order_id'] = $o['id'];
