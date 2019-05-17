@@ -12,7 +12,7 @@ class PlanController extends Controller
 {
     public function index()
     {
-        set_time_limit (0);
+        set_time_limit(300);
 
         Db::startTrans();
 
