@@ -616,13 +616,13 @@ class OrderClass extends \classes\IndexClass
             $insert_send[$i]['created_at'] = $date;
             $i++;
         }
-       /* $first = $insert_send[$i - 1];
-        $insert_send = [];
-        for ($i = 0; $i < 500; $i++) {
-            $f = $first;
-            $f['send_order'] = $first['send_order'] . $i;
-            $insert_send[] = $f;
-        }*/
+        /* $first = $insert_send[$i - 1];
+         $insert_send = [];
+         for ($i = 0; $i < 500; $i++) {
+             $f = $first;
+             $f['send_order'] = $first['send_order'] . $i;
+             $insert_send[] = $f;
+         }*/
 
         if (count($insert_send) > 0) {
 
@@ -649,13 +649,18 @@ class OrderClass extends \classes\IndexClass
 
         $key .= $number;
 
+        return self::test_number($key);
+    }
+
+    private function test_number($key)
+    {
         //验证订单号是否被占用
         $test = new OrderModel();
         $test = $test->where('order_number', '=', $key)->find();
 
         if (!is_null($test)) {
 
-            return self::new_order();
+            return self::test_number(($key+1));
         } else {
 
             return $key;
