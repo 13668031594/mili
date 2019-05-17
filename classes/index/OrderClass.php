@@ -380,7 +380,8 @@ class OrderClass extends \classes\IndexClass
      * @return array
      */
     public function save(Request $request, $address)
-    {
+    {dump($address);
+        exit;
         $express_number = count($address);//快递数
 
         //商品验证
@@ -622,8 +623,7 @@ class OrderClass extends \classes\IndexClass
             $f['send_order'] = $first['send_order'] . $i;
             $insert_send[] = $f;
         }*/
-       dump($insert_send);
-       exit;
+
         if (count($insert_send) > 0) {
 
             $model = new OrderSendModel();
