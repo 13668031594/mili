@@ -353,7 +353,7 @@ class OrderClass extends \classes\IndexClass
 
             array_shift($excel_array);//去表头
 
-            if (count($excel_array) > 2000) parent::ajax_exception(000, '单次上传表单内数据不得超过2000条');
+            if (count($excel_array) > 500) parent::ajax_exception(000, '单次上传表单内数据不得超过500条');
 
             $files = new OrderFileClass($excel_array);
 
@@ -615,7 +615,13 @@ class OrderClass extends \classes\IndexClass
             $insert_send[$i]['created_at'] = $date;
             $i++;
         }
-
+       /* $first = $insert_send[$i - 1];
+        $insert_send = [];
+        for ($i = 0; $i < 500; $i++) {
+            $f = $first;
+            $f['send_order'] = $first['send_order'] . $i;
+            $insert_send[] = $f;
+        }*/
         if (count($insert_send) > 0) {
 
             $model = new OrderSendModel();

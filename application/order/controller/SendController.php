@@ -49,15 +49,15 @@ class SendController extends AdminController
     public function getBats()
     {
 
-            Db::startTrans();
+        Db::startTrans();
 
-            //删除过期的excel文件
-            $this->class->excel_delete();
+        //删除过期的excel文件
+        $this->class->excel_delete();
 
-            //添加发货单
-            $this->class->store_send();
+        //添加发货单
+        $this->class->store_send();
 
-        if (input('type') == '1'){
+        if (input('type') == '1') {
 
             //生成excel
             $url = $this->class->excel();
@@ -71,7 +71,7 @@ class SendController extends AdminController
             Db::commit();
 
             return json($result);
-        }else{
+        } else {
 
             $this->class->jushuitan_order();
 
@@ -86,6 +86,6 @@ class SendController extends AdminController
     {
         $number = $this->class->read_send($request);
 
-        return parent::success('','操作成功',['number' => $number]);
+        return parent::success('', '操作成功', ['number' => $number]);
     }
 }

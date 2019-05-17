@@ -1,41 +1,50 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yangyang
- * Date: 2019/5/16
- * Time: 下午9:24
- */
 
 namespace classes\plan;
-
 
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
 use classes\FirstClass;
-use classes\system\JushuitanClass;
+use classes\vendor\JushuitanClass;
 use think\Db;
 
 class OrderSendClass extends FirstClass
 {
     public function __construct()
     {
-        $set = new JushuitanClass();
+        $set = new \classes\system\JushuitanClass();
         $set = $set->index();
 
         $test = self::test_time($set);
         if (!$test) return;
 
+        $result = self::send($set);
+
+        dump('send_order：' . $result);
+    }
+
+
+    private function test_time($set)
+    {
+        $cache = cache('send_order_time');
+        if ($cache) return false;
+        cache('send_order_time', date('Y-m-d H:i:s'), (60 * $set['jushuitanRefreshOrder']));
+
+        return true;
+    }
+
+    private function send($set)
+    {
         $send = new OrderSendModel();
         $sends = $send->alias('a')
             ->leftJoin('order o', 'o.id = a.order_id')
             ->where('o.order_status', 'in', [15])
             ->where('a.send_create', '=', null)
             ->column('a.id,a.send_order,o.id as oid', 'a.send_order');
-        if (count($sends) <= 0) parent::ajax_exception(000, '没有需要发货的订单');
+        if (count($sends) <= 0) return '没有需要发货的订单';
 
         //50个一组
         $sends2 = array_chunk($sends, 50);
-
 
         $class = new JushuitanClass();
 
@@ -68,16 +77,8 @@ class OrderSendClass extends FirstClass
             $order = new OrderModel();
             $order->whereIn('id', $order_ids)->update(['order_status' => '20']);
         }
-    }
 
-    //验证同步时间
-    private function test_time($set)
-    {
-        $cache = cache('send_order_time');
-        if ($cache) return false;
-        cache('send_order_time', date('Y-m-d H:i:s'), (60 * $set['jushuitanRefreshOrder']));
-
-        return true;
+        return '合计同步发货信息：' . count($update) . '条，涉及本站订单：' . count(array_unique($order_ids)) . '条';
     }
 
     //批量更新
