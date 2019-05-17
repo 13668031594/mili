@@ -380,8 +380,7 @@ class OrderClass extends \classes\IndexClass
      * @return array
      */
     public function save(Request $request, $address)
-    {dump($address);
-        exit;
+    {
         $express_number = count($address);//快递数
 
         //商品验证
