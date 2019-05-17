@@ -51,8 +51,6 @@ class OrderController extends \app\http\controller\IndexController
     //下单
     public function postOrder(Request $request)
     {
-        set_time_limit (0);
-
         $this->class->status();
 
         $address = $this->class->validator_order($request);
