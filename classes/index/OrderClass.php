@@ -461,6 +461,7 @@ class OrderClass extends \classes\IndexClass
 
         Db::startTrans();
 
+
         //正式下单
         $insert = new OrderModel();
         $insert->order_number = self::new_order();
