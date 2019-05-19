@@ -99,7 +99,7 @@ class SendClass extends AdminClass
 //        $date = date('Y-m-d') . ' 00:00:00';
 
 //        if (empty($date)) parent::ajax_exception(000, '请选择下单时间');
-        if (empty($date)) $date = date('Y-m-d') . ' 00:00:00';
+        if (empty($date)) $date = date('Y-m-d 00:00:00', strtotime('-3 day'));
 
         //寻找已经生成了发货单且没发货的订单
         $send = new OrderSendModel();

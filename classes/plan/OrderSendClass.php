@@ -110,10 +110,7 @@ class OrderSendClass extends FirstClass
             $q = rtrim($q, ", ") . " WHERE " . $referenceColumn . " IN (" . rtrim($whereIn, ', ') . ")";
 
             // Update
-            $a = Db::execute($q);
-            dump($a);
-            exit;
-
+            Db::execute($q);
         } else {
             return false;
         }
