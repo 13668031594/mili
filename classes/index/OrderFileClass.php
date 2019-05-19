@@ -320,7 +320,7 @@ class OrderFileClass
 
             if (empty($v)) continue;
 
-            $a = explode('，', $v);
+            $a = explode(',', $v);
             if (count($a) < 3) return '第' . ($i + 1) . '行数据格式错误';
             list($result[$i]['name'], $result[$i]['phone'], $result[$i]['address']) = $a;
 

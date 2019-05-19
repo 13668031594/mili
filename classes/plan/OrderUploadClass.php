@@ -16,7 +16,7 @@ class OrderUploadClass extends FirstClass
         $set = $set->index();
 
         $test = self::test_time($set);
-//        if (!$test) return;
+        if (!$test) return;
 
         $class = new SendClass();
 
