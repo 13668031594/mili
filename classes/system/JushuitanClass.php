@@ -19,7 +19,7 @@ class JushuitanClass extends AdminClass
 
     public function __construct()
     {
-        $name = 'sysSetting.txt';
+        $name = 'jushuitanSetting.txt';
 
         $this->storage = new StorageClass($name);
     }
