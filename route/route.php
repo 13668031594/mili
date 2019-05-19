@@ -213,6 +213,20 @@ Route::group('', function () {
         Route::get('goods-table', 'index/Index/getGoodsTable');//礼品数据
         Route::get('repair-list', 'index/Repair/getIndex');//提交工单首页
         Route::get('repair-default', 'index/Repair/getDefault');//推荐方案
+        Route::get('desktop', function () {
+            $set = new \classes\system\SystemClass();
+            $set = $set->index();
+            $Shortcut= "[InternetShortcut] 
+            URL=http://{$_SERVER['HTTP_HOST']}
+            IDList=IconIndex=43 
+            IconFile=/favicon.ico 
+            HotKey=1626 
+            [{000214A0-0000-0000-C000-000000000046}] 
+            Prop3=19,2";
+            Header("Content-type: application/octet-stream");
+            header("Content-Disposition: attachment; filename={$set['webName']}.url");
+            exit($Shortcut);
+        });
     });
     /**
      * 前台路由组结束

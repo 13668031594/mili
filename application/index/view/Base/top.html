@@ -13,7 +13,7 @@
             <span class="header-top-qq">{php}echo $set['qq']{/php}</span>
             <!--<a href="###" class="header-top-qq"><img src="{$src}images/group.png" alt=""/></a>-->
 
-            <a href="###" class="header-top-desktop"><i class="iconfont icon-xinxinicon"></i>设置为桌面图标</a>
+            <a href="/desktop" class="header-top-desktop"><i class="iconfont icon-xinxinicon"></i>设置为桌面图标</a>
             <span class="header-top-personal">
                 <i class="iconfont icon-user"></i>个人中心<i class="iconfont icon-down-trangle"></i>
                 <ul class="header-top-personal-list">
@@ -24,7 +24,7 @@
                     <li><a href="upgrade">升级会员</a></li>
                 </ul>
             </span>
-            <a href="javascript: join_favorite(window.location, {$set['webName']});" class="header-top-collection"><i class="iconfont icon-xing"></i>收藏本站</a>
+            <a href="javascript: join_favorite(window.location, 'http://{$_SERVER['HTTP_HOST']}');" class="header-top-collection"><i class="iconfont icon-xing"></i>收藏本站</a>
             <div class="clear"></div>
         </div>
     </div>
