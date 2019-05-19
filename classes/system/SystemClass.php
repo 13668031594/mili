@@ -145,6 +145,7 @@ class SystemClass extends AdminClass
 //            'jushuitanToken|聚水潭token' => 'require|max:50',
 //            'jushuitanRefreshToken|聚水潭token续期时间' => 'require',
 //            'jushuitanRefreshOrder|聚水潭同步订单时间' => 'require|integer|between:1,1440',
+            'qq|客服群' => 'max:20000',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -196,6 +197,7 @@ class SystemClass extends AdminClass
 //            'jushuitanToken' => '32e8833df97187b82b53f31584716876',
 //            'jushuitanRefreshToken' => '05-01',
 //            'jushuitanRefreshOrder' => '5',
+            'qq' => '',
         ];
     }
 
