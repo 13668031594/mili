@@ -1,4 +1,5 @@
 <?php
+
 namespace classes\index;
 
 use classes\vendor\StorageClass;
@@ -13,7 +14,7 @@ class OrderFileClass
         $storage = new StorageClass('region');
         $region = $storage->get();
         $this->region = json_decode($region, true);
-        if (is_string($this->region))$this->region = json_decode($this->region, true);
+        if (is_string($this->region)) $this->region = json_decode($this->region, true);
 
         if (input('type') == '0') {
 
@@ -320,9 +321,13 @@ class OrderFileClass
 
             if (empty($v)) continue;
 
+            $v = preg_replace("/(，)/", ',', $v);
             $a = explode(',', $v);
             if (count($a) < 3) return '第' . ($i + 1) . '行数据格式错误';
             list($result[$i]['name'], $result[$i]['phone'], $result[$i]['address']) = $a;
+
+            $area_t = strstr($result[$i]['phone'], '-', true);
+            if ($area_t) list($de, $result[$i]['phone']) = explode('-', $result[$i]['phone']);
 
             if (empty($result[$i]['name'])) return '第' . ($i + 1) . '行收货人格式错误';
             if (!preg_match("/^1[34578]\d{9}$/", $result[$i]['phone'])) return '第' . ($i + 1) . '行收货电话格式错误';
