@@ -17,6 +17,7 @@ use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
 use classes\AdminClass;
 use classes\system\SystemClass;
+use classes\vendor\JushuitanClass;
 use classes\vendor\SmsClass;
 use think\Db;
 use think\Request;
@@ -251,12 +252,10 @@ class OrderClass extends AdminClass
         }
     }
 
-    //取消订单
-    public function order_back()
+    //取消订单时的订单状态验证
+    public function validator_back()
     {
         $id = input('id');
-
-        $master = parent::master();
 
         $order = new OrderModel();
 
@@ -266,7 +265,75 @@ class OrderClass extends AdminClass
 
         if (is_null($order)) parent::ajax_exception(000, '订单已锁定');
 
-        Db::startTrans();
+        return $order;
+    }
+
+    //需要取消的聚水潭订单号
+    public function back_sends($order)
+    {
+        $result = $this->send->where('order_id', '=', $order['id'])->column('send_order');
+
+        return $result;
+    }
+
+    //取消聚水潭中的订单
+    public function jushuitan_back($orders)
+    {
+        if (count($orders) <= 0) return;
+
+        //初始化聚水潭操作类
+        $jushuitan_class = new JushuitanClass();
+
+        //将订单号50一个分组
+        $orders = array_chunk($orders, 50);
+
+        $backs = [];
+
+        $master = parent::master();
+
+        //循环查询订单状体啊
+        foreach ($orders as $v) {
+
+            //接口查询订单状态
+            $result = $jushuitan_class->orders_single_query($jushuitan_class->set['jushuitanShopid'], $v);
+
+            //没有成功，返回
+            if ($result['code'] != '0' || !isset($result['orders'])) continue;
+
+            //组合到结果数组中
+            foreach ($result['orders'] as $va) {
+
+                //上传时的状态或者已经取消
+                if ($va['status'] == 'WaitConfirm' || $va['status'] == 'Cancelled') {
+
+                    $backs[] = [
+                        'shop_id' => $jushuitan_class->set['jushuitanShopid'],
+                        'so_id' => $va['so_id'],
+                        'remark' => '米礼网后台取消订单，操作人：' . $master['nickname'],
+                    ];
+                } else {
+
+                    exit('已经有部分订单发货成功，无法取消');
+                }
+            }
+        }
+
+        if (count($backs) <= 0) return;
+
+        //若有订单上传到聚水潭，则取消之
+        $result = $jushuitan_class->orders_cancel_upload($backs);
+        if (!isset($result['code']) || ($result['code'] != '0')) {
+
+            dump($result);
+            Db::rollback();
+            parent::ajax_exception(000, '聚水潭撤销订单失败');
+        }
+    }
+
+    //取消订单
+    public function order_back($order)
+    {
+        $master = parent::master();
 
         $order->order_status = 30;
         $order->change_id = $master['id'];
@@ -318,6 +385,5 @@ class OrderClass extends AdminClass
             $record->save();
         }
 
-        Db::commit();
     }
 }

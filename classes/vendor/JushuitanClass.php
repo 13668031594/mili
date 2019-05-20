@@ -11,11 +11,13 @@ class JushuitanClass extends FirstClass
     private $partnerkey;//key
     private $token;//token
     private $url = 'http://open.erp321.com/api/open/query.aspx';//接口url
+    public $set;
 
     public function __construct()
     {
         $set = new \classes\system\JushuitanClass();
         $set = $set->index();
+        $this->set = $set;
 
         $this->partnerid = $set['jushuitanId'];
         $this->partnerkey = $set['jushuitanKey'];
@@ -72,6 +74,7 @@ class JushuitanClass extends FirstClass
         return $result;
     }
 
+    //订单状态查询
     public function orders_single_query($shop_id = '', $so_ids = '', $page = 1, $limit = 30, $begin = null, $end = null)
     {
         if (is_null($begin) && is_null($end)) {
@@ -96,6 +99,13 @@ class JushuitanClass extends FirstClass
         ];
 
         $result = self::visit('orders.single.query', $data);
+
+        return $result;
+    }
+
+    public function orders_cancel_upload($list = [])
+    {
+        $result = self::visit('orders.cancel.upload', $list);
 
         return $result;
     }

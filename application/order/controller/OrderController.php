@@ -8,9 +8,9 @@
 
 namespace app\order\controller;
 
-
 use app\http\controller\AdminController;
 use classes\order\OrderClass;
+use think\Db;
 use think\Request;
 
 class OrderController extends AdminController
@@ -74,20 +74,38 @@ class OrderController extends AdminController
 
         $sends = $this->class->sends($order);
 
-        return parent::view('send', ['self' => $order, 'express' => $express,'sends' => $sends]);
+        return parent::view('send', ['self' => $order, 'express' => $express, 'sends' => $sends]);
     }
 
     public function postSend(Request $request)
     {
         $result = $this->class->send2($request);
-        if($result === false)$this->class->send($request);
+        if ($result === false) $this->class->send($request);
 
         return parent::success('/order/index');
     }
 
     public function getBack()
     {
-        $this->class->order_back();
+        Db::startTrans();
+
+        //验证订单状态
+        $order = $this->class->validator_back();
+
+        //发货中状态
+        if ($order['order_status'] == 15) {
+
+            //获取发货单号
+            $send = $this->class->back_sends($order);
+
+            //验证所有订单在聚水潭中的状态
+            if (!empty($send)) $this->class->jushuitan_back($send);
+        }
+
+        //撤销订单
+        $this->class->order_back($order);
+
+        Db::commit();
 
         return parent::view('index');
     }
