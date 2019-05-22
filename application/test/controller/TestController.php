@@ -13,12 +13,11 @@ class TestController extends Controller
 {
     public function index()
     {
-        $set = new SystemClass();
+        $set = new \classes\system\JushuitanClass();
         $set = $set->index();
 
         $class = new JushuitanClass();
-
-        $result = $class->orders_single_query($set['jushuitanShopid'],['20190516000001-1']);
+        $result = $class->orders_single_query($set['jushuitanShopid'],['20190522000010-1']);
 
         dump($result);
         exit;

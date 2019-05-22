@@ -304,7 +304,7 @@ class OrderClass extends AdminClass
             foreach ($result['orders'] as $va) {
 
                 //上传时的状态或者已经取消
-                if ($va['status'] == 'WaitConfirm' || $va['status'] == 'Cancelled') {
+                if ($va['status'] == 'WaitConfirm' || $va['status'] == 'Cancelled' || $va['status'] == 'Question') {
 
                     $backs[] = [
                         'shop_id' => $jushuitan_class->set['jushuitanShopid'],
