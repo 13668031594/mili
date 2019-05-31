@@ -18,7 +18,7 @@ class AdminClass extends FirstClass
     public function master()
     {
         if (is_null($this->master)) {
-            $master = session('master_' . $_SERVER['SERVER_NAME']);
+            $master = session('master');
             $model = new MasterModel();
             $this->master = $model->where('id', '=', $master['id'])->find();
         }

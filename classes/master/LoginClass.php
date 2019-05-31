@@ -97,8 +97,8 @@ class LoginClass extends AdminClass
             'login_ass' => md5(time() . rand(100, 999))//登录密钥
         ];
 
-        session('master_' . $_SERVER['SERVER_NAME'], $session);//保存登录信息
-
+        session('master', $session);//保存登录信息
+//dd('master_' . $_SERVER['SERVER_NAME']);
         $master->login_times += 1;
         $master->login_time = date('Y-m-d H:i:s');
         $master->login_ip = $_SERVER["REMOTE_ADDR"];
@@ -111,13 +111,13 @@ class LoginClass extends AdminClass
      */
     public function logout()
     {
-        session('master_' . $_SERVER['SERVER_NAME'], null);
+        session('master', null);
     }
 
     private function test_master()
     {
         //尝试获取session中的master信息
-        $master = session('master_' . $_SERVER['SERVER_NAME']);
+        $master = session('master');
 
         //验证session中的信息格式与过期时间
         if (is_null($master) || !is_array($master) || !isset($master['id']) || !isset($master['login_ass']) || !isset($master['time']) || ($master['time'] < time())) return null;
@@ -137,7 +137,7 @@ class LoginClass extends AdminClass
         //更新操作时间
         $master['time'] = time() + config('young.admin_login_time');
 
-        session('master_' . $_SERVER['SERVER_NAME'], $master);
+        session('master', $master);
 
         return $masters;
     }
