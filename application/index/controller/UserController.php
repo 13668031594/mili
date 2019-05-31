@@ -172,10 +172,13 @@ class UserController extends \app\http\controller\IndexController
 
         $express = $this->class->express();
 
+        $platform = config('member.store_platform');
+
         $result = [
             'choice' => '/upgrade',
             'grades' => $grades,
             'express' => $express,
+            'platform' => $platform,
         ];
 
         return parent::view('upgrade', $result);
@@ -205,6 +208,7 @@ class UserController extends \app\http\controller\IndexController
 
         $this->class->upgrade($info);
 
-        return parent::success('/upgrade');
+        exit ("<script>alert('升级成功');location.href='".$_SERVER["HTTP_REFERER"]."';</script>");
+//        return parent::success('/upgrade');
     }
 }

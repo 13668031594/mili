@@ -10,11 +10,14 @@ namespace classes\index;
 
 use app\avatar\model\AvatarModel;
 use app\express\model\ExpressModel;
+use app\Member\model\MemberGradeAmountModel;
 use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
 use app\member\model\MemberStoreModel;
+use classes\vendor\ExpressAmountClass;
+use classes\vendor\GradeAmountClass;
 use think\Db;
 use think\Request;
 
@@ -31,7 +34,7 @@ class UserClass extends \classes\IndexClass
     {
         $model = new AvatarModel();
 
-        $covers = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('location');
+        $covers = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('location');
 
         return $covers;
     }
@@ -286,16 +289,30 @@ class UserClass extends \classes\IndexClass
     {
         $member = parent::member();
         $member_grade = new MemberGradeModel();
-        $member_grade = $member_grade->where('substation','=',SUBSTATION)->where('id', '=', $member['grade_id'])->find();
+        $member_grade = $member_grade->where('id', '=', $member['grade_id'])->find();
 
         $grades = new MemberGradeModel();
-        $grades = $grades->where('substation','=',SUBSTATION)->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
+        $grades = $grades->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
 
         $express = new MemberGradeExpressModel();
+        $class = new ExpressAmountClass();
+
+        //获取分站的等级信息
+        $amount_model = new GradeAmountClass();
+        $grade_amount = $amount_model->amount($member_grade['id'], $member_grade['recharge'], $member_grade['buy_total']);
+
         foreach ($grades as &$v) {
 
+
             $v['express'] = $express->where('grade', '=', $v['id'])->column('express,amount', 'express');
-            $v['buy_total'] = ($v['buy_total'] > $member_grade['buy_total']) ? ($v['buy_total'] - $member_grade['buy_total']) : 0;
+            foreach ($v['express'] as $ke => &$va) {
+
+                $amount = $class->amount($ke, $v['id']);
+                $va = $amount['amount'];
+            }
+
+            $ga = $amount_model->amount($v['id'], $v['recharge'], $v['buy_total']);
+            $v['buy_total'] = ($ga['buy_total'] > $grade_amount['buy_total']) ? ($ga['buy_total'] - $grade_amount['buy_total']) : 0;
         }
 
         return $grades;
@@ -306,7 +323,7 @@ class UserClass extends \classes\IndexClass
     {
         $model = new ExpressModel();
 
-        $express = $model->where('disabled', '=', 'on')->order('sort', 'desc')->column('*');
+        $express = $model->where('disabled', '=', 'on')->order('platform', 'asc')->order('sort', 'desc')->column('*');
 
         return array_values($express);
     }
@@ -343,8 +360,12 @@ class UserClass extends \classes\IndexClass
         //高低等级验证
         if ($upgrade->sort < $member_grade->sort) parent::ajax_exception(000, '无法升级到较低等级');
 
+        $amount_class = new GradeAmountClass();
+        $member_grades = $amount_class->amount($member_grade['id'], $member_grade['recharge'], $member_grade['buy_total']);
+        $upgrades = $amount_class->amount($upgrade['id'], $upgrade['recharge'], $upgrade['buy_total']);
+
         //升级费用
-        $diff_total = ($upgrade['buy_total'] > $member_grade['buy_total']) ? ($upgrade['buy_total'] - $member_grade['buy_total']) : 0;
+        $diff_total = ($upgrades['buy_total'] > $member_grades['buy_total']) ? ($upgrades['buy_total'] - $member_grades['buy_total']) : 0;
         if ($diff_total != $total) parent::ajax_exception(000, '请刷新重试total');
 
         if ($member['remind'] < $total) parent::ajax_exception(000, '余额不足');

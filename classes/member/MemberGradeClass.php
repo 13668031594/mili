@@ -54,7 +54,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
         $result = parent::page($this->model, $other);
 
         $amount_class = new GradeAmountClass();
-
+//dd($result);
         foreach ($result['message'] as &$v) {
             $amount = $amount_class->amount($v['id'], $v['recharge'], $v['buy_total']);
             $v['recharge'] = $amount['recharge'];

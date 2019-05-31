@@ -15,6 +15,7 @@ use app\member\model\MemberRecordModel;
 use app\recharge\model\RechargeModel;
 use classes\AdminClass;
 use classes\system\SystemClass;
+use classes\vendor\GradeAmountClass;
 use think\Db;
 use think\Request;
 
@@ -190,12 +191,21 @@ class RechargeClass extends AdminClass
         $recharge = $recharge->where('member_id','=',$member->id)->where('status','=',1)->sum('total');
 
         $grade = new MemberGradeModel();
-        $grade = $grade->where('sort','>',$selfGrade->sort)->where('recharge','<=',$recharge)->order('sort','desc')->find();
-        if (!is_null($grade)){
+        $grade = $grade->where('sort','>',$selfGrade->sort)->order('sort','desc')->find();
 
-            $member->grade_id = $grade->id;
-            $member->grade_name = $grade->name;
-            $member->save();
+        $class = new GradeAmountClass();
+        foreach ($grade as $v){
+
+            $amount = $class->amount($v['id'],$v['recharge'],$v['buy_total']);
+
+            if ($amount['recharge'] <= $recharge){
+
+                $member->grade_id = $v['id'];
+                $member->grade_name = $v['name'];
+                $member->save();
+
+                return;
+            }
         }
     }
 }

@@ -136,7 +136,7 @@ class LoginClass extends IndexClass
     public function reg(Request $request)
     {
         $grade = new MemberGradeModel();
-        $grade = $grade->where('substation', '=', SUBSTATION)->where('change', '=', 'fail')->find();
+        $grade = $grade->where('change', '=', 'fail')->find();
         if (is_null($grade)) parent::ajax_exception(000, '注册失败，请联系管理员');
 
         $class = new MemberClass();

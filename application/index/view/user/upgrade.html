@@ -25,7 +25,7 @@
                             <colgroup>
                                 <col width="200">
                                 <col width="200">
-                                <col>
+                                <col width="400">
                             </colgroup>
                             <thead>
                             <tr>
@@ -53,7 +53,7 @@
                                                                                       lay-filter="filter"></td>
                                 {/if}
                                 <td rowspan="{php}echo count($express);{/php}">{$v['buy_total']}</td>
-                                <td>{$express[0]['name']}：{$v['mode'] =='on' ? $v['amount'] :
+                                <td>{$express[0]['name']}({$platform[$express[0]['platform']]})：{$v['mode'] =='on' ? $v['amount'] :
                                     (isset($v['express'][$express[0]['id']]) ? $v['express'][$express[0]['id']] :
                                     config('young.default_express_amount'))}
                                 </td>
@@ -61,7 +61,7 @@
                             {foreach $express as $ke => $va}
                             {if $ke != '0'}
                             <tr>
-                                <td>{$va['name']}：{$v['mode'] =='on' ? $v['amount'] : (isset($v['express'][$va['id']]) ?
+                                <td>{$va['name']}({$platform[$va['platform']]})：{$v['mode'] =='on' ? $v['amount'] : (isset($v['express'][$va['id']]) ?
                                     $v['express'][$va['id']] : config('young.default_express_amount'))}
                                 </td>
                             </tr>
