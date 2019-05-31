@@ -292,7 +292,7 @@ class UserClass extends \classes\IndexClass
         $member_grade = $member_grade->where('id', '=', $member['grade_id'])->find();
 
         $grades = new MemberGradeModel();
-        $grades = $grades->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
+        $grades = $grades->where('status','=','on')->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
 
         $express = new MemberGradeExpressModel();
         $class = new ExpressAmountClass();
@@ -301,8 +301,15 @@ class UserClass extends \classes\IndexClass
         $amount_model = new GradeAmountClass();
         $grade_amount = $amount_model->amount($member_grade['id'], $member_grade['recharge'], $member_grade['buy_total']);
 
-        foreach ($grades as &$v) {
+        foreach ($grades as $k => &$v) {
 
+            $ga = $amount_model->amount($v['id'], $v['recharge'], $v['buy_total']);
+//dump($ga);
+            if ($ga['status'] == 'off'){
+
+                unset($grades[$k]);
+                continue;
+            }
 
             $v['express'] = $express->where('grade', '=', $v['id'])->column('express,amount', 'express');
             foreach ($v['express'] as $ke => &$va) {
@@ -311,7 +318,6 @@ class UserClass extends \classes\IndexClass
                 $va = $amount['amount'];
             }
 
-            $ga = $amount_model->amount($v['id'], $v['recharge'], $v['buy_total']);
             $v['buy_total'] = ($ga['buy_total'] > $grade_amount['buy_total']) ? ($ga['buy_total'] - $grade_amount['buy_total']) : 0;
         }
 

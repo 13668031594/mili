@@ -51,10 +51,11 @@ class MemberGradeController extends AdminController
      */
     public function getCreate()
     {
-        $express = $this->class->express();
+        $result['express'] = $this->class->express();
+        $result['platform'] = config('member.store_platform');
 
         //视图
-        return parent::view('grade', ['express' => $express]);
+        return parent::view('grade', $result);
     }
 
     /**

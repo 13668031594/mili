@@ -22,6 +22,7 @@ class GradeAmountClass
     public function amount($id, $recharge, $buy_total)
     {
         $result = [
+            'status' => 'on',
             'recharge' => $recharge,
             'buy_total' => $buy_total,
         ];
@@ -32,6 +33,7 @@ class GradeAmountClass
         if (!is_null($a)) {
 
             $result = [
+                'status' => $a['status'],
                 'recharge' => $a['recharge'],
                 'buy_total' => $a['buy_total'],
             ];

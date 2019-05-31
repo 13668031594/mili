@@ -63,7 +63,7 @@
                 <div class="layui-input-inline">
                     <input type="text" name="recharge" lay-verify="number" placeholder="充值升级" autocomplete="off"
                            class="layui-input" value='{if isset($self)}{$self["recharge"]}{else/}100{/if}'
-                           maxlength="9" {if $self['change'] == 'fail'}readonly{/if}/>
+                           maxlength="9" {if isset($self) && $self['change'] == 'fail'}readonly{/if}/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">会员充值达到该值时，自动升级为当前等级。</div>
             </div>
@@ -73,7 +73,7 @@
                 <div class="layui-input-inline">
                     <input type="text" name="buy_total" lay-verify="number" placeholder="购买升级" autocomplete="off"
                            class="layui-input" value='{if isset($self)}{$self["buy_total"]}{else/}100{/if}'
-                           maxlength="9" {if $self['change'] == 'fail'}readonly{/if}/>
+                           maxlength="9" {if isset($self) && $self['change'] == 'fail'}readonly{/if}/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">可以直接支付此数值的金额，成为会员</div>
             </div>
