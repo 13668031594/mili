@@ -47,6 +47,19 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label">分站等级</label>
+                <div class="layui-input-inline">
+                    <select name="level" lay-verify="">
+                        {foreach $level as $k => $v}
+                        <option value="{$k}" {if isset($self) && ($self[
+                        'level_id'] == $k)}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">快递所属平台</div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label">名称</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" lay-verify="required" placeholder="名称" autocomplete="off"

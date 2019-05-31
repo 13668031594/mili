@@ -8,7 +8,6 @@
 <body style="background: #f4f4f4;">
 {include file="index@Base/top"}
 
-
 <!-- 中 -->
 
 <div class="new-order">
@@ -51,25 +50,40 @@
 
                 <input type="hidden" id='sendName' name="sendName" value=""/>
 
+                <input type="hidden" name="express" value="" id="express_value">
+
+                <input type="hidden" name="" value="0" id="express_amount">
+
+                <input type="hidden" name="" value="{$goods['amount']}" id="goods_amount">
 
                 <div class="layui-tab" lay-filter="type">
                     <ul class="layui-tab-title">
                         <li class="layui-this" lay-id="1">批量上传收货人</li>
                         <li lay-id="0">手工录入</li>
                     </ul>
+
                     <div style="padding:20px 0px 0px 10px;">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">每单金额</label>
+                            <div class="layui-input-block" style="width: 350px;">
+                                <input name="" id="amount" value="0" placeholder="没的拿金额"
+                                       class="layui-input" readonly/>
+                            </div>
+                        </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label">发货店铺</label>
                             <div class="layui-input-inline" style="width: 350px;">
                                 <select name="store" lay-filter="send">
                                     <option value="">请选择发货店铺</option>
                                     {foreach $store as $k => $v}
-                                    <option value="{$v['id']}" data-address="{$v['address']}">{$v['name']}-{$platform[$v['platform']]}</option>
+                                    <option value="{$v['id']}" data-id="{$v['platform']}"
+                                            data-address="{$v['address']}">{$v['name']}-{$platform[$v['platform']]}
+                                    </option>
                                     {/foreach}
                                 </select>
                             </div>
                             <div class="layui-form-mid ">
-                                <a href="/store">添加店铺</a>
+                                <a href="/store" target="_Blank">添加店铺</a>
                             </div>
                         </div>
 
@@ -79,17 +93,24 @@
                             </div>
                         </div>
 
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">快递</label>
-                            <div class="layui-input-block" style="width: 350px;">
-                                <select name="express" lay-filter="express">
-                                    <option value="">请选择快递</option>
-                                    {foreach $express as $k => $v}
-                                    <option value="{$k}">{$v}/每单</option>
-                                    {/foreach}
-                                </select>
+                        {foreach $platform as $ke => $va}
+                        <div id="aaa{$ke}" class="aaa" style="display:none;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">快递</label>
+                                <div class="layui-input-block" style="width: 350px;">
+                                    <select name="express{$ke}" lay-filter="express">
+                                        <option value="">请选择快递</option>
+                                        {if isset($express[$ke])}{foreach $express[$ke] as $k => $v}
+                                        <option value="{$k}" data-id="{$v['amount']}">{$v['name']}/{$v['amount']}/每单
+                                        </option>
+                                        {/foreach}{/if}
+                                    </select>
+                                </div>
                             </div>
                         </div>
+                        {/foreach}
+
+
                     </div>
                     <div class="layui-tab-content">
                         <div class="layui-tab-item layui-show">
@@ -273,9 +294,26 @@
     var previewHeader;
     var previewBody;
 
+    //计算每单金额
+    function amount() {
+
+        var orderNum = $('#order-num').val();
+        var orderAmount = $('#goods_amount').val();
+        var expressAmount = $('#express_amount').val();
+        var amount;
+        amount = (orderNum * orderAmount);
+        amount = amount +  + expressAmount;
+console.log(orderNum);
+console.log(orderAmount);
+console.log(expressAmount);
+console.log(amount);
+        $('#amount').val(amount);
+    };
+
     $('#order-num').on('input change', function () {
 
         var goodsNumber = $(this).val();
+
 
         if (Number($(this).val()) > Number($('#max-num').text())) {
             $(this).val($('#max-num').text());
@@ -284,7 +322,10 @@
 
         $("input[name=number]").each(function () {
             $(this).prop('value', goodsNumber);
-        })
+        });
+
+        amount();
+
     });
 
     layui.use(['layer', 'form', 'element', 'laydate'], function () {
@@ -337,6 +378,10 @@
 
         form.on('select(express)', function (data) {
 
+            var id = data.elem.selectedOptions[0].dataset.id;
+            $("#express_amount").val(id);
+            amount();
+
             var expressInfo = data.elem.selectedOptions[0].textContent;
 
             if (expressInfo.indexOf('/') != -1) {
@@ -352,16 +397,17 @@
             var sendInfo = data.elem.selectedOptions[0].textContent;
 //            console.log(sendInfo);
             $("#sendName").val(sendInfo);
+            amount();
 
             //console.log(data.elem.dataset.address);
             //console.log(data);
             var address = data.elem.selectedOptions[0].dataset.address;
 //            console.log($("#store_address .layui-input-inline"));
             $("#store_address .layui-input-inline").text(address);
-            if (address){
+            if (address) {
 
                 $("#store_address").show();
-            }else{
+            } else {
 
                 $("#store_address").hide();
             }
@@ -406,6 +452,17 @@
                 default:
                     break;
             }
+
+            form.render();
+        });
+
+        form.on('select(send)', function (data) {
+
+            var id = data.elem.selectedOptions[0].dataset.id;
+//            console.log(data.elem.selectedOptions[0].dataset.id);
+            $(".aaa").hide();
+            $('#aaa' + id).show();
+            $('#express_value').val(id);
 
             form.render();
         });

@@ -18,7 +18,7 @@ class AdminClass extends FirstClass
     public function master()
     {
         if (is_null($this->master)) {
-            $master = session('master');
+            $master = session('master_' . $_SERVER['SERVER_NAME']);
             $model = new MasterModel();
             $this->master = $model->where('id', '=', $master['id'])->find();
         }
@@ -50,7 +50,7 @@ class AdminClass extends FirstClass
                 ->whereOr('top', '=', SUBSTATION)
                 ->column('id');
 
-            if (SUBSTATION == '0')$sub[] = '0';
+            if (SUBSTATION == '0') $sub[] = '0';
 
         } elseif (!is_null($substation)) {
 

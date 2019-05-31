@@ -15,6 +15,7 @@ use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsClassModel;
 use app\goods\model\GoodsModel;
 use app\notice\model\NoticeModel;
+use classes\vendor\GoodsAmountClass;
 
 class IndexCLass extends \classes\IndexClass
 {
@@ -23,7 +24,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new BannerModel();
 
-        $banner = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
+        $banner = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
 
         $result = [];
         $i = 0;
@@ -44,7 +45,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new AdvModel();
 
-        $banner = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
+        $banner = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->order('sort', 'desc')->column('id,location,title,link');
 
         $result = [];
         $i = 0;
@@ -65,7 +66,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new NoticeModel();
 
-        return $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->limit(3)->page(1)->order('sort', 'desc')->column('id,title');
+        return $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->limit(3)->page(1)->order('sort', 'desc')->column('id,title');
     }
 
     //文章-首页
@@ -73,9 +74,9 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new ArticleModel();
 
-        $article = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->limit(6)->page(1)->order('sort', 'desc')->column('id,title,describe,created_at,author');
+        $article = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->limit(6)->page(1)->order('sort', 'desc')->column('id,title,describe,created_at,author');
 
-        $result =  array_chunk($article, 3);
+        $result = array_chunk($article, 3);
 
 //        dump($result);
 //        exit();
@@ -104,7 +105,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new ArticleModel();
 
-        $article = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
+        $article = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
 
         if (is_null($article)) parent::redirect_exception('/', '该文章已被删除或隐藏');
 
@@ -133,7 +134,7 @@ class IndexCLass extends \classes\IndexClass
     {
         $model = new NoticeModel();
 
-        $result = $model->where('substation','=',SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
+        $result = $model->where('substation', '=', SUBSTATION)->where('show', '=', 'on')->where('id', '=', $id)->find();
 
         if (is_null($result)) parent::redirect_exception('/', '该公告已被删除或隐藏');
 
@@ -165,14 +166,14 @@ class IndexCLass extends \classes\IndexClass
 
         $result = parent::page(new GoodsModel(), $other);
 
-        $amount = new GoodsAmountModel();
+        $amount = new GoodsAmountClass();
         foreach ($result['message'] as &$v) {
 
             if (is_null($v['location']) || !file_exists(substr($v['location'], 1))) $v['location'] = config('young.image_not_found');
             if (SUBSTATION != '0') {
 
-                $a = $amount->where('goods_id', '=', $v['id'])->where('substation', '=', SUBSTATION)->find();
-                if (!is_null($a)) $v['amount']= $a->amount;
+                $a = $amount->amount($v['id'], $v['amount'], $v['cost'], $v['protect']);
+                $v['amount'] = $a['amount'];
             }
         }
 

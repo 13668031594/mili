@@ -23,8 +23,10 @@ class SubstationController extends AdminController
      */
     public function getIndex()
     {
+        $level = $this->class->levels();
+
         //视图
-        return parent::view('index');
+        return parent::view('index', ['level' => $level]);
     }
 
     /**
@@ -48,8 +50,10 @@ class SubstationController extends AdminController
     {
         $sub_id = SUBSTATION;
 
+        $level = $this->class->levels();
+
         //视图
-        return parent::view('substation',['id' => $sub_id]);
+        return parent::view('substation', ['id' => $sub_id, 'level' => $level]);
     }
 
     /**
@@ -63,8 +67,10 @@ class SubstationController extends AdminController
         //获取数据
         $substation = $this->class->edit($request->get('id'));
 
+        $level = $this->class->levels();
+
         //视图
-        return parent::view('substation', ['self' => $substation]);
+        return parent::view('substation', ['self' => $substation, 'level' => $level]);
     }
 
     /**

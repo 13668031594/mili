@@ -72,9 +72,9 @@
                             <tr>
                                 <td>付款类型</td>
                                 {if $self['pay_type'] == '2'}
-                                <span class="layui-badge-rim">后台付款</span>
+                                <td><span class="layui-badge-rim">后台付款</span></td>
                                 {elseif $self['pay_type'] == '1'}
-                                <span class="layui-badge-rim">前台支付</span>
+                                <td><span class="layui-badge-rim">前台支付</span></td>
                                 {else/}
                                 <td><span class="layui-badge-rim">-</span></td>
                                 {/if}

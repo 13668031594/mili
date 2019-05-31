@@ -91,7 +91,7 @@ layui.define(['table', 'form'], function (exports) {
                         obj.del();
                         layer.msg('删除成功');
                     } else {
-                        layer.msg('删除失败');
+                        layer.msg(data.message);
                     }
                     //table.reload("idTable");
                 });

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>利润统计</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="{$src}res/js/jquery.min.js"
+
+    ></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">利润统计</a>
+        </span>
+    </div>
+
+        <div class="layui-row">
+
+            <form class="layui-form layui-form-min" action="/admin/profit/index" method="post">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">起始时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="time-start" name="startTime"
+                               placeholder="开始时间" value="{$data['startTime']}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">结束时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="time-end" name="endTime"
+                               placeholder="开始时间" value="{$data['endTime']}">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">站点筛选</label>
+                    <div class="layui-input-inline">
+                        <select name="substation" lay-verify="">
+                            {foreach $sub['array_con'] as $k => $v}
+                            <option value="{$k}"  {if $k == $data['substation']}selected="selected"{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">需要查看的站点</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">快递筛选</label>
+                    <div class="layui-input-inline">
+                        <select name="express" lay-verify="">
+                            <option value="">全部</option>
+                            {foreach $platform as $k => $v}
+                            <option value="platform-{$k}" style="color: blue;" {if 'platform-'.$k == $data['express']}selected="selected"{/if}>{$v}</option>
+                            {if isset($express[$k])}{foreach $express[$k] as $ke => $va}
+                            <option value="{$va['id']}" {if $va['id'] == $data['express']}selected="selected"{/if}>----{$va['name']}</option>
+                            {/foreach}{/if}
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">需要查看的快递</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品分类</label>
+                    <div class="layui-input-inline">
+                        <select name="goods_class" lay-verify="">
+                            <option value="">全部</option>
+                            {foreach $goods_class as $k => $v}
+                            <option value="{$k}" {if $k == $data['goods_class']}selected="selected" {/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">需要查看的商品分类</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品编号</label>
+                    <div class="layui-input-block">
+                <textarea id="content" title="请输入需要筛选的商品编号" name="goods_code"
+                          placeholder="请输入需要筛选的商品编号,不填则为查看所有商品"
+                          class="layui-textarea" maxlength="200">{$data['goods_code']}</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input class="layui-btn" type="submit" value="立即提交">
+                        <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+                    </div>
+                </div>
+            </form>
+
+            <div class="layui-col-sm6">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>{$sub['array'][$substation]}</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-even>
+                            <colgroup>
+                                <col width="150">
+                                <col width="200">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>订单数量</td>
+                                <td>{$self['number']}</td>
+                            </tr>
+                            <tr>
+                                <td>总金额</td>
+                                <td>{$self['total']}</td>
+                            </tr>
+                            <tr>
+                                <td>总收益</td>
+                                <td>{$self['profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>总成本</td>
+                                <td>{$self['cost']}</td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td>商品数量</td>
+                                <td>{$self['goods_number']}</td>
+                            </tr>
+
+                            <tr>
+                                <td>商品金额</td>
+                                <td>{$self['goods_total']}</td>
+                            </tr>
+                            <tr>
+                                <td>商品收益</td>
+                                <td>{$self['goods_profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>商品成本</td>
+                                <td>{$self['goods_cost']}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>快递数量</td>
+                                <td>{$self['express_number']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递金额</td>
+                                <td>{$self['express_total']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递收益</td>
+                                <td>{$self['express_profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递成本</td>
+                                <td>{$self['express_cost']}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+
+            {if !empty($child)}
+            <div class="layui-col-sm6">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>总体收益</legend>
+                    <div class="layui-field-box">
+                        <table class="layui-table" lay-even>
+                            <colgroup>
+                                <col width="150">
+                                <col width="200">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>订单数量</td>
+                                <td>{$child['number']}</td>
+                            </tr>
+                            <tr>
+                                <td>总金额</td>
+                                <td>{$child['total']}</td>
+                            </tr>
+                            <tr>
+                                <td>总收益</td>
+                                <td>{$child['profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>总成本</td>
+                                <td>{$child['cost']}</td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td>商品数量</td>
+                                <td>{$child['goods_number']}</td>
+                            </tr>
+
+                            <tr>
+                                <td>商品金额</td>
+                                <td>{$child['goods_total']}</td>
+                            </tr>
+                            <tr>
+                                <td>商品收益</td>
+                                <td>{$child['goods_profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>商品成本</td>
+                                <td>{$child['goods_cost']}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>快递数量</td>
+                                <td>{$child['express_number']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递金额</td>
+                                <td>{$child['express_total']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递收益</td>
+                                <td>{$child['express_profit']}</td>
+                            </tr>
+                            <tr>
+                                <td>快递成本</td>
+                                <td>{$child['express_cost']}</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+            </div>
+            {/if}
+        </div>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element']);
+
+
+</script>
+</body>
+
+</html>

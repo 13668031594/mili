@@ -32,7 +32,7 @@ class OrderController extends \app\http\controller\IndexController
 
         $store = $this->class->store();
 
-        $express = $this->class->express();
+        $express = $this->class->express($goods['code']);
 
         $content = $this->class->goods_content($goods_id);
 
@@ -44,7 +44,8 @@ class OrderController extends \app\http\controller\IndexController
             'prompt' => $this->class->prompt($goods),
             'content' => $content,
         ];
-
+//        dump($result);
+//        exit;
         return parent::view('order', $result);
     }
 

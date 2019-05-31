@@ -13,7 +13,7 @@
     <![endif]-->
     <script src="{$src}res/js/jquery.min.js"
 
-             ></script>
+    ></script>
     <style type="text/css">
         .images-item {
             height: 212px;
@@ -95,12 +95,20 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">商品分类</label>
                 <div class="layui-input-inline">
+                    {if SUBSTATION ==0}
                     <select name="goods_class" lay-verify="">
                         {foreach $goods_class as $k => $v}
                         <option value="{$k}" {if isset($self) && ($self[
                         'goods_class_id'] == $k)}selected{/if}>{$v}</option>
                         {/foreach}
                     </select>
+                    {else}
+                    <input type="hidden" name="goods_class" value="{$self['goods_class_id']}">
+                    <input type="text" name="" lay-verify="required" placeholder="商品名称" autocomplete="off"
+                           class="layui-input" value='{$self["goods_class_name"]}' maxlength="20" {if
+                           SUBSTATION !=0}readonly{/if}/>
+                    {/if}
+
                 </div>
                 <div class="layui-form-mid layui-word-aux">商品所在分类</div>
             </div>
@@ -110,7 +118,8 @@
                 <label class="layui-form-label">商品名字</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" lay-verify="required" placeholder="商品名称" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20" {if
+                           SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
 
@@ -118,7 +127,8 @@
                 <label class="layui-form-label">商品编号</label>
                 <div class="layui-input-block">
                     <input type="text" name="code" placeholder="商品编号" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["code"]}{/if}' maxlength="20"/>
+                           class="layui-input" value='{if isset($self)}{$self["code"]}{/if}' maxlength="20" {if
+                           SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
 
@@ -126,16 +136,16 @@
                 <label class="layui-form-label">商品重量</label>
                 <div class="layui-input-block">
                     <input type="text" name="weight" placeholder="商品重量" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["weight"]}{/if}' maxlength="20"/>
+                           class="layui-input" value='{if isset($self)}{$self["weight"]}{/if}' maxlength="20" {if
+                           SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
-
 
             <div class="layui-form-item">
                 <label class="layui-form-label">商品描述</label>
                 <div class="layui-input-block">
                 <textarea type="text" name="describe" lay-verify="required" placeholder="商品描述" autocomplete="off"
-                          class="layui-textarea" maxlength="60">{if isset($self)}{$self["describe"]}{/if}</textarea>
+                          class="layui-textarea" maxlength="60" {if SUBSTATION !=0}readonly{/if}>{if isset($self)}{$self["describe"]}{/if}</textarea>
                 </div>
             </div>
 
@@ -149,10 +159,31 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label">成本价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cost" lay-verify="required|number" placeholder="商品成本价" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["cost"]}{else/}0{/if}' maxlength="60"
+                           {if SUBSTATION !=0}readonly{/if}/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">保护价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="protect" lay-verify="required|number" placeholder="商品保护价"
+                           autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["protect"]}{else/}0{/if}' maxlength="60"
+                           {if SUBSTATION !=0}readonly{/if}/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label">每单数量</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="express_number" lay-verify="required|number" placeholder="商品单价" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["express_number"]}{else/}5{/if}' maxlength="60"/>
+                    <input type="text" name="express_number" lay-verify="required|number" placeholder="商品单价"
+                           autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["express_number"]}{else/}5{/if}'
+                           maxlength="60" {if SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
 
@@ -160,23 +191,34 @@
                 <label class="layui-form-label">排序</label>
                 <div class="layui-input-inline">
                     <input type="text" name="sort" lay-verify="required" placeholder="商品排序" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="60"/>
+                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="60" {if
+                           SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
+                {if SUBSTATION ==0}
                 <div class="layui-input-block">
                     <input type="checkbox" lay-filter="show"
                            lay-skin="switch"
-                           lay-text="上架|未上架" {if isset($self) && ($self['status'] == 'on')}checked{/if}/>
-                    <!-- 显示开关 嵌套填充 -->
-                    <input type="hidden" id='show' name="status"
-                           value="{if isset($self) && ($self['status'] == 'on')}on{else}off{/if}"/>
+                           lay-text="上架|未上架" {if isset($self) && ($self['status'] == 'on')}checked{/if} />
                 </div>
+                {else}
+                <div class="layui-input-inline">
+                    <input type="text" name="" lay-verify="required" placeholder="" autocomplete="off"
+                           class="layui-input" value='{if $self['status'] == 'on'}上架{else/}下架{/if}' maxlength="60"/>
+                </div>
+                {/if}
+                <!-- 显示开关 嵌套填充 -->
+                <input type="hidden" id='show' name="status"
+                       value="{if isset($self) && ($self['status'] == 'on')}on{else}off{/if}"/>
+
             </div>
         </div>
         <hr>
+
+        {if SUBSTATION == 0}
         <blockquote class="layui-elem-quote">商品相册图片最多增加4张</blockquote>
 
         <div class="layui-form-item">
@@ -190,6 +232,7 @@
                 class="layui-btn layui-btn-primary layui-btn-xs images-item-button layui-hide">
             <i class="layui-icon">&#xe67c;</i>上传图片
         </button>
+        {/if}
 
         <div id="defaultImage" class="layui-inline">
             <div class="layui-form-item">
@@ -227,7 +270,7 @@
             </div>
         </div>
         <div id="extendImages">
-        {if isset($self)}
+            {if isset($self)}
             {foreach $images as $k => $v}
             <div class="layui-inline">
                 <div class="layui-form-item">
@@ -261,17 +304,23 @@
                 </div>
             </div>
             {/foreach}
-        {/if}
+            {/if}
         </div>
         <hr>
 
         <div class="layui-form-item">
             <label class="layui-form-label">商品详情</label>
+            {if SUBSTATION == 0}
             <div class="layui-input-block">
-                <textarea id="fwb-content" name="fwb-content" placeholder="描述"
-                          autocomplete="off"
-                          class="layui-textarea" maxlength="60">{if isset($self)}{$content['content']}{/if}</textarea>
+                        <textarea id="fwb-content" name="fwb-content" placeholder="描述"
+                                  autocomplete="off"
+                                  class="layui-textarea"
+                                  maxlength="60">{if isset($self)}{$content['content']}{/if}</textarea>
             </div>
+            {else}
+            {php}echo $content['content'];{/php}
+            {/if}
+
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">

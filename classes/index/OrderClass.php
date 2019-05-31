@@ -22,6 +22,8 @@ use app\member\model\MemberStoreModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
+use classes\vendor\ExpressAmountClass;
+use classes\vendor\GoodsAmountClass;
 use think\Db;
 use think\Model;
 use think\Request;
@@ -45,12 +47,13 @@ class OrderClass extends \classes\IndexClass
         if (is_null($result)) parent::redirect_exception('/', '商品已下架');
 
         $result['location'] = (!is_null($result['location']) && file_exists(substr($result['location'], 1))) ? $result['location'] : config('young.image_not_found');
-//exit('123');
+
         if (SUBSTATION != '0') {
 
-            $amount = new GoodsAmountModel();
-            $a = $amount->where('goods_id', '=', $result['id'])->where('substation', '=', SUBSTATION)->find();
-            if (!is_null($a)) $result['amount'] = $a->amount;
+            $class = new GoodsAmountClass();
+            $amount = $class->amount($id, $result['amount'], $result['cost'], $result['protect']);
+
+            $result['amount'] = $amount['amount'];
         }
 
         return $result;
@@ -66,28 +69,49 @@ class OrderClass extends \classes\IndexClass
     }
 
     //快递列表
-    public function express()
+    public function express($goods_code)
     {
         $model = new ExpressModel();
 
-        $express = $model->where('substation', '=', SUBSTATION)->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name');
+        $express = $model->where('disabled', '=', 'on')->order('sort', 'desc')->column('id,name,platform,goods_code');
 
         $member = parent::member();
 
+        $amount_class = new ExpressAmountClass();
+
         $grade = new MemberGradeModel();
         $grade = $grade->where('id', '=', $member['grade_id'])->find();
-        foreach ($express as $k => &$v) {
+        $result = [];
+        foreach ($express as $k => $v) {
 
-            if ($grade->mode == 'on') $v .= '/' . $grade->amount;
-            else {
+            if (!empty($v['goods_code'])){
+                $str = str_replace(" ", '', $v['goods_code']);//去空格
+                $code = explode("\r\n", $str);//按行分组
+                $codes = [];
+                foreach ($code as $va){
 
-                $model = new MemberGradeExpressModel();
-                $model = $model->where('express', '=', $k)->where('grade', '=', $grade->id)->find();
-                $v .= '/' . ($model ? $model->amount : config('young.default_express_amount'));
+                    $va = preg_replace("/(，)/", ',', $va);//去逗号
+                    $codes = array_merge($codes,explode(',', $va));
+                }
+
+                if (!in_array($goods_code,$codes))continue;
             }
+
+            if ($grade->mode == 'on') {
+
+                $amount = $amount_class->amount(0, $member['grade_id']);
+            } else {
+
+                $amount = $amount_class->amount($v['id'], $member['grade_id']);
+            }
+
+            $result[$v['platform']][$v['id']] = [
+                'name' => $v['name'],
+                'amount' => $amount['amount'],
+            ];
         }
 
-        return $express;
+        return $result;
     }
 
     //最大数量提示
@@ -253,7 +277,7 @@ class OrderClass extends \classes\IndexClass
             'goods|礼品' => 'require',
             'number|每单数量' => 'require|integer|between:1,1000',
             'store|店铺' => 'require',
-            'express|快递' => 'require',
+            'express' . $request->post('express') . '|快递' => 'require',
             'type|类型' => 'require|in:0,1',
             'address|发货信息' => 'requireIf:type,0',
             'pay|支付密码' => 'requireIf:confirm,1',
@@ -389,9 +413,10 @@ class OrderClass extends \classes\IndexClass
         if (is_null($goods)) parent::ajax_exception(000, '该礼品已下架');
         if (SUBSTATION != '0') {
 
-            $amount = new GoodsAmountModel();
-            $a = $amount->where('goods_id', '=', $goods->id)->where('substation', '=', SUBSTATION)->find();
-            if (!is_null($a)) $goods->amount = $a->amount;
+            $amount = new GoodsAmountClass();
+            $a = $amount->amount($goods->id, $goods->amount, $goods->cost, $goods->protect);
+            $goods->amount = $a['amount'];
+            $goods->cost = $a['cost'];
         }
 
         //库存验证
@@ -408,7 +433,7 @@ class OrderClass extends \classes\IndexClass
 
         //快递验证
         $express = new ExpressModel();
-        $express = $express->where('id', '=', $request->post('express'))->find();
+        $express = $express->where('id', '=', $request->post('express'.$request->post('express')))->find();
         if (is_null($express)) parent::ajax_exception(000, '快递信息异常');
 
         //会员等级验证
@@ -416,16 +441,17 @@ class OrderClass extends \classes\IndexClass
         $grade = $grade->where('id', '=', $this->member['grade_id'])->find();
         if (is_null($grade)) parent::ajax_exception(000, '会员等级异常');
 
+        $b = new ExpressAmountClass();
         //快递费验证
         if ($grade['mode'] == 'on') {
 
-            $amount = $grade['amount'];
+            $b = $b->amount(0,$grade->id);
         } else {
 
-            $grade_express = new MemberGradeExpressModel();
-            $grade_express = $grade_express->where('grade', '=', $grade['id'])->where('express', '=', $express['id'])->find();
-            $amount = is_null($grade_express) ? config('young.default_express_amount') : $grade_express['amount'];
+            $b = $b->amount($express->id,$grade->id);
         }
+        $amount = $b['amount'];
+
 
         //余额验证
         $express_total = number_format($express_number * $amount, 2, '.', '');//总快递费
@@ -513,6 +539,12 @@ class OrderClass extends \classes\IndexClass
 
         $insert->created_at = $date;
         $insert->substation = SUBSTATION;
+
+        //新增成本价
+        $insert->goods_cost = $goods['cost'];
+        $insert->goods_cost_all = $goods['cost'] * $goods_number;
+        $insert->express_cost = $b['cost'];
+        $insert->express_cost_all = $b['cost'] * $express_number;
 
         $insert->save();
         //正式下单结束
@@ -660,7 +692,7 @@ class OrderClass extends \classes\IndexClass
 
         if (!is_null($test)) {
 
-            return self::test_number(($key+1));
+            return self::test_number(($key + 1));
         } else {
 
             return $key;

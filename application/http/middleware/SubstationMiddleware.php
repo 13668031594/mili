@@ -40,7 +40,7 @@ class SubstationMiddleware
     private function errors()
     {
         exit('非法域名');
-        session('master', null);
+        session('master_' . $_SERVER['SERVER_NAME'], null);
 
         $errors = json_encode([
             'url' => '',

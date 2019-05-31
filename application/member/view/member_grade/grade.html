@@ -36,7 +36,8 @@
                 <label class="layui-form-label">等级名称</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" lay-verify="required" placeholder="等级名称" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"/>
+                           class="layui-input" value='{if isset($self)}{$self["name"]}{/if}' maxlength="20"
+                           {if SUBSTATION !=0}readonly{/if}/>
                 </div>
             </div>
             <!-- <div class="layui-form-item">
@@ -51,7 +52,8 @@
                 <label class="layui-form-label">排序</label>
                 <div class="layui-input-inline">
                     <input type="text" name="sort" lay-verify="number" placeholder="排序" autocomplete="off"
-                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="3"/>
+                           class="layui-input" value='{if isset($self)}{$self["sort"]}{else/}50{/if}' maxlength="3"
+                           {if SUBSTATION !=0}readonly{/if}/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">影响前台的显示顺序</div>
             </div>
@@ -61,7 +63,7 @@
                 <div class="layui-input-inline">
                     <input type="text" name="recharge" lay-verify="number" placeholder="充值升级" autocomplete="off"
                            class="layui-input" value='{if isset($self)}{$self["recharge"]}{else/}100{/if}'
-                           maxlength="9"/>
+                           maxlength="9" {if $self['change'] == 'fail'}readonly{/if}/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">会员充值达到该值时，自动升级为当前等级。</div>
             </div>
@@ -71,9 +73,21 @@
                 <div class="layui-input-inline">
                     <input type="text" name="buy_total" lay-verify="number" placeholder="购买升级" autocomplete="off"
                            class="layui-input" value='{if isset($self)}{$self["buy_total"]}{else/}100{/if}'
-                           maxlength="9"/>
+                           maxlength="9" {if $self['change'] == 'fail'}readonly{/if}/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">可以直接支付此数值的金额，成为会员</div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" lay-filter="status"
+                           lay-skin="switch"
+                           lay-text="开启|关闭" {if !isset($self) || $self["status"] == "on"}checked{/if}/>
+                    <!-- 显示开关 嵌套填充 -->
+                    <input type="hidden" id='status' name="status"
+                           value='{if !isset($self) || $self["status"] == "on"}on{else}off{/if}'/>
+                </div>
             </div>
         </div>
         <hr>
@@ -94,26 +108,65 @@
         <div class="layui-form-item">
             <label class="layui-form-label">快递费</label>
             <div class="layui-input-inline">
-                <input type="text" name="amount" lay-verify="number" placeholder="快递费" autocomplete="off"
-                       class="layui-input" value='{if isset($self)}{$self["amount"]}{else}0{/if}' maxlength="10"/>
+                <input type="text" name="expressAmount[0][amount]" lay-verify="number" placeholder="快递费" autocomplete="off"
+                       class="layui-input" value='{if isset($amount) && isset($amount[0])}{$amount[0]["amount"]}{else/}0{/if}' maxlength="10"/>
             </div>
             <div class="layui-form-mid layui-word-aux">所有快递统一价格</div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">成本价</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expressAmount[0][cost]" lay-verify="required|number" placeholder="成本价" autocomplete="off"
+                       class="layui-input" value='{if isset($amount) && isset($amount[0])}{$amount[0]["cost"]}{else/}0{/if}' maxlength="60"
+                       {if SUBSTATION !=0}readonly{/if}/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">统一模式成本价</div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">保护价</label>
+            <div class="layui-input-inline">
+                <input type="text" name="expressAmount[0][protect]" lay-verify="required|number" placeholder="保护价"
+                       autocomplete="off"
+                       class="layui-input" value='{if isset($amount) && isset($amount[0])}{$amount[0]["protect"]}{else/}0{/if}' maxlength="60"
+                       {if SUBSTATION !=0}readonly{/if}/>
+            </div>
+            <div class="layui-form-mid layui-word-aux">统一模式保护价</div>
+        </div>
+        <input type="hidden" name="expressAmount[0][id]" value="0">
+        <input type="hidden" name="expressAmount[0][name]" value="统一模式快递费">
 </div>
-<div id='mode2' class="layui-form-min" {if !isset($self) || $self[
-"mode"] == "on"}style="display:none"{/if}>
-{foreach $express as $k => $v}
+<div id='mode2' class="layui-form-min" {if !isset($self) || $self["mode"] == "on"}style="display:none"{/if}>
+{foreach $platform as $ke => $va}
+{if isset($express[$ke])}
+<p style="color: #0000FF">{$va}：</p>
+{foreach $express[$ke] as $k => $v}
 <div class="layui-form-item">
-    <label class="layui-form-label">{$v}</label>
+
+    <label class="layui-form-label">{$v['name']}：</label>
     <div class="layui-input-inline">
-        <input type="text" name="expressAmount[{$k}][amount]" lay-verify="" placeholder="快递费" autocomplete="off"
+        <div class="layui-form-mid layui-word-aux">快递费</div>
+        <input type="text" name="expressAmount[{$v['id']}][amount]" lay-verify="" placeholder="快递费" autocomplete="off"
                class="layui-input expressAmount"
-               value='{if isset($amount) && isset($amount[$k])}{$amount[$k]}{else/}0{/if}' maxlength="10"/>
-        <input type="hidden" name="expressAmount[{$k}][id]" value="{$k}">
-        <input type="hidden" name="expressAmount[{$k}][name]" value="{$v}">
+               value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["amount"]}{else/}0{/if}' maxlength="10"/>
+        <div class="layui-form-mid layui-word-aux">成本价</div>
+        <input type="text" name="expressAmount[{$v['id']}][cost]" lay-verify="" placeholder="快递费" autocomplete="off"
+               class="layui-input expressAmount"
+               value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["cost"]}{else/}0{/if}' maxlength="10"
+               {if SUBSTATION !=0}readonly{/if}/>
+        <div class="layui-form-mid layui-word-aux">保护费</div>
+        <input type="text" name="expressAmount[{$v['id']}][protect]" lay-verify="" placeholder="快递费" autocomplete="off"
+               class="layui-input expressAmount"
+               value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["protect"]}{else/}0{/if}' maxlength="10"
+               {if SUBSTATION !=0}readonly{/if}/>
+        <input type="hidden" name="expressAmount[{$v['id']}][id]" value="{$v['id']}">
+        <input type="hidden" name="expressAmount[{$v['id']}][name]" value="{$v['name']}">
     </div>
 </div>
+{/foreach}{/if}
 {/foreach}
+
 </div>
 <div class="layui-form-item">
     <div class="layui-input-block">
@@ -146,6 +199,14 @@
                     //console.log('close',i) ;
                     $(this).attr('lay-verify', 'number');
                 });
+            }
+        });
+
+        form.on('switch(status)', function (data) {
+            if (data.elem.checked) {
+                $('#status').prop('value', 'on');
+            } else {
+                $('#status').prop('value', 'off');
             }
         });
     }); //加载入口

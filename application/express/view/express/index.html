@@ -27,19 +27,20 @@
     </div>
 
     <div class="toolTable">
+        {if !SUBSTATION}
         <button class="layui-btn layui-btn-sm" data-type="addData">
             <i class="layui-icon">&#xe654;</i>添加快递
         </button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>
+        {/if}
 
-        {if $sub['is']}
         <form class="layui-form layui-inline layui-form-query">
-            <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="the_substation" lay-verify="" style="height:30px;">
-                    <option value="all">全站</option>
-                    {foreach $sub['array_con'] as $k => $v}
+            <div class="layui-input-inline layui-query-select" style="width:140px;">
+                <select name="platform" lay-verify="" style="height:30px;">
+                    <option value="">所有平台</option>
+                    {foreach $platform_array as $k => $v}
                     <option value="{$k}" >{$v}</option>
                     {/foreach}
                 </select>
@@ -50,7 +51,6 @@
                 </button>
             </div>
         </form>
-        {/if}
     </div>
 
     <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
@@ -61,7 +61,9 @@
 
 <script type="text/html" id="tableTool">
     <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    {if !SUBSTATION}
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+    {/if}
 </script>
 <script>
     layui.config({
@@ -70,6 +72,7 @@
 
         var layer = layui.layer;
         var mTable = layui.mTable;
+        var platform = {php}echo $platform;{/php};
 
         mTable.init({
             url: {
@@ -89,8 +92,13 @@
                         return '<span class="layui-badge layui-bg-gray">关</span>' ;
                     }
                 }},
+                {field: 'platform', width: 200, title:'平台',templet:function(d){
+
+                        return platform[d.platform] ;
+                }},
                 {field: 'name', width: 200, title: '快递名称'},
-//                {field: 'amount', title: '快递费'},
+                {field: 'cost', title: '成本价'},
+                {field: 'protect', title: '保护价'},
                 {field: 'created_at', title: '创建时间'},
                 {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#tableTool'}
             ]]

@@ -12,7 +12,7 @@ class MasterLoginMiddleware
     public function handle($request, \Closure $next)
     {
         //尝试获取session中的master信息
-        $master = session('master');
+        $master = session('master_' . $_SERVER['SERVER_NAME']);
 //dump($master);
 //exit;
         //验证session中的信息格式与过期时间
@@ -47,7 +47,7 @@ class MasterLoginMiddleware
 
         //更新操作时间
         $master['time'] = time() + config('young.admin_login_time');
-        session('master', $master);
+        session('master_' . $_SERVER['SERVER_NAME'], $master);
 
         return $next($request);
     }
@@ -55,7 +55,7 @@ class MasterLoginMiddleware
     //报错
     private function errors()
     {
-        session('master', null);
+        session('master_' . $_SERVER['SERVER_NAME'], null);
 
         $errors = json_encode([
             'url' => '/admin/login',

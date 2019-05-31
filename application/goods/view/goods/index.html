@@ -13,7 +13,7 @@
     <![endif]-->
     <script src="{$src}res/js/jquery.min.js"
 
-             ></script>
+    ></script>
     <style type="text/css">
         .images {
             height: 30px;
@@ -80,8 +80,14 @@
 
 <script type="text/html" id="tableTool">
     <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+    {if !SUBSTATION}
     <a class="layui-btn layui-btn-xs layui-btn-primary" href="stock.html?id={{d.id}}"><i
             class="layui-icon layui-icon-form"></i>库存</a>
+    {/if}
+    {if $sub['is']}
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="amount.html?id={{d.id}}"><i
+            class="layui-icon layui-icon-form"></i>分站价格</a>
+    {/if}
 </script>
 <script>
 
@@ -124,7 +130,7 @@
                 {field: 'stock', title: '库存'},
                 {field: 'amount', title: '单价'},
                 {field: 'weight', title: '重量'},
-                {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#tableTool'}
+                {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#tableTool'}
             ]]
         });
         mTable.render();

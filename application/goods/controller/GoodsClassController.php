@@ -135,4 +135,23 @@ class GoodsClassController extends AdminController
         //修改会员列表中的缓存
         $this->class->change_goods_class($class);
     }
+
+    //批量调价页面
+    public function getAmount(Request $request)
+    {
+        //获取数据
+        $result = $this->class->edit($request->get('id'));
+
+        //视图
+        return parent::view('goods_amount', ['self' => $result]);
+    }
+
+    //批量调价页面
+    public function postAmount(Request $request)
+    {
+        $this->class->amount($request);
+
+        //反馈成功
+        return parent::success('/goods_class/index');
+    }
 }

@@ -80,6 +80,8 @@ class FirstController
         $substations = new SubstationModel();
         $substations = $substations->column('id,name');
         $substations[0] = '主站';
+        ksort($substations);
+        ksort($substation);
 
         return [
             'array' => $substations,

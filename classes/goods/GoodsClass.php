@@ -8,17 +8,18 @@
 
 namespace classes\goods;
 
-
 use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsContentModel;
 use app\goods\model\GoodsImagesModel;
 use app\goods\model\GoodsClassModel;
+use app\Goods\model\GoodsLevelAmountModel;
 use app\goods\model\GoodsModel;
 use app\goods\model\GoodsRecordModel;
+use app\Substation\model\SubstationLevelModel;
 use classes\AdminClass;
 use classes\ListInterface;
+use classes\vendor\GoodsAmountClass;
 use classes\vendor\StorageClass;
-use think\Db;
 use think\Request;
 
 class GoodsClass extends AdminClass implements ListInterface
@@ -54,15 +55,16 @@ class GoodsClass extends AdminClass implements ListInterface
 
         $result = parent::page($this->model, $other);
 
-        $amount = new GoodsAmountModel();
-
+        $amount_class = new GoodsAmountClass();
         foreach ($result['message'] as &$v) {
 
             if (is_null($v['location']) || !file_exists(substr($v['location'], 1))) $v['location'] = config('young.image_not_found');
             if (SUBSTATION != '0') {
 
-                $a = $amount->where('goods_id', '=', $v['id'])->where('substation', '=', SUBSTATION)->find();
-                if (!is_null($a)) $v['amount'] = $a->amount;
+                $amount = $amount_class->amount($v['id'], $v['amount'], $v['cost'], $v['protect']);
+                $v['amount'] = $amount['amount'];
+                $v['cost'] = $amount['cost'];
+                $v['protect'] = $amount['protect'];
             }
         }
 
@@ -121,10 +123,13 @@ class GoodsClass extends AdminClass implements ListInterface
 
 
         if (SUBSTATION != '0') {
+            $class = new GoodsAmountClass();
 
-            $amount = new GoodsAmountModel();
-            $a = $amount->where('goods_id', '=', $model->id)->where('substation', '=', SUBSTATION)->find();
-            if (!is_null($a)) $model->amount = $a->amount;
+            $result = $class->amount($id, $model->amount, $model->cost, $model->protect);
+
+            $model->amount = $result['amount'];
+            $model->cost = $result['cost'];
+            $model->protect = $result['protect'];
         }
 
         return $model->getData();
@@ -169,23 +174,37 @@ class GoodsClass extends AdminClass implements ListInterface
 
         if (SUBSTATION != '0') {
 
-            $amount = new GoodsAmountModel();
-            $a = $amount->where('goods_id', '=', $model->id)->where('substation', '=', SUBSTATION)->find();
+            $amount = number_format($request->post('amount'), 2, '.', '');
+
+            $class = new GoodsAmountClass();
+            $result = $class->amount($id, $model->amount, $model->cost, $model->protect);
+            $cost = $result['cost'];
+            $protect = $result['protect'];
+            if ($amount < $result['protect']) parent::ajax_exception(000, '单价不得低于：' . $result['protect']);
+
+            $amount_model = new GoodsAmountModel();
+            $a = $amount_model->where('goods_id', '=', $model->id)->where('substation', '=', SUBSTATION)->find();
             if (!is_null($a)) {
 
-                $a->amount = number_format($request->post('amount'), 2, '.', '');
+                $a->amount = $amount;
+                $a->cost = $cost;
+                $a->protect = $protect;
                 $a->updated_at = date('Y-m-d H:i:s');
                 $a->save();
             } else {
 
-                $amount->goods_id = $model->id;
-                $amount->substation = SUBSTATION;
-                $amount->amount = number_format($request->post('amount'), 2, '.', '');
-                $amount->created_at = date('Y-m-d H:i:s');
-                $amount->updated_at = date('Y-m-d H:i:s');
-                $amount->save();
+                $amount_model->goods_id = $model->id;
+                $amount_model->substation = SUBSTATION;
+                $amount_model->amount = $amount;
+                $amount_model->cost = $cost;
+                $amount_model->protect = $protect;
+                $amount_model->created_at = date('Y-m-d H:i:s');
+                $amount_model->updated_at = date('Y-m-d H:i:s');
+                $amount_model->save();
             }
         } else {
+
+            if (is_null($request->post('protect'))) parent::ajax_exception(000, '请输入基础保护价');
 
             $model->goods_class_id = $class['id'];
             $model->goods_class_name = $class['name'];
@@ -197,6 +216,8 @@ class GoodsClass extends AdminClass implements ListInterface
             $model->status = $request->post('status');
             $model->express_number = $request->post('express_number');
             $model->weight = $request->post('weight');
+            $model->cost = number_format($request->post('cost'), 2, '.', '');
+            $model->protect = number_format($request->post('protect'), 2, '.', '');
             $model->updated_at = date('Y-m-d H:i:s');
             $model->save();
 
@@ -230,6 +251,8 @@ class GoodsClass extends AdminClass implements ListInterface
             'imageId|图片' => 'require|array',
             'fwb-content|详情' => 'require|max:20000',
             'express_number|每单数量' => 'require|integer|between:1,1000',
+            'cost|成本价' => 'require|between:0,100000000',
+            'protect|保护价' => 'require|between:0.01,100000000',
         ];
 
         $result = parent::validator($request->post(), $rule);
@@ -247,9 +270,13 @@ class GoodsClass extends AdminClass implements ListInterface
             'sort|排序' => 'require|integer|between:1,999',
             'status|状态' => 'require|in:on,off',
             'imageId|图片' => 'require|array',
-            'fwb-content|详情' => 'require|max:20000',
             'express_number|每单数量' => 'require|integer|between:1,1000',
+            'cost|成本价' => 'require|between:0,100000000',
+            'protect|保护价' => 'require|between:0.01,100000000',
         ];
+
+        if (SUBSTATION == 0) $rule['fwb-content|详情'] = 'require|max:20000';
+
 
         $result = parent::validator($request->post(), $rule);
         if (!is_null($result)) parent::ajax_exception(000, $result);
@@ -440,5 +467,86 @@ class GoodsClass extends AdminClass implements ListInterface
         return [
             'src' => $location,
         ];
+    }
+
+    //分站等级
+    public function substation_level($goods)
+    {
+        $model = new SubstationLevelModel();
+
+        $level = $model->order('sort asc')->column('*');
+
+        $amount = new GoodsLevelAmountModel();
+        $amount = $amount->where('substation', '=', SUBSTATION)->where('goods_id', '=', $goods['id'])->column('*', 'level_id');
+
+        foreach ($level as &$v) {
+
+            $v['cost'] = $goods['cost'];
+            $v['protect'] = $goods['protect'];
+
+            if (isset($amount[$v['id']])) {
+
+                $al = $amount[$v['id']];
+
+                $v['cost'] = $v['cost'] > $al['cost'] ? $v['cost'] : $al['cost'];
+                $v['protect'] = $v['protect'] > $al['protect'] ? $v['protect'] : $al['protect'];
+            } else {
+
+                $v['cost'] += $v['goods_cost_up'];
+                $v['protect'] += $v['goods_protect_up'];
+            }
+        }
+
+        return $level;
+    }
+
+    //为每个分站等级配备成本价和保护价
+    public function level_amount(Request $request)
+    {
+        //获取商品模型
+        $goods = new GoodsModel();
+        $goods = $goods->find($request->post('id'));
+
+        //获取本站此商品的价格
+        if (SUBSTATION == 0) {
+
+            //主站直接使用商品的
+            $cost = $goods->cost;
+            $protect = $goods->protect;
+        } else {
+
+            //分站使用验证后的
+            $amount_class = new GoodsAmountClass();
+            $amount = $amount_class->amount($goods->id, $goods->amount, $goods->cost, $goods->protect);
+            $cost = $amount['cost'];
+            $protect = $amount['protect'];
+        }
+
+        //设置的成本价数组
+        $costs = $request->post('cost');
+        //设置的保护价数组
+        $protects = $request->post('protect');
+
+        $goods_amount_model = new GoodsLevelAmountModel();
+        $goods_amount_model->where('substation', '=', SUBSTATION)->where('goods_id', '=', $goods['id'])->delete();
+
+        $insert = [];
+        foreach ($costs as $k => $v) {
+
+            if ($v < $cost) parent::ajax_exception(000, '成本价不得低于：' . $cost);
+            if ($protects[$k] < $protect) parent::ajax_exception(000, '保护价不得低于：' . $protect);
+
+            $i = [
+                'goods_id' => $goods['id'],
+                'cost' => $v,
+                'protect' => $protects[$k],
+                'substation' => SUBSTATION,
+                'level_id' => $k,
+            ];
+
+            $insert[] = $i;
+        }
+
+        if (count($insert) > 0) $goods_amount_model->insertAll($insert);
     }
 }

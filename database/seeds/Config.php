@@ -23,7 +23,8 @@ class Config extends Seeder
         self::master();//初始管理员
 //        self::express();//初始快递
         self::member_grade();//初始会员等级
-
+        self::member_grade_amount();//初始会员等级金额
+        self::substation_level();//初始分站等级
     }
 
     private function master()
@@ -86,5 +87,69 @@ class Config extends Seeder
 
             $grade->insert($insert);
         }
+    }
+
+    private function substation_level()
+    {
+        $level = new \app\Substation\model\SubstationLevelModel();
+
+        $test = $level->find();
+
+        if (is_null($test)) {
+
+            $insert = [
+                'id' => '1',
+                'name' => '普通分站',
+                'sort' => '50',
+                'goods_up' => '0',
+                'express_up' => '0',
+                'goods_cost_up' => '0',
+                'express_cost_up' => '0',
+                'goods_protect_up' => '0',
+                'express_protect_up' => '0',
+                'created_at' => $this->date,
+            ];
+
+            $level->insert($insert);
+        }
+    }
+
+    private function member_grade_amount()
+    {
+        $grade = new \app\member\model\MemberGradeModel();
+
+        $test = $grade->column('*');
+
+        $model = new \app\member\model\MemberGradeExpressModel();
+
+        $substation = new \app\Substation\model\SubstationModel();
+        $substation = $substation->column('id');
+        $substation[] = 0;
+
+        $insert = [];
+        foreach ($substation as $va) {
+
+            foreach ($test as $v) {
+
+                $amount = $model->where('express', '=', 0)->where('grade', '=', $v['id'])->where('substation', '=', $va)->find();
+
+                if (is_null($amount)) {
+
+                    $i = [
+                        'express' => 0,
+                        'grade' => $v['id'],
+                        'substation' => $va,
+                        'amount' => 0,
+                        'cost' => 0,
+                        'protect' => 0,
+                    ];
+
+                    $insert[] = $i;
+                }
+            }
+
+        }
+
+        if (count($insert))$model->insertAll($insert);
     }
 }

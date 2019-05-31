@@ -11,9 +11,7 @@
     <script src="{$src}res/js/html5.min.js"></script>
     <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
-    <script src="{$src}res/js/jquery.min.js"
-
-             ></script>
+    <script src="{$src}res/js/jquery.min.js"></script>
 </head>
 
 <div class="layui-fluid">
@@ -33,6 +31,20 @@
         <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
         {/if}
         <div class="layui-form-min">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">平台</label>
+                <div class="layui-input-inline">
+                    <select name="platform" lay-verify="">
+                        {foreach $platform as $k => $v}
+                        <option value="{$k}" {if isset($self) && ($self[
+                        'platform'] == $k)}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">快递所属平台</div>
+            </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">名称</label>
                 <div class="layui-input-block">
@@ -56,6 +68,7 @@
                 </div>
                 <div class="layui-form-mid layui-word-aux">影响前台的显示顺序</div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
                 <div class="layui-input-block">
@@ -66,6 +79,18 @@
                     <input type="hidden" id='show' name="disabled" value="{if !isset($self) || $self['disabled'] == 'on'}on{else/}off{/if}"/>
                 </div>
             </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">限制使用</label>
+                <div class="layui-input-block">
+                <textarea type="text" name="goods_code" placeholder="限制使用" autocomplete="off"
+                          class="layui-textarea" maxlength="60">{if isset($self)}{$self["goods_code"]}{/if}</textarea>
+                </div>
+            </div>
+
+            <blockquote class="layui-elem-quote">限制使用为可使用该快递的商品编号，不填则为全部可用，请用逗号或者换行隔开
+            </blockquote>
+
         </div>
         <!--<hr>
         <div class="layui-form-min">

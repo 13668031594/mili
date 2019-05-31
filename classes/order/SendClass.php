@@ -346,12 +346,12 @@ class SendClass extends AdminClass
             $date = date('Y-m-d H:i:s');
             foreach ($excel_array as $k => $v) {
 
-                if (count($v) != 10) {
+                if (count($v) != 13) {
                     unlink($filename);
                     parent::ajax_exception(000, '导入文件格式有误');
                 }
                 $id = $v[0];
-                $no = $v[9];
+                $no = $v[13];
 //                list($id, $no) = $v;
 
                 if (in_array($id, $ids)) {

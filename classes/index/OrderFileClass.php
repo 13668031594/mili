@@ -365,10 +365,9 @@ class OrderFileClass
 
             $long1 = strlen($v['name']);
 
-            $pro = substr($address, 0, $long1);
-
             $pro_t = $v['name'];
             $result['pro'] = $pro_t;
+            $pro = substr($address, 0, $long1);
 
             if ($pro != $pro_t) {
 
@@ -385,18 +384,19 @@ class OrderFileClass
 
             foreach ($v['child'] as $va) {
 
-                if ($va['name'] == $v['name']) {
+                if (self::special_pro($result['pro'])){
 
-                    $result['city'] = $va['name'];
                     $long2 = 0;
-                } else {
+                    $city = $pro_t;
+                    $city_t = $pro_t;
+                    $result['city'] = $city_t;
+                }else{
 
                     $long2 = strlen($va['name']);
 
-                    $city = substr($address, $long1, $long2);
-
                     $city_t = $va['name'];
                     $result['city'] = $city_t;
+                    $city = substr($address, $long1, $long2);
 
                     if ($city != $city_t) {
 
@@ -405,19 +405,24 @@ class OrderFileClass
                         $long2 = strlen($city_t);
                         $city = substr($address, $long1, $long2);
                     }
-
-                    if ($city != $city_t) continue;
                 }
 
-                foreach ($va['child'] as $val) {
+                if ($city != $city_t) continue;
 
+                //不设区的市级单位
+                if (self::special_city($result['pro'], $result['city'])) {
 
-                    if ($va['name'] == $val['name']) {
+                    $result['area'] = $city_t;
 
-                        $result['area'] = $val['name'];
-                        $long3 = 0;
-                        $area = $area_t = $val['name'];
-                    } else {
+                    $add = substr($address, ($long1 + $long2));
+
+                    $result['add'] = $add;
+
+                    return $result;
+                } else {
+
+                    //正常市级单位
+                    foreach ($va['child'] as $val) {
 
                         $long3 = strlen($val['name']);
 
@@ -436,17 +441,53 @@ class OrderFileClass
                             $long3 = strlen($area_t);
                             $area = substr($address, ($long1 + $long2), $long3);
                         }
+
+                        $add = substr($address, ($long1 + $long2 + $long3));
+
+                        $result['add'] = $add;
+
+                        if ($area == $area_t) return $result;
                     }
-
-                    $add = substr($address, ($long1 + $long2 + $long3));
-
-                    $result['add'] = $add;
-
-                    if ($area == $area_t) return $result;
                 }
             }
         }
 
         return false;
+    }
+
+    public function special_pro($pro)
+    {
+        if (input('platform') != 'jingdong' || input('type') == '0')return false;
+
+        $special_pro = [
+            '北京市',
+            '天津市',
+            '上海市',
+            '重庆市',
+        ];
+
+        if (in_array($pro,$special_pro))return true;
+
+        return false;
+    }
+
+    public function special_city($pro, $city)
+    {
+        $special_city = [
+            '广东省' => [
+                '东莞市',
+                '中山市',
+            ],
+            '海南省' => [
+                '三沙市',
+                '儋州市',
+            ],
+            '甘肃省' => [
+                '嘉峪关市',
+            ],
+        ];
+
+        if (isset($special_city[$pro]) && in_array($city, $special_city[$pro])) return true;
+        else return false;
     }
 }

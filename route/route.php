@@ -93,9 +93,11 @@ Route::group('', function () {
         Route::controller('link', 'nav/Link');
 
         Route::controller('bill', 'bill/Bill');
+        Route::controller('profit', 'bill/Profit');
 
         //分站列表
         Route::controller('substation', 'substation/Substation');
+        Route::controller('substation-level', 'substation/SubstationLevel');
 
         //工单
         Route::controller('repair_class', 'repair/RepairClass');//分类

@@ -70,6 +70,7 @@ class MemberGradeController extends AdminController
 
         //快递信息
         $result['express'] = $this->class->express();
+        $result['platform'] = config('member.store_platform');
 
         //视图
         return parent::view('grade', $result);

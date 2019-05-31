@@ -28,8 +28,13 @@ class ExpressController extends AdminController
      */
     public function getIndex()
     {
+        $platform = config('member.store_platform');
+
         //视图
-        return parent::view('index');
+        return parent::view('index', [
+            'platform_array' => $platform,
+            'platform' => json_encode($platform)
+        ]);
     }
 
     /**
@@ -51,8 +56,10 @@ class ExpressController extends AdminController
      */
     public function getCreate()
     {
+        $platform = config('member.store_platform');
+
         //视图
-        return parent::view('express');
+        return parent::view('express', ['platform' => $platform]);
     }
 
     /**
@@ -66,8 +73,10 @@ class ExpressController extends AdminController
         //获取数据
         $master = $this->class->edit($request->get('id'));
 
+        $platform = config('member.store_platform');
+
         //视图
-        return parent::view('express', ['self' => $master]);
+        return parent::view('express', ['self' => $master, 'platform' => $platform]);
     }
 
     /**
@@ -98,7 +107,7 @@ class ExpressController extends AdminController
         $id = $request->post('id');
 
         if (empty($id)) self::save($request);
-        else self::update($id,$request);
+        else self::update($id, $request);
 
         //反馈成功
         return parent::success('/express/index');
@@ -124,12 +133,12 @@ class ExpressController extends AdminController
      * @param $id
      * @param Request $request
      */
-    private function update($id,Request $request)
+    private function update($id, Request $request)
     {
         //验证字段
-        $this->class->validator_update($id,$request);
+        $this->class->validator_update($id, $request);
 
         //更新
-        $this->class->update($id,$request);
+        $this->class->update($id, $request);
     }
 }

@@ -27,9 +27,17 @@ class ExpressClass extends AdminClass implements ListInterface
 
     public function index()
     {
+        $where = [];
+
+        $platform = input('platform');
+        if (!is_null($platform) && ($platform != '')) {
+
+            $where[] = ['platform', '=', $platform];
+        }
+
         $other = [
+            'where' => $where,
             'order_name' => 'sort',
-            'substation' => '1',
         ];
 
         return parent::page($this->model, $other);
@@ -46,6 +54,10 @@ class ExpressClass extends AdminClass implements ListInterface
         $express->name = $request->post('name');
         $express->sort = $request->post('sort');
         $express->disabled = $request->post('disabled');
+        $express->platform = $request->post('platform');
+        $express->goods_code = $request->post('goods_code');
+        $express->cost = $request->post('cost');
+        $express->protect = $request->post('protect');
         $express->substation = SUBSTATION;
         $express->created_at = date('Y-m-d H:i:s');
         $express->save();
@@ -74,6 +86,8 @@ class ExpressClass extends AdminClass implements ListInterface
         $express->name = $request->post('name');
         $express->sort = $request->post('sort');
         $express->disabled = $request->post('disabled');
+        $express->platform = $request->post('platform');
+        $express->goods_code = $request->post('goods_code');
         $express->updated_at = date('Y-m-d H:i:s');
         $express->save();
     }
@@ -90,6 +104,8 @@ class ExpressClass extends AdminClass implements ListInterface
             'name|快递名称' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'disabled|状态' => 'require',
+            'platform|平台' => 'require|in:0,1,2',
+            'goods_code|限制使用' => 'max:2000',
         ];
 
         $result = parent::validator($request->post(), $rule);
@@ -102,6 +118,8 @@ class ExpressClass extends AdminClass implements ListInterface
             'name|快递名称' => 'require|min:1|max:48',
             'sort|排序' => 'require|integer|between:1,999',
             'disabled|状态' => 'require',
+            'platform|平台' => 'require|in:0,1,2',
+            'goods_code|限制使用' => 'max:2000',
         ];
 
         $result = parent::validator($request->post(), $rule);

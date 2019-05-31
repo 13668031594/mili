@@ -197,7 +197,7 @@ class GoodsController extends AdminController
     {
         $self = $this->class->read($id);
 
-        return parent::view('record',['self' => $self]);
+        return parent::view('record', ['self' => $self]);
     }
 
     public function getRecordTable(Request $request)
@@ -231,5 +231,22 @@ class GoodsController extends AdminController
         }
 
         return json_encode($result);
+    }
+
+    //分站价格修改
+    public function getAmount(Request $request)
+    {
+        $self = $this->class->read($request->get('id'));
+
+        $level = $this->class->substation_level($self);
+
+        return parent::view('amount', ['self' => $self, 'level' => $level]);
+    }
+
+    public function postAmount(Request $request)
+    {
+        $this->class->level_amount($request);
+
+        return parent::success('/goods/index');
     }
 }

@@ -43,8 +43,8 @@ class OrderSendClass extends FirstClass
             ->column('a.id,a.send_order,o.id as oid', 'a.send_order');
         if (count($sends) <= 0) return '没有需要发货的订单';
 
-        //50个一组
-        $sends2 = array_chunk($sends, 50);
+        //20个一组
+        $sends2 = array_chunk($sends, 20);
 
         $class = new JushuitanClass();
 
