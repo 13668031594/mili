@@ -116,7 +116,7 @@ class OrderUploadClass extends FirstClass
                     'shop_sku_id' => $v['code'],//网站sku
                     'amount' => $v['goods_amount'],//应付金额，保留两位小数，单位（元）；备注：可能存在人工改价
                     'base_price' => $v['goods_amount'],//基本价（拍下价格），保留两位小数，单位（元）
-                    'qty' => $v['goods_number'],//购买数量
+                    'qty' => $v['goods_number'] / $v['express_number'],//购买数量
                     'name' => $v['goods'],//商品名称
                     'outer_oi_id' => $v['id'],//id
                 ],
