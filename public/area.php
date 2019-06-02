@@ -31,7 +31,7 @@ class area
      */
     public function getTmpPath()
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR;
     }
 
     /**传入 URL

@@ -13,14 +13,18 @@ class TestController extends Controller
 {
     public function index()
     {
-        $set = new \classes\system\JushuitanClass();
-        $set = $set->index();
+        include "area.php";
+//        include "area_ext.php";
 
-        $class = new JushuitanClass();
-        $result = $class->orders_single_query($set['jushuitanShopid'],['20190522000010-1']);
+        //淘宝收货地址页面
+        $js_url='https://g.alicdn.com/vip/address/6.0.14/index-min.js';
 
-        dump($result);
-        exit;
+        $c=new \area();
+        $c->setUrl($js_url);
+        $c->setIsCountry(false);
+        $c->setMakeCsv(true);
+        $c->setExtData([]);
+        $c->process();
     }
 
     public function index2()

@@ -38,7 +38,7 @@ class OrderSendClass extends FirstClass
         $send = new OrderSendModel();
         $sends = $send->alias('a')
             ->leftJoin('order o', 'o.id = a.order_id')
-            ->where('o.order_status', 'in', [15])
+            ->where('o.order_status', 'in', [15, 20])
             ->where('a.send_create', '=', null)
             ->column('a.id,a.send_order,o.id as oid', 'a.send_order');
         if (count($sends) <= 0) return '没有需要发货的订单';

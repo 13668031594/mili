@@ -191,7 +191,7 @@ class RechargeClass extends AdminClass
         $recharge = $recharge->where('member_id','=',$member->id)->where('status','=',1)->sum('total');
 
         $grade = new MemberGradeModel();
-        $grade = $grade->where('sort','>',$selfGrade->sort)->order('sort','desc')->find();
+        $grade = $grade->where('sort','>',$selfGrade->sort)->order('sort','desc')->column('*');
 
         $class = new GradeAmountClass();
         foreach ($grade as $v){
