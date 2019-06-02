@@ -330,7 +330,7 @@ class OrderFileClass
             if ($area_t) list($de, $result[$i]['phone']) = explode('-', $result[$i]['phone']);
 
             if (empty($result[$i]['name'])) return '第' . ($i + 1) . '行收货人格式错误';
-            if (!preg_match("/^1[34578]\d{9}$/", $result[$i]['phone'])) return '第' . ($i + 1) . '行收货电话格式错误';
+            if (!preg_match("/^1[23456789]\d{9}$/", $result[$i]['phone'])) return '第' . ($i + 1) . '行收货电话格式错误';
             if (empty($result[$i]['address'])) return '第' . ($i + 1) . '行收货地址格式错误';
             if (strlen($result[$i]['address']) > 255) return '第' . ($i + 1) . '行收货地址超长';
 
