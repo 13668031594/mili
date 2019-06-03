@@ -115,7 +115,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
 //        $amounts = $this->express->where('substation', '=', SUBSTATION)->where('grade', '=', $id)->column('express,amount,cost,protect', 'express');
         $amounts = [];
 
-        if (SUBSTATION != 0) {
+//        if (SUBSTATION != 0) {
 
             $class = new ExpressAmountClass();
 
@@ -131,7 +131,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
                 $amounts[$v] = $a;
             }
-        }
+//        }
 
         //结果数组
         $result = [

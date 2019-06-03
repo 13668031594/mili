@@ -101,6 +101,8 @@ class ExpressAmountClass
 
         if ($result['protect'] > $result['amount']) $result['amount'] = $result['protect'];
 
+        foreach ($result as &$v) $v = number_format($v, 2, '.', '');
+
         return $result;
     }
 }

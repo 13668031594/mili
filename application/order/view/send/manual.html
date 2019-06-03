@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>发货列表</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="{$src}res/js/jquery.min.js"></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">系统管理</a>
+          <a href="javascript:;">发货列表</a>
+          <a><cite>手动发货：{$self['send_order']}</cite></a>
+        </span>
+    </div>
+
+    <form class="layui-form" action="/admin/send/manual">
+        <!-- 编辑时写入id -->
+        {if isset($self)}
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        {/if}
+        <div class="layui-form-min">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">快递号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="express_no" lay-verify="required" placeholder="快递号" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["express_no"]}{/if}' maxlength="20"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即保存</button>
+                <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element','form'],function(){
+        var form = layui.form;
+        form.on('switch(show)', function (data) {
+            if (data.elem.checked) {
+                $('#show').prop('value', 'on');
+            } else {
+                $('#show').prop('value', 'off');
+            }
+        });
+    }); //加载入口
+</script>
+</body>
+
+</html>

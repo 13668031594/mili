@@ -39,7 +39,9 @@ class OrderSendClass extends FirstClass
         $sends = $send->alias('a')
             ->leftJoin('order o', 'o.id = a.order_id')
             ->where('o.order_status', 'in', [15, 20])
-            ->where('a.send_create', '=', null)
+            ->where(function ($query) {
+                $query->where('a.express_no', '=', null)->whereOr('a.express_no', '=', '')->whereOr('a.send_create', '=', null);
+            })
             ->column('a.id,a.send_order,o.id as oid', 'a.send_order');
         if (count($sends) <= 0) return '没有需要发货的订单';
 
@@ -60,7 +62,7 @@ class OrderSendClass extends FirstClass
 
             foreach ($result['orders'] as $va) {
 
-                if (isset($sends[$va['so_id']]) && !is_null($va['l_id'])) {
+                if (isset($sends[$va['so_id']]) && !empty($va['l_id'])) {
 
                     $update[] = [
                         'id' => $sends[$va['so_id']]['id'],

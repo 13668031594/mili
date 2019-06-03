@@ -351,7 +351,7 @@ class SendClass extends AdminClass
                     parent::ajax_exception(000, '导入文件格式有误');
                 }
                 $id = $v[0];
-                $no = $v[13];
+                $no = $v[12];
 //                list($id, $no) = $v;
 
                 if (in_array($id, $ids)) {
@@ -529,5 +529,32 @@ class SendClass extends AdminClass
     public function jushuitan_ok()
     {
         parent::ajax_exception(101, '上传成功，请登录聚水潭账号管理');
+    }
+
+    public function send_info($id)
+    {
+        $model = new OrderSendModel();
+
+        $a = $model->find($id);
+
+        return $a;
+    }
+
+    public function send(Request $request)
+    {
+        $rule = [
+            'id|发货单号' => 'require',
+            'express_no|快递号' => 'require|length:1,255',
+        ];
+
+        $result = parent::validator($request->post(), $rule);
+        if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        $model = new OrderSendModel();
+
+        $a = $model->find($request->post('id'));
+        $a->express_no = $request->post('express_no');
+        $a->send_create = date('Y-m-d H:i:s');
+        $a->save();
     }
 }

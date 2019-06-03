@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>直充列表</title>
+    <title>发货列表</title>
     <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
     <!--[if lt IE 9]>
@@ -144,7 +144,16 @@
                 {field: 'store', width: 100, title: '店铺'},
                 {field: 'express', title: '快递', width: 100 },
                 {field: 'order_number', title: '订单号',width: 100 },
-                {field: 'express_no', title: '快递单',width: 130 },
+                {field: 'express_no', title: '快递单',width: 130 ,templet: function (d) {
+
+                var a = d.express_no;
+                    if (a){
+                        return a;
+                    }else{
+                        return '<a href="/admin/send/manual?id='+d.id+'">手动发货';
+                    }
+                }
+                },
                 {field: 'goods', title: '宝贝名称',width: 170 },
                 {field: 'consignee', title: '收件人',width: 100 },
                 {field: 'phone', title: '电话',width: 120 },

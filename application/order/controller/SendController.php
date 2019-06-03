@@ -87,4 +87,18 @@ class SendController extends AdminController
 
         return parent::success('', '操作成功', ['number' => $number]);
     }
+
+    public function getManual()
+    {
+        $self = $this->class->send_info(input('id'));
+
+        return parent::view('manual', ['self' => $self]);
+    }
+
+    public function postManual(Request $request)
+    {
+        $self = $this->class->send($request);
+
+        return $this->success();
+    }
 }
