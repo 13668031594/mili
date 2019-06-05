@@ -296,16 +296,17 @@
     //计算每单金额
     function amount() {
 
-        var orderNum = $('#order-num').val();
-        var orderAmount = $('#goods_amount').val();
-        var expressAmount = $('#express_amount').val();
+        var orderNum = $('#order-num').val() * 100;
+        var orderAmount = $('#goods_amount').val() * 100;
+        var expressAmount = $('#express_amount').val() * 100;
         var amount;
-        amount = (orderNum * orderAmount);
-        amount = ((amount * 3 )+ (expressAmount *3))/3;
+        amount = orderNum * orderAmount;
+        amount = amount + expressAmount;
 //console.log(orderNum);
 //console.log(orderAmount);
 //console.log(expressAmount);
 //console.log(amount);
+        amount = amount /100;
         $('#amount').val(amount);
     };
 
