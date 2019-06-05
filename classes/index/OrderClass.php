@@ -81,20 +81,25 @@ class OrderClass extends \classes\IndexClass
 
         $grade = new MemberGradeModel();
         $grade = $grade->where('id', '=', $member['grade_id'])->find();
+
+        $platform = array_keys(config('member.store_platform'));
         $result = [];
+
+        $code_express = [];
         foreach ($express as $k => $v) {
 
-            if (!empty($v['goods_code'])){
+            if (!empty($v['goods_code'])) {
                 $str = str_replace(" ", '', $v['goods_code']);//去空格
                 $code = explode("\r\n", $str);//按行分组
                 $codes = [];
-                foreach ($code as $va){
+                foreach ($code as $va) {
 
                     $va = preg_replace("/(，)/", ',', $va);//去逗号
-                    $codes = array_merge($codes,explode(',', $va));
+                    $codes = array_merge($codes, explode(',', $va));
                 }
 
-                if (!in_array($goods_code,$codes))continue;
+                if (!in_array($goods_code, $codes)) continue;
+                else $code_express[] = $v['id'];
             }
 
             if ($grade->mode == 'on') {
@@ -109,6 +114,11 @@ class OrderClass extends \classes\IndexClass
                 'name' => $v['name'],
                 'amount' => $amount['amount'],
             ];
+        }
+
+        if (!empty($code_express)) foreach ($platform as $v) foreach ($result[$v] as $key => $val) {
+
+            if (!in_array($key,$code_express))unset($result[$v][$key]);
         }
 
         return $result;
@@ -433,7 +443,7 @@ class OrderClass extends \classes\IndexClass
 
         //快递验证
         $express = new ExpressModel();
-        $express = $express->where('id', '=', $request->post('express'.$request->post('express')))->find();
+        $express = $express->where('id', '=', $request->post('express' . $request->post('express')))->find();
         if (is_null($express)) parent::ajax_exception(000, '快递信息异常');
 
         //会员等级验证
@@ -445,10 +455,10 @@ class OrderClass extends \classes\IndexClass
         //快递费验证
         if ($grade['mode'] == 'on') {
 
-            $b = $b->amount(0,$grade->id);
+            $b = $b->amount(0, $grade->id);
         } else {
 
-            $b = $b->amount($express->id,$grade->id);
+            $b = $b->amount($express->id, $grade->id);
         }
         $amount = $b['amount'];
 
