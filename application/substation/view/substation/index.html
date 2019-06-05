@@ -25,14 +25,15 @@
     </div>
 
     {if $sub['is']}
-    <form class="layui-form layui-inline layui-form-query">
+        <div class="toolTable">
         <button class="layui-btn layui-btn-sm" data-type="addData">
             <i class="layui-icon">&#xe654;</i>添加分站
         </button>
         <button class="layui-btn layui-btn-sm layui-btn-danger" data-type="delData">
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>
-        <div class="layui-input-inline layui-query-select" style="width:140px;">
+            <form class="layui-form layui-inline layui-form-query">
+            <div class="layui-input-inline layui-query-select" style="width:140px;">
             <select name="level" lay-verify="" style="height:30px;">
                 <option value="">分站等级</option>
                 {foreach $level as $k => $v}
@@ -45,9 +46,9 @@
                 <i class="layui-icon ">&#xe615;</i>搜索
             </button>
         </div>
-    </form>
+            </form>
+        </div>
     {/if}
-
 
     <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
     </table>
@@ -68,39 +69,40 @@
         var mTable = layui.mTable;
         var sub = {php}echo $sub['json'];{/php}
 
-        mTable.init({
-            url: {
-                del: '/admin/substation/delete',
-                table: '/admin/substation/table',
-                edit: '/admin/substation/edit',
-                add: '/admin/substation/create',
-            },
-            isPage: false,
-            cols: [[
-                {field: 'id', width: 50, type:'checkbox'},
-                {
-                    field: 'pid', width: 130, title: '上级站点', templet: function (d) {
-                    return sub[d.pid];
-                }
+            mTable.init({
+                url: {
+                    del: '/admin/substation/delete',
+                    table: '/admin/substation/table',
+                    edit: '/admin/substation/edit',
+                    add: '/admin/substation/create',
                 },
-                {field: 'id', width: 80, title: '分站id'},
-                {field: 'level_name', width: 120, title: '分站等级'},
-                {field: 'status', width: 60, title:'状态',templet:function(d){
-                    if(d.status == 'on' ){
-                        return '<span class="layui-badge layui-bg-green">开</span>' ;
-                    }else{
-                        return '<span class="layui-badge layui-bg-gray">关</span>' ;
+                isPage: false,
+                cols: [[
+                    {field: 'id', width: 50, type:'checkbox'},
+                    {
+                        field: 'pid', width: 130, title: '上级站点', templet: function (d) {
+                        return sub[d.pid];
                     }
-                }},
-                {field: 'name', width: 200, title: '分站名称'},
-                {field: 'localhost', width: 250, title: '域名'},
-//                {field: 'amount', title: '分站费'},
-                {field: 'created_at',width: 200, title: '创建时间'},
-                {fixed: 'right', title: '操作',  align: 'center', toolbar: '#tableTool'}
-            ]]
-        });
-        mTable.render();
-    });
+                    },
+                    {field: 'id', width: 80, title: '分站id'},
+                    {field: 'level_name', width: 120, title: '分站等级'},
+                    {field: 'status', width: 60, title:'状态',templet:function(d){
+                        if(d.status == 'on' ){
+                            return '<span class="layui-badge layui-bg-green">开</span>' ;
+                        }else{
+                            return '<span class="layui-badge layui-bg-gray">关</span>' ;
+                        }
+                    }},
+                    {field: 'name', width: 200, title: '分站名称'},
+                    {field: 'localhost', width: 250, title: '域名'},
+    //                {field: 'amount', title: '分站费'},
+                    {field: 'created_at',width: 200, title: '创建时间'},
+                    {fixed: 'right', title: '操作',  align: 'center', toolbar: '#tableTool'}
+                ]]
+            });
+            mTable.render();
+        }
+    );
 </script>
 </body>
 

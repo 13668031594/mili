@@ -301,11 +301,11 @@
         var expressAmount = $('#express_amount').val();
         var amount;
         amount = (orderNum * orderAmount);
-        amount = amount +  + expressAmount;
-console.log(orderNum);
-console.log(orderAmount);
-console.log(expressAmount);
-console.log(amount);
+        amount = ((amount * 3 )+ (expressAmount *3))/3;
+//console.log(orderNum);
+//console.log(orderAmount);
+//console.log(expressAmount);
+//console.log(amount);
         $('#amount').val(amount);
     };
 

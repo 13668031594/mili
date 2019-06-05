@@ -177,6 +177,7 @@ layui.define(['table', 'form'], function (exports) {
 
         }
         , addData: function () {
+            // console.log(tableParams.params.url.add);
             window.location.href = tableParams.params.url.add;
         }
     };

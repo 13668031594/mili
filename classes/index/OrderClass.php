@@ -83,7 +83,9 @@ class OrderClass extends \classes\IndexClass
         $grade = $grade->where('id', '=', $member['grade_id'])->find();
 
         $platform = array_keys(config('member.store_platform'));
+
         $result = [];
+        foreach ($platform as $v)$result[$v] = [];
 
         $code_express = [];
         foreach ($express as $k => $v) {
