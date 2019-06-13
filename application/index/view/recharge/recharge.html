@@ -18,7 +18,7 @@
                 <div class="title">余额充值</div>
                 <div class="data-content">
 
-                    <form class="layui-form" id="forms" action="/recharge" method="post">
+                    <form class="layui-form" action="/recharge" method="post">
                         <!--<div class="layui-form-item">
                             <label class="layui-form-label">汇款备注</label>
                             <div class="layui-input-block">
@@ -38,7 +38,7 @@
 
                         <div class="layui-form-item">
                             <label class="layui-form-label">付款类型</label>
-                            <div class="layui-input-block">
+                            <div>
                                 <input type="radio" name="type" value="1">支付宝
                                 <input type="radio" name="type" value="2" checked>微信
                                 <input type="radio" name="type" value="3">qq钱包
@@ -65,7 +65,7 @@
     {include file="index@Base/copyright"}
 </body>
 
-<!--<script src="{$src}js/ajax.js"></script>-->
+<script src="{$src}js/ajax.js"></script>
 <script>
     layui.use(['layer'], function () {
         var layer = layui.layer;
