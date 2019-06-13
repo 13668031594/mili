@@ -161,10 +161,10 @@ class YouyunbaoClass
         );
 
         //加密token 32位  小写
-        $token = md5(urlparams($token));
+        $token = md5($this->config->urlparams($token));
         //exit($token);
         //重组条件
-        $postdata = urlparams($yundata) . '&token=' . $token;
+        $postdata = $this->config->urlparams($yundata) . '&token=' . $token;
 
 
         //订单查询网关地址后面加 order
@@ -203,10 +203,10 @@ class YouyunbaoClass
         );
 
         //加密token 32位  小写
-        $token = md5(urlparams($token));
+        $token = md5($this->config->urlparams($token));
         //exit($token);
         //重组条件
-        $postdata = urlparams($yundata).'&token='.$token;
+        $postdata = $this->config->urlparams($yundata).'&token='.$token;
 
         //订单查询网关地址后面加 order
         $fdata = curl_post_https($congig['server'].'order',$postdata);
