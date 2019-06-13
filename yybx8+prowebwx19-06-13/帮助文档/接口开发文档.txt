@@ -1,0 +1,72 @@
+
+
+请登录网址 查看  http://www.youyunnet.com/news-5.html
+
+
+
+新版将支持签名，可以在 软件配置中开启，如果是老接口不需要启用！
+
+
+
+
+
+异地通知接口 POST返回的数据
+
+接收参数	类型	必需	描述	示例
+
+ddh	String(100)	是	支付宝/微信/QQ钱包交易单号	20161217200040011100700005735533
+
+money	Numeric(11)2	是	支付金额	10.00
+
+lb	int(1)	是	支付类型 1支付宝，2QQ钱包，3微信	1
+
+name	String(100)	否	网站单号/支付宝备注	账号ID/或 201633225454
+
+key	String(100)	是	KEY密匙	
+
+paytime	日期时间	是	支付成功日期	2018-01-02 10:21:23
+
+
+
+签名版规则key
+
+
+签名版key规则 【  ddh=支付单号&name=数据单号&money=金额&key=APPKEY   】 进行MD5 32位加密即可  小写
+
+例如php： $sing =md5('ddh='.$ddh.'&name='.$name.'&money='.$money.'&key='.$key.'');
+
+
+
+
+
+
+网关接口（POST 或 GET） 发送数据参数(如果不用免备注可以省略)
+
+接收参数	类型	必需	描述	示例
+
+pid	String(15)	是	申请开户后新建自动生成的一个APPID号码	20161217200（支持多APPID负载均衡请在官网查看教程）
+
+money	Numeric(11)	否	支付金额	10
+
+lb	int(1)	是	支付类型 1支付宝，2QQ钱包，3微信	1
+
+data	String(100)	是	网站单号/支付宝备注	账号ID/或 201633225454
+
+m	String(1)	否	网关默认模板金额横排1竖排0	1
+
+url	String(255)	否	支付成功后跳回网址（注意：不是跳转接口）无参数回执	http://www.xxx.com
+
+bk	String(1)	否	网关支付模板边框是否显示1不显示	1
+
+h        =  1           否      横屏魔板
+
+h5       =  1           否      支付宝固定金额二维码直接启动APP 仅限手机浏览器（不兼容QQ浏览器或者是QQ内核的浏览器）
+
+
+
+网关地址1	http://pay1.youyunnet.com/pay/
+
+网关地址2	http://pay2.youyunnet.com/pay/
+
+
+

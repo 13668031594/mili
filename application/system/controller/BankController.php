@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yangyang
- * Date: 2018/11/21
- * Time: 下午5:29
- */
 
 namespace app\system\controller;
 
