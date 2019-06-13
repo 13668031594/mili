@@ -237,7 +237,8 @@ Route::group('', function () {
     Route::get('/plan', 'plan/Plan/index');
     Route::get('/test', 'test/Test/index');
     Route::post('/test', 'test/Test/file');
+
+    Route::get('/alipayh5','youyunbao/Youyunbao/alipayh5');
+    Route::post('/orderajax','youyunbao/Youyunbao/orderajax');
 })->middleware('substation');
 
-Route::get('/alipayh5','youyunbao/Youyunbao/alipayh5');
-Route::post('/orderajax','youyunbao/Youyunbao/orderajax');
