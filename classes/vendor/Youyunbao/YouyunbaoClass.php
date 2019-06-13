@@ -66,7 +66,7 @@ class YouyunbaoClass
             $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => time() + 300, 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据
         } else {
             //否则走云端
-            $fdata = curl_post_https($congig['server'], $postdata);//发送数据到网关
+            $fdata = $this->config->curl_post_https($congig['server'], $postdata);//发送数据到网关
             $sdata = json_decode($fdata, true);//将json代码转换为数组
         }
         /*返回的json参数
@@ -168,7 +168,7 @@ class YouyunbaoClass
 
 
         //订单查询网关地址后面加 order
-        $fdata = curl_post_https($congig['server'] . 'Alipay', $postdata);
+        $fdata = $this->config->curl_post_https($congig['server'] . 'Alipay', $postdata);
 
         $sdata = json_decode($fdata, true);//将json代码转换为数组
 
@@ -209,7 +209,7 @@ class YouyunbaoClass
         $postdata = $this->config->urlparams($yundata).'&token='.$token;
 
         //订单查询网关地址后面加 order
-        $fdata = curl_post_https($congig['server'].'order',$postdata);
+        $fdata = $this->config->curl_post_https($congig['server'].'order',$postdata);
 
         //$sdata = json_decode($fdata, true);//将json代码转换为数组
         /*
