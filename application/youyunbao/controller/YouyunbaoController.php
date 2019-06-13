@@ -22,4 +22,15 @@ class YouyunbaoController extends IndexController
 
         return parent::view('alipayh5', ['sdata' => $sdata]);
     }
+
+    public function orderajax()
+    {
+        $class = new YouyunbaoClass();
+
+        $class->orderajax();
+
+        exit;
+    }
+
+
 }
