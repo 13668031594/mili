@@ -122,7 +122,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "orderajax.php",
+            url: "orderajax",
             timeout: 10000, //ajax请求超时时间10s
             data: {type: "{$yundata['type']}", order: "{$order}", data: "{$data}"}, //post数据
             success: function (data, textStatus) {
