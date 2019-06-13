@@ -32,7 +32,7 @@ class RechargeController extends \app\http\controller\IndexController
 
         $result = [
             'choice' => '/recharge',
-            'order' => $this->class->order(),
+            'order' => time(),//$this->class->order(),
 //            'bank' => $class->index(),
         ];
 
