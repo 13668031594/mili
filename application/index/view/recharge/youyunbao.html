@@ -43,7 +43,7 @@
                     </p>
 
                     <p class="animation-slide-bottom">
-                        <a class="btn btn-danger" href="{$congig['reurl']}">付款成功会自动跳转</a>
+                        <a class="btn btn-danger" href="{$congig['reurl']}">返回</a>
                     </p>
 
 
@@ -52,9 +52,9 @@
                         <a class="btn btn-danger" onclick="goAli()">启动支付宝付款</a>
                     </p>
                     {/if}
-                    <p class="animation-slide-bottom">
+                    <!--<p class="animation-slide-bottom">
                         <a class="btn btn-danger" onclick="help()">付款帮助？</a>
-                    </p>
+                    </p>-->
                 </div>
             </div>
         </div>
@@ -168,12 +168,12 @@
     window.onload = loadmsg();
 
 
-    function help() {
+    /*function help() {
         layer.open({
             content: '<p style="font-size:25px;color:#F00"><b>必须付款：{$moneys} 元 才能自动到账</b></p>{$tishi}',
             btn: '我知道了'
         });
-    }
+    }*/
 
     {if ($congig['helpts'] == 1)}
     window.onload = help();
