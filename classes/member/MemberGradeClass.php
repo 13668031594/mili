@@ -148,6 +148,13 @@ class MemberGradeClass extends AdminClass implements ListInterface
         return self::read($id);
     }
 
+    /**
+     * 编辑
+     *
+     * @param $id
+     * @param Request $request
+     * @return MemberGradeModel
+     */
     public function update($id, Request $request)
     {
         $model = $this->model->where('id', '=', $id)->find();

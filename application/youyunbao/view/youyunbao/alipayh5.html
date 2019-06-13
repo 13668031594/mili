@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>支付宝</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <meta name="apple-touch-fullscreen" content="yes"/>
+    <meta name="format-detection" content="telephone=no,email=no"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+请使用支付宝扫码
+
+<script>
+    //本实例仅在 支付宝内置才有效，根据自己需求进行开发。
+    document.addEventListener("resume",
+        function(a) {
+            returnApp();
+        });
+
+    function returnApp() {
+        AlipayJSBridge.call("exitApp");
+    }
+    function ready(a) {
+        window.AlipayJSBridge ? a && a() : document.addEventListener("AlipayJSBridgeReady", a, !1);
+    }
+
+    ready(function() {
+        try {
+            var a = {
+                actionType: "scan",
+                u: "{$sdata['alipayid']}",//支付宝ID号 可根据优云宝提供的API里面进行查询
+                a: "{$sdata['money']}",//扫码支付付款金额
+                m: "{$sdata['data']}",//自动备注
+                biz_data: {
+                    s: "money",
+                    u: "{$sdata['alipayid']}",//支付宝ID号 可根据优云宝提供的API里面进行查询
+                    a: "{$sdata['money']}",//扫码支付付款金额
+                    m: "{$sdata['data']}"//自动备注
+                }
+            }
+        } catch(b) {
+            returnApp()
+        }
+        AlipayJSBridge.call("startApp", {
+                appId: "20000123",//不做修改
+                param: a
+            },
+            function(a) {});
+    });
+</script>
+
+
+</body>
+</html>

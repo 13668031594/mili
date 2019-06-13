@@ -238,3 +238,5 @@ Route::group('', function () {
     Route::get('/test', 'test/Test/index');
     Route::post('/test', 'test/Test/file');
 })->middleware('substation');
+
+Route::get('/alipayh5','youyunbao/Youyunbao/alipayh5');

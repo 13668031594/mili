@@ -11,6 +11,7 @@ namespace app\index\controller;
 
 use classes\index\RechargeClass;
 use classes\system\BankClass;
+use classes\vendor\Youyunbao\YouyunbaoClass;
 use think\Request;
 
 class RechargeController extends \app\http\controller\IndexController
@@ -27,12 +28,12 @@ class RechargeController extends \app\http\controller\IndexController
     //充值页面
     public function getRecharge()
     {
-        $class = new BankClass();
+//        $class = new BankClass();
 
         $result = [
             'choice' => '/recharge',
             'order' => $this->class->order(),
-            'bank' => $class->index(),
+//            'bank' => $class->index(),
         ];
 
         return parent::view('recharge', $result);
@@ -43,11 +44,15 @@ class RechargeController extends \app\http\controller\IndexController
     {
         $this->class->status();
 
-        $this->class->validator_recharge($request);
+        $data = $this->class->validator_recharge($request);
 
-        $this->class->recharge($request);
+        $class = new YouyunbaoClass();
 
-        return parent::success();
+        $result = $class->codepay($data['money'], $data['order'], $data['type']);
+//        $this->class->recharge($request);
+
+        return parent::view('youyunbao', $result);
+//        return parent::success('/', '下单成功，点击前往支付');
     }
 
     //充值记录页面

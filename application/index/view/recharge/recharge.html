@@ -19,19 +19,29 @@
                 <div class="data-content">
 
                     <form class="layui-form" id="forms" action="/recharge" method="post">
-                        <div class="layui-form-item">
+                        <!--<div class="layui-form-item">
                             <label class="layui-form-label">汇款备注</label>
                             <div class="layui-input-block">
                                 <input type="text" name="order" required lay-verify="required" placeholder="请输入充值金额"
-                                       autocomplete="off" class="layui-input" value="{$order}" readonly
+                                       autocomplete="off" class="layui-input" value="$order" readonly
                                        style="color: red">
                             </div>
-                        </div>
+                        </div>-->
+                        <input type="hidden" name="order" value="{$order}">
                         <div class="layui-form-item">
                             <label class="layui-form-label">充值金额</label>
                             <div class="layui-input-block">
                                 <input type="number" name="total" required lay-verify="required" placeholder="请输入充值金额"
                                        autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">付款类型</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="type" value="1" checked>支付宝
+                                <input type="radio" name="type" value="2">微信
+                                <input type="radio" name="type" value="3">qq钱包
                             </div>
                         </div>
 
@@ -42,9 +52,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="layui-form-item">
-                    {php}echo $bank['file']{/php}
-                </div>
+                <!--<div class="layui-form-item">
+                    php echo $bank['file'] /php
+                </div>-->
             </div>
 
         </div>
@@ -53,10 +63,9 @@
     </div>
 
     {include file="index@Base/copyright"}
-
 </body>
 
-<script src="{$src}js/ajax.js"></script>
+<!--<script src="{$src}js/ajax.js"></script>-->
 <script>
     layui.use(['layer'], function () {
         var layer = layui.layer;

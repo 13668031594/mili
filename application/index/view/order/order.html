@@ -290,393 +290,414 @@
 <script type="text/javascript" src="{$src}js/cptable.full.js"></script>
 <script>
 
-    var previewHeader;
-    var previewBody;
+    var dianpu = {php}
+    echo
+    json_encode($store, JSON_UNESCAPED_UNICODE);
+    {
+        /php};
+        var pingtai = {php}
+        echo
+        json_encode($platform, JSON_UNESCAPED_UNICODE);
+        {
+            /php};
+            var kuaidi = {php}
+            echo
+            json_encode($express, JSON_UNESCAPED_UNICODE);
+            {
+                /php};
 
-    //计算每单金额
-    function amount() {
+                console.log(dianpu);
+                console.log(pingtai);
+                console.log(kuaidi);
 
-        var orderNum = $('#order-num').val();
-        var orderAmount = $('#goods_amount').val() * 100;
-        var expressAmount = $('#express_amount').val() * 100;
-        var amount;
-        amount = orderNum * orderAmount;
-        amount = amount + expressAmount;
+                var previewHeader;
+                var previewBody;
+
+                //计算每单金额
+                function amount() {
+
+                    var orderNum = $('#order-num').val();
+                    var orderAmount = $('#goods_amount').val() * 100;
+                    var expressAmount = $('#express_amount').val() * 100;
+                    var amount;
+                    amount = orderNum * orderAmount;
+                    amount = amount + expressAmount;
 //console.log(orderNum);
 //console.log(orderAmount);
 //console.log(expressAmount);
 //console.log(amount);
-        amount = amount /100;
-        $('#amount').val(amount);
-    };
+                    amount = amount / 100;
+                    $('#amount').val(amount);
+                };
 
-    $('#order-num').on('input change', function () {
+                $('#order-num').on('input change', function () {
 
-        var goodsNumber = $(this).val();
+                    var goodsNumber = $(this).val();
 
 
-        if (Number($(this).val()) > Number($('#max-num').text())) {
-            $(this).val($('#max-num').text());
-            goodsNumber = $('#max-num').text();
-        }
-
-        $("input[name=number]").each(function () {
-            $(this).prop('value', goodsNumber);
-        });
-
-        amount();
-
-    });
-
-    layui.use(['layer', 'form', 'element', 'laydate'], function () {
-        var laydate = layui.laydate;
-        laydate.render({
-            elem: '#timeStart'
-            , type: 'datetime'
-        });
-
-        laydate.render({
-            elem: '#timeEnd'
-            , type: 'datetime'
-        });
-
-        var form = layui.form;
-        var element = layui.element;
-        var formId = $("batForm");
-
-        // 订单类型切换
-        element.on('tab(type)', function (data) {
-            //console.log(data);
-            $("#orderType").val(data.index == 1 ? 0 : 1);
-        });
-
-        // 批量上传类型切换
-        form.on('radio(uploadType)', function (data) {
-            if (data.value == 0) {
-                $(".upload-item-table").show();
-                $(".upload-item-api").hide();
-            } else {
-                $(".upload-item-table").hide();
-                $(".upload-item-api").show();
-            }
-        });
-
-        $('#form').on('submit', function () {
-
-            var orderType = $("#orderType").val();
-
-            if (orderType == 1 && 1 != 1) {
-                var file = $(this).find('input[name=file]').val();
-                if (!file) {
-                    layer.alert('请选择上传文档');
-                    return false;
-                }
-            }
-            ajax_submit_func($(this), ajax_submit_callback);
-            return false;
-        });
-
-        form.on('select(express)', function (data) {
-
-            var id = data.elem.selectedOptions[0].dataset.id;
-            $("#express_amount").val(id);
-            amount();
-
-            var expressInfo = data.elem.selectedOptions[0].textContent;
-
-            if (expressInfo.indexOf('/') != -1) {
-                var expressArray = expressInfo.split('/');
-                $("#expressName").val(expressArray[0]);
-            } else {
-                $("#expressName").val("");
-            }
-        });
-
-        form.on('select(send)', function (data) {
-
-            var sendInfo = data.elem.selectedOptions[0].textContent;
-//            console.log(sendInfo);
-            $("#sendName").val(sendInfo);
-            amount();
-
-            //console.log(data.elem.dataset.address);
-            //console.log(data);
-            var address = data.elem.selectedOptions[0].dataset.address;
-//            console.log($("#store_address .layui-input-inline"));
-            $("#store_address .layui-input-inline").text(address);
-            if (address) {
-
-                $("#store_address").show();
-            } else {
-
-                $("#store_address").hide();
-            }
-        });
-
-        form.on('select(platform)', function (data) {
-
-            switch (data.value) {
-                case 'self':
-                    $('#self_note').show();
-                    $("#screen-container").hide();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").hide();
-                    break;
-                case 'taobao':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'tianmao':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'jingdong':
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop('disabled', false);
-                    $("#uploadType").show();
-                    break;
-                case 'pinduoduo':
-
-                    $('#self_note').hide();
-                    $("#screen-container").show();
-                    $("input:radio[name='select_name']").eq(1).prop({'disabled': true, 'checked': false});
-                    $("input:radio[name='select_name']").eq(0).prop({'checked': true});
-                    $("#uploadType").show();
-
-                    break;
-                default:
-                    break;
-            }
-
-            form.render();
-        });
-
-        form.on('select(send)', function (data) {
-
-            var id = data.elem.selectedOptions[0].dataset.id;
-//            console.log(data.elem.selectedOptions[0].dataset.id);
-            $(".aaa").hide();
-            $('#aaa' + id).show();
-            $('#express_value').val(id);
-
-            form.render();
-        });
-
-        // 确认清单
-        function openConfirm(form, data) {
-            var formData = new FormData($(form)[0]);
-            layer.open({
-                title: '订单确认',
-                type: 2,
-                area: ['800px', '600px'],
-                content: 'static/html/confirmOrder.html',
-                btn: ['立即支付'],
-                yes: function (index, layero) {
-
-                    var body = layer.getChildFrame('body', index);
-                    var payPass = body.find('input').val();
-
-                    if (!payPass) {
-                        layer.msg('请输入支付密码');
-                        return false;
+                    if (Number($(this).val()) > Number($('#max-num').text())) {
+                        $(this).val($('#max-num').text());
+                        goodsNumber = $('#max-num').text();
                     }
 
-                    // 额外参数
-                    var extras = {
-                        'confirm': 1,
-                        'pay': payPass,
-                    };
-
-                    layer.confirm('您确认要支付吗？', function () {
-                        //layer.msg('确认支付了哦');
-
-                        var loading = layer.open({
-                            type: 3
-                        });
-                        ajax_submit_func(form, function (data) {
-                            //layer.close(loading);
-                            console.log('支付后', data);
-                            if (data.status == 'success') {
-                                layer.msg('支付成功,请稍候..');
-                                setTimeout(function () {
-                                    window.location.href = '/goods-had';
-                                }, 1000)
-                            } else {
-                                layer.close(loading);
-                                layer.msg(data.message);
-                            }
-                        }, extras);
+                    $("input[name=number]").each(function () {
+                        $(this).prop('value', goodsNumber);
                     });
 
-                },
-                success: function (layero, index) {
-                    var body = layer.getChildFrame('body', index);
-                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                    //console.log(body.html()) //得到iframe页的body内容
-                    //body.find('input').val('Hi，我是从父页来的')
-                    body.find('#goodsAmount').html($("#goodsAmount").text());
-                    body.find('#goodsImage').attr('src', $("#goodsImage").attr('src'));
-                    body.find('#goodsWeight').html($("#goodsWeight").text());
-                    body.find('#goodsName').html($("#goodsName").text());
-                    body.find('#goodsNumber').html(formData.get('number'));
-                    body.find('#express').html(formData.get('expressName'));
-                    body.find('#expressAmount').html(data.express_amount);
-                    body.find('#expressTotal').html(data.express_total);
-                    body.find('#expressNumber').html(data.express_number);
-                    body.find('#goodsTotal').html(data.goods_total);
-                    body.find('#total').html(data.total);
-                    console.log(formData.get('sendName'));
-                    body.find('#sendData').html(formData.get('sendName'));
-                    var preview = '';
-                    var expressNumber = data.express_number;
-                    for (var i = 0; i < data.address.length; i++) {
-                        preview += "<tr>";
-                        preview += "<td>" + data.address[i].name + "</td>";
-                        preview += "<td>" + data.address[i].phone + "</td>";
-                        preview += "<td>" + data.address[i].address + "</td>";
-                        preview += "</tr>";
-                    }
-                    //body.find('#preview').html(preview);
+                    amount();
 
-                    //body.find('#express').html(data.get('number')) ;
-                    body.find('#view').click(function () {
+                });
+
+                layui.use(['layer', 'form', 'element', 'laydate'], function () {
+                    var laydate = layui.laydate;
+                    laydate.render({
+                        elem: '#timeStart'
+                        , type: 'datetime'
+                    });
+
+                    laydate.render({
+                        elem: '#timeEnd'
+                        , type: 'datetime'
+                    });
+
+                    var form = layui.form;
+                    var element = layui.element;
+                    var formId = $("batForm");
+
+                    // 订单类型切换
+                    element.on('tab(type)', function (data) {
+                        //console.log(data);
+                        $("#orderType").val(data.index == 1 ? 0 : 1);
+                    });
+
+                    // 批量上传类型切换
+                    form.on('radio(uploadType)', function (data) {
+                        if (data.value == 0) {
+                            $(".upload-item-table").show();
+                            $(".upload-item-api").hide();
+                        } else {
+                            $(".upload-item-table").hide();
+                            $(".upload-item-api").show();
+                        }
+                    });
+
+                    $('#form').on('submit', function () {
+
+                        var orderType = $("#orderType").val();
+
+                        if (orderType == 1 && 1 != 1) {
+                            var file = $(this).find('input[name=file]').val();
+                            if (!file) {
+                                layer.alert('请选择上传文档');
+                                return false;
+                            }
+                        }
+                        ajax_submit_func($(this), ajax_submit_callback);
+                        return false;
+                    });
+
+                    form.on('select(express)', function (data) {
+
+                        var id = data.elem.selectedOptions[0].dataset.id;
+                        $("#express_amount").val(id);
+                        amount();
+
+                        var expressInfo = data.elem.selectedOptions[0].textContent;
+
+                        if (expressInfo.indexOf('/') != -1) {
+                            var expressArray = expressInfo.split('/');
+                            $("#expressName").val(expressArray[0]);
+                        } else {
+                            $("#expressName").val("");
+                        }
+                    });
+
+                    form.on('select(send)', function (data) {
+
+                        var sendInfo = data.elem.selectedOptions[0].textContent;
+//            console.log(sendInfo);
+                        $("#sendName").val(sendInfo);
+
+                        amount();
+
+                        //console.log(data.elem.dataset.address);
+                        //console.log(data);
+                        var address = data.elem.selectedOptions[0].dataset.address;
+//            console.log($("#store_address .layui-input-inline"));
+                        $("#store_address .layui-input-inline").text(address);
+                        if (address) {
+
+                            $("#store_address").show();
+                        } else {
+
+                            $("#store_address").hide();
+                        }
+                    });
+
+                    form.on('select(platform)', function (data) {
+
+                        switch (data.value) {
+                            case 'self':
+                                $('#self_note').show();
+                                $("#screen-container").hide();
+                                $("input:radio[name='select_name']").eq(1).prop('disabled', false);
+                                $("#uploadType").hide();
+                                break;
+                            case 'taobao':
+                                $('#self_note').hide();
+                                $("#screen-container").show();
+                                $("input:radio[name='select_name']").eq(1).prop('disabled', false);
+                                $("#uploadType").show();
+                                break;
+                            case 'tianmao':
+                                $('#self_note').hide();
+                                $("#screen-container").show();
+                                $("input:radio[name='select_name']").eq(1).prop('disabled', false);
+                                $("#uploadType").show();
+                                break;
+                            case 'jingdong':
+                                $('#self_note').hide();
+                                $("#screen-container").show();
+                                $("input:radio[name='select_name']").eq(1).prop('disabled', false);
+                                $("#uploadType").show();
+                                break;
+                            case 'pinduoduo':
+
+                                $('#self_note').hide();
+                                $("#screen-container").show();
+                                $("input:radio[name='select_name']").eq(1).prop({'disabled': true, 'checked': false});
+                                $("input:radio[name='select_name']").eq(0).prop({'checked': true});
+                                $("#uploadType").show();
+
+                                break;
+                            default:
+                                break;
+                        }
+
+                        form.render();
+                    });
+
+                    form.on('select(send)', function (data) {
+
+                        var id = data.elem.selectedOptions[0].dataset.id;
+//            console.log(data.elem.selectedOptions[0].dataset.id);
+                        $(".aaa").hide();
+                        $('#aaa' + id).show();
+                        $('#express_value').val(id);
+
+                        form.render();
+                    });
+
+                    // 确认清单
+                    function openConfirm(form, data) {
+                        var formData = new FormData($(form)[0]);
                         layer.open({
-                            title: '预览收货人',
+                            title: '订单确认',
                             type: 2,
                             area: ['800px', '600px'],
-                            content: 'static/html/uploadPreview.html',
+                            content: 'static/html/confirmOrder.html',
+                            btn: ['立即支付'],
+                            yes: function (index, layero) {
+
+                                var body = layer.getChildFrame('body', index);
+                                var payPass = body.find('input').val();
+
+                                if (!payPass) {
+                                    layer.msg('请输入支付密码');
+                                    return false;
+                                }
+
+                                // 额外参数
+                                var extras = {
+                                    'confirm': 1,
+                                    'pay': payPass,
+                                };
+
+                                layer.confirm('您确认要支付吗？', function () {
+                                    //layer.msg('确认支付了哦');
+
+                                    var loading = layer.open({
+                                        type: 3
+                                    });
+                                    ajax_submit_func(form, function (data) {
+                                        //layer.close(loading);
+                                        console.log('支付后', data);
+                                        if (data.status == 'success') {
+                                            layer.msg('支付成功,请稍候..');
+                                            setTimeout(function () {
+                                                window.location.href = '/goods-had';
+                                            }, 1000)
+                                        } else {
+                                            layer.close(loading);
+                                            layer.msg(data.message);
+                                        }
+                                    }, extras);
+                                });
+
+                            },
                             success: function (layero, index) {
                                 var body = layer.getChildFrame('body', index);
-                                var iframeWin = window[layero.find('iframe')[0]['name']];
-                                //body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
-                                body.find('#tbody').html(preview);
-                                body.find('#count').html(expressNumber);
+                                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                                //console.log(body.html()) //得到iframe页的body内容
+                                //body.find('input').val('Hi，我是从父页来的')
+                                body.find('#goodsAmount').html($("#goodsAmount").text());
+                                body.find('#goodsImage').attr('src', $("#goodsImage").attr('src'));
+                                body.find('#goodsWeight').html($("#goodsWeight").text());
+                                body.find('#goodsName').html($("#goodsName").text());
+                                body.find('#goodsNumber').html(formData.get('number'));
+                                body.find('#express').html(formData.get('expressName'));
+                                body.find('#expressAmount').html(data.express_amount);
+                                body.find('#expressTotal').html(data.express_total);
+                                body.find('#expressNumber').html(data.express_number);
+                                body.find('#goodsTotal').html(data.goods_total);
+                                body.find('#total').html(data.total);
+                                console.log(formData.get('sendName'));
+                                body.find('#sendData').html(formData.get('sendName'));
+                                var preview = '';
+                                var expressNumber = data.express_number;
+                                for (var i = 0; i < data.address.length; i++) {
+                                    preview += "<tr>";
+                                    preview += "<td>" + data.address[i].name + "</td>";
+                                    preview += "<td>" + data.address[i].phone + "</td>";
+                                    preview += "<td>" + data.address[i].address + "</td>";
+                                    preview += "</tr>";
+                                }
+                                //body.find('#preview').html(preview);
+
+                                //body.find('#express').html(data.get('number')) ;
+                                body.find('#view').click(function () {
+                                    layer.open({
+                                        title: '预览收货人',
+                                        type: 2,
+                                        area: ['800px', '600px'],
+                                        content: 'static/html/uploadPreview.html',
+                                        success: function (layero, index) {
+                                            var body = layer.getChildFrame('body', index);
+                                            var iframeWin = window[layero.find('iframe')[0]['name']];
+                                            //body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
+                                            body.find('#tbody').html(preview);
+                                            body.find('#count').html(expressNumber);
+                                        }
+                                    });
+                                });
+
+                                //body.find('#express').html(data.get('number')) ;
                             }
                         });
-                    });
-
-                    //body.find('#express').html(data.get('number')) ;
-                }
-            });
-        }
-
-        function ajax_submit_callback(data) {
-
-            if (data && data.status == 'success') {
-                //console.log(data);
-                openConfirm($("#form"), data);
-            } else {
-                if (data.code == '999') {
-                    layer.alert('登录失效, 请重新登录', function (index) {
-                        window.location.href = '/index-login';
-                        layer.close(index);
-                    });
-                } else {
-                    layer.alert(data.message);
-                }
-            }
-        }
-
-        $('#file-input').change(function (e) {
-            //var dmsg = layer.msg('导入中...', {time: false});
-
-            $('.import-btn').text(e.target.files[0].name);
-            return false;
-
-            var files = e.target.files;
-
-            var fileReader = new FileReader();
-            fileReader.onload = function (ev) {
-                try {
-
-                    var data = ev.target.result,
-                        workbook = XLSX.read(data, {
-                            type: 'binary'
-                        }), // 以二进制流方式读取得到整份excel表格对象
-                        persons = []; // 存储获取到的数据
-
-                } catch (e) {
-                    layer.alert('文件类型不正确');
-                    $('.import-btn').text('选择文件');
-                    $('#file-input').val('');
-                    layer.close(dmsg);
-                    return;
-                }
-                // 表格的表格范围，可用于判断表头是否数量是否正确
-                var fromTo = '';
-                // 遍历每张表读取
-                for (var sheet in workbook.Sheets) {
-                    if (workbook.Sheets.hasOwnProperty(sheet)) {
-                        fromTo = workbook.Sheets[sheet]['!ref'];
-                        //console.log('123123',fromTo);
-                        persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
-                        break; // 如果只取第一张表，就取消注释这行
                     }
-                }
 
-                //console.log(persons);
-                //将persons赋值给要展示的表格数组里即可展示在界面
-                var data = persons[0];
-                //var thead = [];
-                previewHeader = [];
-                for (var i in data) {
-                    previewHeader.push('<th>' + i + '</th>');
-                }
-                //$('#thead').empty();
-                //$('#thead').append('<tr>' + thead.join('') + '</tr>');
-                previewBody = [];
-                persons.forEach(function (obj) {
-                    var arr = [];
-                    for (var j in obj) {
-                        arr.push('<td>' + obj[j] + '</td>');
+                    function ajax_submit_callback(data) {
+
+                        if (data && data.status == 'success') {
+                            //console.log(data);
+                            openConfirm($("#form"), data);
+                        } else {
+                            if (data.code == '999') {
+                                layer.alert('登录失效, 请重新登录', function (index) {
+                                    window.location.href = '/index-login';
+                                    layer.close(index);
+                                });
+                            } else {
+                                layer.alert(data.message);
+                            }
+                        }
                     }
-                    previewBody.push('<tr>' + arr.join('') + '</tr>');
+
+                    $('#file-input').change(function (e) {
+                        //var dmsg = layer.msg('导入中...', {time: false});
+
+                        $('.import-btn').text(e.target.files[0].name);
+                        return false;
+
+                        var files = e.target.files;
+
+                        var fileReader = new FileReader();
+                        fileReader.onload = function (ev) {
+                            try {
+
+                                var data = ev.target.result,
+                                    workbook = XLSX.read(data, {
+                                        type: 'binary'
+                                    }), // 以二进制流方式读取得到整份excel表格对象
+                                    persons = []; // 存储获取到的数据
+
+                            } catch (e) {
+                                layer.alert('文件类型不正确');
+                                $('.import-btn').text('选择文件');
+                                $('#file-input').val('');
+                                layer.close(dmsg);
+                                return;
+                            }
+                            // 表格的表格范围，可用于判断表头是否数量是否正确
+                            var fromTo = '';
+                            // 遍历每张表读取
+                            for (var sheet in workbook.Sheets) {
+                                if (workbook.Sheets.hasOwnProperty(sheet)) {
+                                    fromTo = workbook.Sheets[sheet]['!ref'];
+                                    //console.log('123123',fromTo);
+                                    persons = persons.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                                    break; // 如果只取第一张表，就取消注释这行
+                                }
+                            }
+
+                            //console.log(persons);
+                            //将persons赋值给要展示的表格数组里即可展示在界面
+                            var data = persons[0];
+                            //var thead = [];
+                            previewHeader = [];
+                            for (var i in data) {
+                                previewHeader.push('<th>' + i + '</th>');
+                            }
+                            //$('#thead').empty();
+                            //$('#thead').append('<tr>' + thead.join('') + '</tr>');
+                            previewBody = [];
+                            persons.forEach(function (obj) {
+                                var arr = [];
+                                for (var j in obj) {
+                                    arr.push('<td>' + obj[j] + '</td>');
+                                }
+                                previewBody.push('<tr>' + arr.join('') + '</tr>');
+                            });
+                            //console.log(previewBody) ;
+                            //$('#tbody').empty();
+                            //$('#tbody').append(tbody.join(''));
+                            //$('#import-table-num').text(persons.length);
+                            $('#import-see').show();
+                            layer.close(dmsg);
+
+                        };
+
+                        // 以二进制方式打开文件
+                        fileReader.readAsBinaryString(files[0]);
+                    });
                 });
-                //console.log(previewBody) ;
-                //$('#tbody').empty();
-                //$('#tbody').append(tbody.join(''));
-                //$('#import-table-num').text(persons.length);
-                $('#import-see').show();
-                layer.close(dmsg);
 
-            };
+                //查看
+                $('#import-see').click(function () {
+                    //$('.screen').show();
+                    //$('.import-pop').show();
+                    layer.open({
+                        title: '预览收货人',
+                        type: 2,
+                        area: ['800px', '600px'],
+                        content: 'static/html/uploadPreview.html',
+                        success: function (layero, index) {
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']];
+                            body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
+                            body.find('#tbody').html(previewBody.join(''));
+                            body.find('#count').html(previewBody.length);
+                            //body.find('#express').html(data.get('number')) ;
 
-            // 以二进制方式打开文件
-            fileReader.readAsBinaryString(files[0]);
-        });
-    });
+                        }
+                    });
+                });
 
-    //查看
-    $('#import-see').click(function () {
-        //$('.screen').show();
-        //$('.import-pop').show();
-        layer.open({
-            title: '预览收货人',
-            type: 2,
-            area: ['800px', '600px'],
-            content: 'static/html/uploadPreview.html',
-            success: function (layero, index) {
-                var body = layer.getChildFrame('body', index);
-                var iframeWin = window[layero.find('iframe')[0]['name']];
-                body.find('#thead').html('<tr>' + previewHeader.join('') + '</tr>');
-                body.find('#tbody').html(previewBody.join(''));
-                body.find('#count').html(previewBody.length);
-                //body.find('#express').html(data.get('number')) ;
-
-            }
-        });
-    });
-
-    //关闭
-    $('#import-pop-close').click(function () {
-        $('.screen').hide();
-        $('.import-pop').hide();
-    });
+                //关闭
+                $('#import-pop-close').click(function () {
+                    $('.screen').hide();
+                    $('.import-pop').hide();
+                });
 
 </script>
 </html>
