@@ -132,7 +132,7 @@ class YouyunbaoClass
 
     public function alipayh5()
     {
-        $congig = $this->config;
+        $congig = $this->config->config;
 
         //导入配置文件 一般配置这个文件即可 如果你是高手任你发挥
         $base = base64_decode($_REQUEST['data']);
@@ -183,7 +183,7 @@ class YouyunbaoClass
 
     public function orderajax()
     {
-        $congig = $this->config;
+        $congig = $this->config->config;
 
         $yundata = array(
             "appid"  => $congig['appid'],//获取appid
