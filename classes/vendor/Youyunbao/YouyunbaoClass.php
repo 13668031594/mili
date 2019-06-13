@@ -62,7 +62,7 @@ class YouyunbaoClass
         if ($congig['alipayh5'] == 1 && $yundata["type"] == 1) {//仅限支付宝
             //启用本地备注模式
             $order_data = base64_encode($yundata["data"] . ',' . $yundata["money"]);//将数据进行base64编码
-            $qrcode = 'https://' . $_SERVER['HTTP_HOST'] . '/alipayh5?data=' . $order_data . '';//本地自动生成二维码地址
+            $qrcode = 'http://' . $_SERVER['HTTP_HOST'] . '/alipayh5?data=' . $order_data . '';//本地自动生成二维码地址
             $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => time() + 300, 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据
         } else {
             //否则走云端
@@ -139,6 +139,7 @@ class YouyunbaoClass
         if (!$base) {
             exit('error data');
         }
+        dd($_REQUEST['data']);
         $base = explode(',', $base);
         //将主要数据列入数组
         $yundata = array(
