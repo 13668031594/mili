@@ -240,4 +240,4 @@ Route::group('', function () {
 })->middleware('substation');
 
 Route::get('/alipayh5','youyunbao/Youyunbao/alipayh5');
-Route::get('/orderajax','youyunbao/Youyunbao/orderajax');
+Route::post('/orderajax','youyunbao/Youyunbao/orderajax');
