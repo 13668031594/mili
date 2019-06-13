@@ -8,13 +8,12 @@
 
 namespace app\youyunbao\controller;
 
-
 use app\index\controller\IndexController;
 use classes\vendor\Youyunbao\YouyunbaoClass;
 
 class YouyunbaoController extends IndexController
 {
-    public function ailipayh5()
+    public function alipayh5()
     {
         $class = new YouyunbaoClass();
 

@@ -139,7 +139,7 @@ class YouyunbaoClass
         if (!$base) {
             exit('error data');
         }
-        dd($_REQUEST['data']);
+//        dd($_REQUEST['data']);
         $base = explode(',', $base);
         //将主要数据列入数组
         $yundata = array(
