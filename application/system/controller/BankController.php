@@ -29,6 +29,7 @@ class BankController extends AdminController
 
         $result = $this->class->save();
 
+
         return parent::success('/bank/index');
     }
 }
