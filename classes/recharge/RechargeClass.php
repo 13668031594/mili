@@ -31,8 +31,7 @@ class RechargeClass extends AdminClass
     public function index(Request $request)
     {
         $where = [
-            //['substation','=', SUBSTATION]
-
+            ['substation','=', SUBSTATION]
         ];
 
         $startTime = $request->get('startTime');
@@ -63,7 +62,7 @@ class RechargeClass extends AdminClass
             $where[] = ['status', '=', $status];
         }
 
-        return parent::page($this->model, ['substation' => '1','where' => $where]);
+        return parent::page($this->model, ['where' => $where]);
     }
 
     public function status(Request $request)

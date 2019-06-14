@@ -46,7 +46,7 @@ class OrderDownloadClass extends \classes\IndexClass
     public function store_send()
     {
         //ID确认
-        $id = input('id');
+        $id = input('id');dd($id);
         if (empty($id)) parent::ajax_exception(000, '请选择需要导出的订单');
         $ids = $this->ids = explode(',', $id);
 
@@ -166,6 +166,7 @@ class OrderDownloadClass extends \classes\IndexClass
     public function excel()
     {
         $send = new OrderSendModel();
+
         $sends = $send->whereIn('order_id', $this->ids)->column('*');
         if (count($sends) <= 0) parent::ajax_exception(000, '没有找到发货单');
 

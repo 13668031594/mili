@@ -146,6 +146,10 @@ class SystemClass extends AdminClass
 //            'jushuitanRefreshToken|聚水潭token续期时间' => 'require',
 //            'jushuitanRefreshOrder|聚水潭同步订单时间' => 'require|integer|between:1,1440',
             'qq|客服群' => 'max:20000',
+            'server|客服二维码' => 'require',
+            'serverUrl|客服二维码连接' => 'require|length:0,255',
+            'qr_note|客服二维码描述' => 'require|length:0,100',
+            'work_time|客服上班时间' => 'require|length:0,100',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -198,6 +202,10 @@ class SystemClass extends AdminClass
 //            'jushuitanRefreshToken' => '05-01',
 //            'jushuitanRefreshOrder' => '5',
             'qq' => '',
+            'server' => config('young.image_not_found'),
+            'serverUrl' => 'http://',
+            'qr_note' => '',
+            'work_time' => '24小时上班',
         ];
     }
 
@@ -239,8 +247,9 @@ class SystemClass extends AdminClass
             $a = (('/' . $file) != $set['logo']);
             $b = (('/' . $file) != $set['login']);
             $c = (('/' . $file) != $set['reg']);
+            $d = (('/' . $file) != $set['server']);
 
-            if ($a && $b && $c) unlink($file);//删除未使用图片
+            if ($a && $b && $c && $d) unlink($file);//删除未使用图片
         }
     }
 }

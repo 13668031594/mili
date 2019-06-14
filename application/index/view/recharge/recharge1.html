@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
     {include file="index@Base/head"}
-
-
-
 </head>
 
 <body style="background: #f4f4f4;">
@@ -22,14 +19,14 @@
                 <div class="data-content">
 
                     <form class="layui-form" action="/recharge" method="post">
-                        <div class="layui-form-item">
+                        <!--<div class="layui-form-item">
                             <label class="layui-form-label">汇款备注</label>
                             <div class="layui-input-block">
                                 <input type="text" name="order" required lay-verify="required" placeholder="请输入充值金额"
-                                       autocomplete="off" class="layui-input" value="{$order}" readonly
+                                       autocomplete="off" class="layui-input" value="$order" readonly
                                        style="color: red">
                             </div>
-                        </div>
+                        </div>-->
                         <input type="hidden" name="order" value="{$order}">
                         <div class="layui-form-item">
                             <label class="layui-form-label">充值金额</label>
@@ -39,14 +36,14 @@
                             </div>
                         </div>
 
-                        <!--<div class="layui-form-item">
+                        <div class="layui-form-item">
                             <label class="layui-form-label">付款类型</label>
                             <div>
                                 <input type="radio" name="type" value="1">支付宝
                                 <input type="radio" name="type" value="2" checked>微信
                                 <input type="radio" name="type" value="3">qq钱包
                             </div>
-                        </div>-->
+                        </div>
 
                         <div class="layui-form-item sub-btn">
                             <div class="layui-input-block">
@@ -55,9 +52,9 @@
                         </div>
                     </form>
                 </div>
-                <div class="layui-form-item">
-                    {php} echo $bank['file'] {/php}
-                </div>
+                <!--<div class="layui-form-item">
+                    php echo $bank['file'] /php
+                </div>-->
             </div>
 
         </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>充值列表</title>
+    <title>分站充值</title>
     <link rel="stylesheet" href="{$src}layui/css/layui.css"/>
     <link rel="stylesheet" href="{$src}res/css/common.css"/>
     <!--[if lt IE 9]>
@@ -21,8 +21,8 @@
     <div class="layui-row m-breadcrumb">
         <span class="layui-breadcrumb" lay-separator="/">
           <a href="javascript:;">首页</a>
-          <a href="javascript:;">资金管理</a>
-          <a><cite>充值记录</cite></a>
+          <a href="javascript:;">分站管理</a>
+          <a><cite>分站充值</cite></a>
         </span>
     </div>
 
@@ -55,7 +55,6 @@
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="keywordType" lay-verify="" style="height:30px;">
                     <option value="1">订单号</option>
-                    <option value="0">账号</option>
                 </select>
             </div>
             <div class="layui-input-inline">
@@ -102,7 +101,7 @@
     // 非常规操作连接
 
     var tUrl = {
-        0:'/admin/recharge/status', // 取消 处理
+        0:'/admin/substation-recharge/status', // 取消 处理
     };
     var sub = {php}echo $sub['json'];{/php}
 
@@ -134,7 +133,7 @@
 
         mTable.init({
             url: {
-                table: '/admin/recharge/table',
+                table: '/admin/substation-recharge/table',
             },
             cols: [[
                 {fixed: 'left',field: 'order_number', width:140,title: '编号'},
@@ -146,9 +145,7 @@
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];
                 }},
-                {field: 'member_account', width: 150, title: '账号'},
-                {field: 'member_phone', width: 150, title: '电话'},
-                {field: 'member_nickname',width:100,title: '昵称'},
+                {field: 'master_nickname',width:100,title: '提交人'},
                 {field: 'total',width:100, title: '充值金额'},
 //                {field: 'content',width:170,title: '详情'},
                 {field: 'created_at', minWidth:170, title: '时间'},

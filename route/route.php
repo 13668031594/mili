@@ -98,6 +98,7 @@ Route::group('', function () {
         //分站列表
         Route::controller('substation', 'substation/Substation');
         Route::controller('substation-level', 'substation/SubstationLevel');
+        Route::controller('substation-recharge', 'substation/SubstationRecharge');
 
         //工单
         Route::controller('repair_class', 'repair/RepairClass');//分类

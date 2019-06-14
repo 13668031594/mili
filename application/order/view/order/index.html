@@ -79,10 +79,12 @@
 <script type="text/html" id="tableTool">
     <a class="layui-btn layui-btn-xs" href="/admin/order/edit?id={{d.id}}"><i class="layui-icon layui-icon-search"></i>查看</a>
     {{# if ( d.order_status == 10 || d.order_status == 15) { }}
+    {if SUBSTATION == 0}
     <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/order/send?id={{d.id}}"><i
             class="layui-icon layui-icon-release"></i>发货</a>
     <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/order/back?id={{d.id}}"><i
             class="layui-icon layui-icon-release"></i>取消</a>
+    {/if}
     {{# }else if ( d.order_status == 20 ) { }}
     <a class="layui-btn layui-btn-xs layui-btn-primary" href="/admin/send/index?id={{d.id}}"><i
             class="layui-icon layui-icon-list"></i>清单</a>

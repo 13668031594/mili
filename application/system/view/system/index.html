@@ -12,7 +12,6 @@
     <script src="{$src}res/js/respond.min.js"></script>
     <![endif]-->
     <script src="{$src}res/js/jquery.min.js"></script>
-
 </head>
 
 <div class="layui-fluid">
@@ -34,6 +33,8 @@
                 <li>提示文字</li>
                 <!--<li>聚水潭接口</li>-->
                 <!--<li>提现转账</li>-->
+                <li>左侧客服</li>
+
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -302,6 +303,53 @@
                 </blockquote>
             </div>
 
+            <div class="layui-tab-item">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">客服二维码</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn" id="serverImage">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">图片尺寸为：100x100</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片链接</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="serverUrl" title="图片链接"
+                               placeholder="图片链接" autocomplete="off" value="{$self['serverUrl']}"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">注册图片连接</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片预览</label>
+                    <div class="layui-input-inline">
+                        <img id="serverUrl" src="{$self['server']}" width="100" height="100"/>
+                        <input type="hidden" id="server" name="server" value="{$self['server']}"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">二维码描述</label>
+                    <div class="layui-input-block">
+                    <textarea title="二维码描述" name="qr_note" style="height: 100px"
+                              placeholder="二维码描述"
+                              class="layui-textarea">{$self['qr_note']}</textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上班时间</label>
+                    <div class="layui-input-block">
+                    <textarea title="上班时间" name="work_time" style="height: 100px"
+                              placeholder="上班时间"
+                              class="layui-textarea">{$self['work_time']}</textarea>
+                    </div>
+                </div>
+            </div>
+
 
 
             <div class="layui-form-item">
@@ -335,6 +383,39 @@
             elem: '#jushuitanRefreshToken', //指定元素
             format: 'MM-dd',
             type: 'time',
+        });
+
+        var serverImage = layui.upload;
+        upload.render({
+            elem: '#serverImage'
+            , url: urls.upload
+            , field: 'images'
+            , exts: 'jpg|png|gif|bmp|jpeg'
+            , size: 500//kb
+            , number: 1
+            , done: function (res, index, upload) {
+                console.log(res);
+                /**
+                 * 返回格式
+                 * {
+                 *      status : ,
+                 *      message : ,
+                 *      image : , 成功以后图片预览地址
+                 *      imageId : 成功以后图片id
+                 * }
+                 */
+
+                // image
+                // imageId  图片id
+
+                if (res.status == 'success') {
+                    layer.msg('上传成功');
+                    $("#serverUrl").prop('src', res.image);
+                    $("#server").prop('value', res.image);
+                } else {
+                    layer.msg('上传失败');
+                }
+            }
         });
 
         upload.render({

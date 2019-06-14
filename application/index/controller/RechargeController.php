@@ -28,12 +28,12 @@ class RechargeController extends \app\http\controller\IndexController
     //充值页面
     public function getRecharge()
     {
-//        $class = new BankClass();
+        $class = new BankClass();
 
         $result = [
             'choice' => '/recharge',
-            'order' => time(),//$this->class->order(),
-//            'bank' => $class->index(),
+            'order' => $this->class->order(),
+            'bank' => $class->index(),
         ];
 
         return parent::view('recharge', $result);
@@ -46,13 +46,13 @@ class RechargeController extends \app\http\controller\IndexController
 
         $data = $this->class->validator_recharge($request);
 
-        $class = new YouyunbaoClass();
+//        $class = new YouyunbaoClass();
 
-        $result = $class->codepay($data['money'], $data['order'], $data['type']);
-//        $this->class->recharge($request);
+//        $result = $class->codepay($data['money'], $data['order'], $data['type']);
+        $this->class->recharge($request);
 
-        return parent::view('youyunbao', $result);
-//        return parent::success('/', '下单成功，点击前往支付');
+//        return parent::view('youyunbao', $result);
+        return parent::success();
     }
 
     //充值记录页面

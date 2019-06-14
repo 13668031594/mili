@@ -37,7 +37,7 @@ class RechargeClass extends \classes\IndexClass
         return $order->order_number;
     }
 
-    public function validator_recharge(Request $request)
+    public function validator_recharge1(Request $request)
     {
         $rule = [
             'total|充值金额' => 'require|integer',
@@ -85,7 +85,7 @@ class RechargeClass extends \classes\IndexClass
         ];
     }
 
-    public function validator_recharge1(Request $request)
+    public function validator_recharge(Request $request)
     {
         $rule = [
             'total|充值金额' => 'require|integer',

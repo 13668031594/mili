@@ -22,6 +22,12 @@ class BankClass extends AdminClass
     {
         $name = 'bankSetting.txt';
 
+        if (!empty(SUBSTATION)) {
+
+            $name = 'bankSetting_' . SUBSTATION . '.txt';
+            $this->dir .= '_' . SUBSTATION;
+        }
+
         $this->storage = new StorageClass($name);
         if (!is_dir($this->dir)) mkdir($this->dir);
     }

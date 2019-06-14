@@ -22,6 +22,8 @@ use app\member\model\MemberStoreModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
+use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationRecordModel;
 use classes\vendor\ExpressAmountClass;
 use classes\vendor\GoodsAmountClass;
 use think\Db;
@@ -85,7 +87,7 @@ class OrderClass extends \classes\IndexClass
         $platform = array_keys(config('member.store_platform'));
 
         $result = [];
-        foreach ($platform as $v)$result[$v] = [];
+        foreach ($platform as $v) $result[$v] = [];
 
         $code_express = [];
         foreach ($express as $k => $v) {
@@ -120,7 +122,7 @@ class OrderClass extends \classes\IndexClass
 
         if (!empty($code_express)) foreach ($platform as $v) foreach ($result[$v] as $key => $val) {
 
-            if (!in_array($key,$code_express))unset($result[$v][$key]);
+            if (!in_array($key, $code_express)) unset($result[$v][$key]);
         }
 
         return $result;
@@ -558,8 +560,40 @@ class OrderClass extends \classes\IndexClass
         $insert->express_cost = $b['cost'];
         $insert->express_cost_all = $b['cost'] * $express_number;
 
+        $insert->substation_pay = 0;
         $insert->save();
         //正式下单结束
+
+        if (SUBSTATION != 0){
+
+            //分站扣款
+            $substation = new SubstationModel();
+            $substation = $substation->find(SUBSTATION);
+
+            $all = $insert->goods_cost_all + $insert->express_cost_all;
+
+            if ($all <= $substation->balance){
+
+                $substation->balance -= $all;
+                $substation->save();
+
+                $record = new SubstationRecordModel();
+                $record->substation = SUBSTATION;
+                $record->balance = -$all;
+                $record->balance_now = $substation->balance;
+                $record->type = 20;
+                $record->content = '订单扣款，合计：' . $all . '，订单号：' . $insert->order_number;
+                $record->other = '';
+                $record->created_at = $date;
+                $record->save();
+            }
+        }else{
+
+            $insert->substation_pay = 1;
+            $insert->save();
+        }
+
+
 
         //添加收货地址
         $content = [];

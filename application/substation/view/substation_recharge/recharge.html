@@ -21,7 +21,7 @@
     <div class="layui-row m-breadcrumb">
         <span class="layui-breadcrumb" lay-separator="/">
           <a href="javascript:;">首页</a>
-          <a href="javascript:;">资金管理</a>
+          <a href="javascript:;">站点余额</a>
           <a><cite>充值记录</cite></a>
         </span>
     </div>
@@ -31,17 +31,6 @@
             <i class="layui-icon ">&#xe640;</i>批量删除
         </button>-->
         <form class="layui-form layui-inline layui-form-query">
-
-            {if $sub['is']}
-                <div class="layui-input-inline layui-query-select" style="width:70px;">
-                    <select name="the_substation" lay-verify="" style="height:30px;">
-                        <option value="all">全站</option>
-                        {foreach $sub['array_con'] as $k => $v}
-                        <option value="{$k}" >{$v}</option>
-                        {/foreach}
-                    </select>
-                </div>
-            {/if}
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="status" lay-verify="" style="height:30px;">
@@ -55,7 +44,6 @@
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="keywordType" lay-verify="" style="height:30px;">
                     <option value="1">订单号</option>
-                    <option value="0">账号</option>
                 </select>
             </div>
             <div class="layui-input-inline">
@@ -88,13 +76,6 @@
 <script src="{$src}layui/layui.js"></script>
 
 <script type="text/html" id="tableTool">
-    <!-- 类型|标题|字段|value|按钮对应地址 -->
-    {{# if ( d.status == 0 ) { }}
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="custom|拒绝充值|status|3|0">拒绝</a>
-    <a class="layui-btn layui-btn-xs" lay-event="custom|处理充值|status|1|0">处理</a>
-    {{# }else{ }}
-    -
-    {{# } }}
 </script>
 
 <script>
@@ -102,7 +83,7 @@
     // 非常规操作连接
 
     var tUrl = {
-        0:'/admin/recharge/status', // 取消 处理
+        0:'/admin/substation-recharge/status', // 取消 处理
     };
     var sub = {php}echo $sub['json'];{/php}
 
@@ -134,25 +115,25 @@
 
         mTable.init({
             url: {
-                table: '/admin/recharge/table',
+                table: '/admin/substation-recharge/rechargeTable',
             },
             cols: [[
                 {fixed: 'left',field: 'order_number', width:140,title: '编号'},
-                {
+                /*{
                     field: 'substation', width: 130, title: '站点', templet: function (d) {
                     return sub[d.substation];
                 }
-                },
+                },*/
                 {field: 'status',width:100,title: '状态',templet:function(d){
                     return transform[d.status];
                 }},
-                {field: 'member_account', width: 150, title: '账号'},
-                {field: 'member_phone', width: 150, title: '电话'},
-                {field: 'member_nickname',width:100,title: '昵称'},
+//                {field: 'member_account', width: 150, title: '账号'},
+//                {field: 'member_phone', width: 150, title: '电话'},
+                {field: 'master_nickname',width:100,title: '提交人'},
                 {field: 'total',width:100, title: '充值金额'},
 //                {field: 'content',width:170,title: '详情'},
                 {field: 'created_at', minWidth:170, title: '时间'},
-                {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#tableTool'}
+//                {fixed: 'right', title: '操作', width: 120, align: 'center', toolbar: '#tableTool'}
             ]]
         });
 
