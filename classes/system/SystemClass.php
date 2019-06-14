@@ -204,7 +204,7 @@ class SystemClass extends AdminClass
             'qq' => '',
             'server' => config('young.image_not_found'),
             'serverUrl' => 'http://',
-            'qr_note' => '',
+            'qr_note' => '未填写',
             'work_time' => '24小时上班',
         ];
     }
