@@ -46,7 +46,7 @@ class OrderDownloadClass extends \classes\IndexClass
     public function store_send()
     {
         //ID确认
-        $id = input('id');dd($id);
+        $id = input('id');
         if (empty($id)) parent::ajax_exception(000, '请选择需要导出的订单');
         $ids = $this->ids = explode(',', $id);
 

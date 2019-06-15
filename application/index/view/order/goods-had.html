@@ -261,7 +261,7 @@
                 type: 'get',
                 url: '/order-download',
                 dataType: 'json',
-                data: {id: arr.join('')},
+                data: {id: arr.join(',')},
                 success: function (resp) {
                     layer.close(index);
                     is_click = true;
