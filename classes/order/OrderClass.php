@@ -390,7 +390,7 @@ class OrderClass extends AdminClass
         if ($order->substation != 0 && $order->substation_pay == 1) {
 
             $substation = new SubstationModel();
-            $substation->find($order->substation);
+            $substation = $substation->find($order->substation);
             if (is_null($substation)) return;
 
             $all = $order->goods_cost_all + $order->express_cost_all;
