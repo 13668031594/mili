@@ -153,6 +153,15 @@
                 }},
                 {field: 'goods_amount', title: '商品单价', width: 100},
                 {field: 'goods_cost', title: '商品成本', width: 100},
+                {
+                    field: 'substation_pay', width: 100, title: '站点扣款', templet: function (d) {
+                    if (d.substation_pay == 1) {
+                        return '<span class="layui-badge layui-bg-green">已付款</span>'
+                    }else{
+                        return '<span class="layui-badge layui-bg-gray">已付款</span>'
+                    }
+                }
+                },
                 /*{
                     field: 'payType', width: 100, title: '付款类型', templet: function (d) {
                     if (d.payType == 1) {
