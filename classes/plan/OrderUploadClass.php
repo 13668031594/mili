@@ -50,6 +50,7 @@ class OrderUploadClass extends FirstClass
         $sends = $send->alias('a')
             ->leftJoin('order o', 'o.id = a.order_id')
             ->leftJoin('goods g', 'g.id = o.goods_id')
+            ->where('o.substation_pay', '=', 1)
             ->where('o.order_status', 'in', [10])
             ->where('a.order_create', '>=', $date)
             ->where('a.send_create', '=', null)
