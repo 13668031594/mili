@@ -310,11 +310,8 @@
         var amount;
         amount = orderNum * orderAmount;
         amount = amount + expressAmount;
-//console.log(orderNum);
-//console.log(orderAmount);
-//console.log(expressAmount);
-//console.log(amount);
-        amount = amount / 100;
+
+        amount = parseFloat((amount / 100).toFixed(2));
         $('#amount').val(amount);
     };
 
@@ -406,12 +403,10 @@
 //            console.log(sendInfo);
             $("#sendName").val(sendInfo);
 
-            amount();
-
             //console.log(data.elem.dataset.address);
             //console.log(data);
             var address = data.elem.selectedOptions[0].dataset.address;
-//            console.log($("#store_address .layui-input-inline"));
+//            console.log(address);
             $("#store_address .layui-input-inline").text(address);
             if (address) {
 
@@ -420,6 +415,16 @@
 
                 $("#store_address").hide();
             }
+
+            var id = data.elem.selectedOptions[0].dataset.id;
+//            console.log(data.elem.selectedOptions[0].dataset.id);
+            $(".aaa").hide();
+            $('#aaa' + id).show();
+            $('#express_value').val(id);
+
+            form.render();
+
+            amount();
         });
 
         form.on('select(platform)', function (data) {
@@ -465,16 +470,10 @@
             form.render();
         });
 
-        form.on('select(send)', function (data) {
+        /*form.on('select(send)', function (data) {
 
-            var id = data.elem.selectedOptions[0].dataset.id;
-//            console.log(data.elem.selectedOptions[0].dataset.id);
-            $(".aaa").hide();
-            $('#aaa' + id).show();
-            $('#express_value').val(id);
 
-            form.render();
-        });
+        });*/
 
         // 确认清单
         function openConfirm(form, data) {
