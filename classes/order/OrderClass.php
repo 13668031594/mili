@@ -15,6 +15,8 @@ use app\member\model\MemberRecordModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
+use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationRecordModel;
 use classes\AdminClass;
 use classes\system\SystemClass;
 use classes\vendor\JushuitanClass;
@@ -384,6 +386,29 @@ class OrderClass extends AdminClass
             $record->type = '1';
             $record->save();
         }
+
+        if ($order->substation != 0 && $order->substation_pay == 1) {
+
+            $substation = new SubstationModel();
+            $substation->find($order->substation);
+            if (is_null($substation)) return;
+
+            $all = $order->goods_cost_all + $order->express_cost_all;
+
+            $substation->balance += $all;
+            $substation->save();
+
+            $record = new SubstationRecordModel();
+            $record->substation = $substation->id;
+            $record->balance = $all;
+            $record->balance_now = $substation->balance;
+            $record->type = 30;
+            $record->content = '订单被取消，合计退款：' . $all . '，订单号：' . $order->order_number;
+            $record->other = '';
+            $record->created_at = date('Y-m-d H:i:s');
+            $record->save();
+        }
+
 
     }
 }

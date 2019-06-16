@@ -586,6 +586,9 @@ class OrderClass extends \classes\IndexClass
                 $record->other = '';
                 $record->created_at = $date;
                 $record->save();
+
+                $insert->substation_pay = 1;
+                $insert->save();
             }
         }else{
 
