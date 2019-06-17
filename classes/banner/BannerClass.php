@@ -139,7 +139,7 @@ class BannerClass extends AdminClass implements ListInterface
         if ($request->post('show') == 'on') {
 
             $model = new BannerModel();
-            $test = $model->where('show', '=', 'on')->count();
+            $test = $model->where('show', '=', 'on')->where('substation', '=', SUBSTATION)->count();
             if ($test >= $this->number) parent::ajax_exception(000, '至多只能显示『' . $this->number . '』个banner');
         }
     }
@@ -164,7 +164,7 @@ class BannerClass extends AdminClass implements ListInterface
         if ($request->post('show') == 'on') {
 
             $model = new BannerModel();
-            $test = $model->where('show', '=', 'on')->where('id', '<>', $id)->count();
+            $test = $model->where('show', '=', 'on')->where('id', '<>', $id)->where('substation', '=', SUBSTATION)->count();
             if ($test >= $this->number) parent::ajax_exception(000, '至多只能显示『' . $this->number . '』个banner');
         }
     }
