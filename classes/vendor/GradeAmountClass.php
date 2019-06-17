@@ -2,12 +2,7 @@
 
 namespace classes\vendor;
 
-use app\Member\model\ExpressLevelAmountModel;
 use app\Member\model\MemberGradeAmountModel;
-use app\member\model\MemberGradeExpressModel;
-use app\Substation\model\SubstationLevelModel;
-use app\Substation\model\SubstationLevelUpModel;
-use app\Substation\model\SubstationModel;
 
 class GradeAmountClass
 {

@@ -9,10 +9,12 @@
 namespace classes\member;
 
 use app\express\model\ExpressModel;
+use app\Member\model\ExpressLevelAmountModel;
 use app\Member\model\MemberGradeAmountModel;
 use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
+use app\Substation\model\SubstationLevelModel;
 use classes\AdminClass;
 use classes\ListInterface;
 use classes\vendor\ExpressAmountClass;
@@ -106,6 +108,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
         //等级信息
         $model = $this->model->where('id', '=', $id)->find();
         if (is_null($model)) parent::redirect_exception('/admin/member_grade/index', '等级不存在');
+        $model = $model->getData();
 
         $express = new ExpressModel();
         $express = $express->column('id');
@@ -117,20 +120,20 @@ class MemberGradeClass extends AdminClass implements ListInterface
 
 //        if (SUBSTATION != 0) {
 
-            $class = new ExpressAmountClass();
+        $class = new ExpressAmountClass();
 
-            foreach ($express as $v) {
+        foreach ($express as $v) {
 
-                $r = $class->amount($v, $id);
+            $r = $class->amount($v, $id);
 
-                $a = [];
-                $a['express'] = $v;
-                $a['amount'] = $r['amount'];
-                $a['cost'] = $r['cost'];
-                $a['protect'] = $r['protect'];
+            $a = [];
+            $a['express'] = $v;
+            $a['amount'] = $r['amount'];
+            $a['cost'] = $r['cost'];
+            $a['protect'] = $r['protect'];
 
-                $amounts[$v] = $a;
-            }
+            $amounts[$v] = $a;
+        }
 //        }
 
         //结果数组
@@ -365,5 +368,83 @@ class MemberGradeClass extends AdminClass implements ListInterface
     {
         $model = new MemberModel();
         $model->where('grade_id', '=', $gradeModel->id)->update(['grade_name' => $gradeModel->name]);
+    }
+
+    //分站等级
+    public function substation_level($grade, $level_id)
+    {
+        $self = $grade['self'];
+        $amounts = $grade['amount'];
+
+        $model = new SubstationLevelModel();
+
+        $level = $model->order('sort asc')->find($level_id);
+//dd($level);
+        $amount = new ExpressLevelAmountModel();
+        $amount = $amount->where('substation', '=', SUBSTATION)->where('level_id', '=', $level['id'])->where('grade', '=', $self['id'])->column('*');
+
+
+        $a = [];
+
+        foreach ($amounts as $k => $v) {
+
+            $a[$k]['cost'] = $v['cost'] + $level['goods_cost_up'];
+            $a[$k]['protect'] = $v['protect'] + $level['goods_protect_up'];
+        }
+
+        foreach ($amount as $v) {
+
+            $a[$v['express']]['cost'] = $a[$v['express']]['cost'] > $v['cost'] ? $a[$v['express']]['cost'] : $v['cost'];
+            $a[$v['express']]['protect'] = $a[$v['express']]['protect'] > $v['protect'] ? $a[$v['express']]['protect'] : $v['protect'];
+        }
+
+        $level['grade'] = $a;
+
+
+        return $level;
+    }
+
+    //为每个分站等级配备成本价和保护价
+    public function level_amount(Request $request)
+    {
+        $grade = self::read($request->post('id'));
+
+        $self = $grade['self'];
+        //本站的价格
+        $amounts = $grade['amount'];
+
+        $model = new SubstationLevelModel();
+        $level = $model->order('sort asc')->find($request->post('level_id'));
+
+        //等级名称而已
+        $model = new ExpressModel();
+        $express = $model->order('sort asc')->column('id,name');
+
+        //设置的成本价数组
+        $costs = $request->post('cost');
+        //设置的保护价数组
+        $protects = $request->post('protect');
+
+        $insert = [];
+        foreach ($costs as $k => $v) {
+
+            if ($v < $amounts[$k]['cost']) parent::ajax_exception(000, $express[$k] . '成本价不得低于：' . $amounts[$k]['cost']);
+            if ($protects[$k] < $amounts[$k]['protect']) parent::ajax_exception(000, $express[$k] . '保护价不得低于：' . $amounts[$k]['protect']);
+
+            $i = [
+                'express' => $k,
+                'grade' => $self['id'],
+                'substation' => SUBSTATION,
+                'level_id' => $level['id'],
+                'cost' => $v,
+                'protect' => $protects[$k],
+            ];
+
+            $insert[] = $i;
+        }
+
+        $express_amount_model = new ExpressLevelAmountModel();
+        $express_amount_model->where('substation', '=', SUBSTATION)->where('grade', '=', $self['id'])->where('level_id', '=', $level['id'])->delete();
+        if (count($insert) > 0) $express_amount_model->insertAll($insert);
     }
 }

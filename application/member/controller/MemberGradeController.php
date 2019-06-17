@@ -9,6 +9,7 @@
 namespace app\member\controller;
 
 use app\http\controller\AdminController;
+use app\Substation\model\SubstationLevelModel;
 use classes\member\MemberGradeClass;
 use think\Request;
 
@@ -141,5 +142,40 @@ class MemberGradeController extends AdminController
 
         //修改会员列表中的缓存
         $this->class->change_member_grade($grade);
+    }
+
+    //分站价格修改
+    public function getAmount(Request $request)
+    {
+        $level_id = $request->get('level_id');
+
+        $result = $this->class->read($request->get('id'));
+
+        $level = $this->class->substation_level($result,$level_id);
+
+        $express = $this->class->express();
+
+        $platform = config('member.store_platform');
+
+        $model = new SubstationLevelModel();
+
+        $levels = $model->order('sort asc')->column('id,name');
+
+        $result = array_merge($result,[
+            'level_id' => $level_id,
+            'level' => $level,
+            'levels' => $levels,
+            'express' => $express,
+            'platform' => $platform,
+        ]);
+//dd($result);
+        return parent::view('amount',$result);
+    }
+
+    public function postAmount(Request $request)
+    {
+        $this->class->level_amount($request);
+
+        return parent::success('/member_grade/index');
     }
 }

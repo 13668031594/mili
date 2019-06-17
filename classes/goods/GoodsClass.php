@@ -481,8 +481,8 @@ class GoodsClass extends AdminClass implements ListInterface
 
         foreach ($level as &$v) {
 
-            $v['cost'] = $goods['cost'];
-            $v['protect'] = $goods['protect'];
+            $v['cost'] = $goods['cost'] + $v['goods_cost_up'];
+            $v['protect'] = $goods['protect'] + $v['goods_protect_up'];
 
             if (isset($amount[$v['id']])) {
 
@@ -490,10 +490,6 @@ class GoodsClass extends AdminClass implements ListInterface
 
                 $v['cost'] = $v['cost'] > $al['cost'] ? $v['cost'] : $al['cost'];
                 $v['protect'] = $v['protect'] > $al['protect'] ? $v['protect'] : $al['protect'];
-            } else {
-
-                $v['cost'] += $v['goods_cost_up'];
-                $v['protect'] += $v['goods_protect_up'];
             }
         }
 

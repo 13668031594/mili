@@ -51,6 +51,10 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
             class="layui-icon layui-icon-delete"></i>删除</a>
     {/if}
+    {if $sub['is']}
+    <a class="layui-btn layui-btn-xs layui-btn-primary" href="amount.html?id={{d.id}}"><i
+            class="layui-icon layui-icon-form"></i>分站价格</a>
+    {/if}
 
 </script>
 <script>
@@ -95,7 +99,7 @@
                 {field: 'recharge', title: '充值升级'},
                 {field: 'buy_total', title: '购买升级'},
                 {field: 'created_at', width: 200, title: '创建时间'},
-                {fixed: 'right', title: '操作', width: 160, align: 'center', toolbar: '#tableTool'}
+                {fixed: 'right', title: '操作', width: 240, align: 'center', toolbar: '#tableTool'}
             ]]
         });
         mTable.render();

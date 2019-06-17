@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>分站价格</title>
+    <link rel="stylesheet" href="{$src}layui/css/layui.css">
+    <link rel="stylesheet" href="{$src}res/css/common.css"/>
+    <!--[if lt IE 9]>
+    <script src="{$src}res/js/html5.min.js"></script>
+    <script src="{$src}res/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="{$src}res/js/jquery.min.js"
+
+    ></script>
+</head>
+
+<div class="layui-fluid">
+
+    <div class="layui-row m-breadcrumb">
+        <span class="layui-breadcrumb" lay-separator="/">
+          <a href="javascript:;">首页</a>
+          <a href="javascript:;">会员等级</a>
+          <a href="javascript:;">分站价格</a>
+          <a><cite>等级：{$self['name']}</cite></a>
+        </span>
+    </div>
+
+    <form action="/admin/member_grade/amount" method="get">
+        <select name="level_id">
+            {foreach $levels as $key => $val}
+            <option value="{$key}"  {if $level_id == $key}selected{/if}>{$val}
+                {/foreach}
+        </select>
+        <input type="hidden" name="id" value="{$self['id']}">
+        <input type="submit">
+    </form>
+
+    <form class="layui-form" action="/admin/member_grade/amount">
+        <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
+        <input type='hidden' name='level_id' id='level_id' value='{$level["id"]}'/>
+
+        {foreach $platform as $ke => $va}
+        {foreach $express[$ke] as $v}
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$v['name']}</label>
+                <hr>
+                <div class="layui-input-inline">
+                    <input type="text" name="cost[{$v['id']}]" lay-verify="required|number" placeholder="成本价"
+                           autocomplete="off"
+                           class="layui-input" value='{$level["grade"][$v["id"]]["cost"]}' maxlength="20"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">成本价</div>
+                <hr>
+                <div class="layui-input-inline">
+                    <input type="text" name="protect[{$v['id']}]" lay-verify="required|number" placeholder="保护价"
+                           autocomplete="off"
+                           class="layui-input" value='{$level["grade"][$v["id"]]["protect"]}' maxlength="20"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">保护价</div>
+            </div>
+        </div>
+        {/foreach}
+        {/foreach}
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
+                <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{$src}layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '{$src}res/js/common/'
+    }).use(['mForm', 'layer', 'element', 'form']);
+</script>
+</body>
+
+</html>
