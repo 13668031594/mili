@@ -39,7 +39,6 @@ class AdminClass extends FirstClass
 
     public function substation_ids()
     {
-
         $substation = request()->get('the_substation');
 
         if ($substation == 'all') {

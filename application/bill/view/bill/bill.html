@@ -46,7 +46,7 @@
                            $type=='4'}value="{$end}"{/if}>
                 </div>
             </div>
-        {if $sub['is']}
+            {if $sub['is']}
             <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="the_substation" lay-verify="" style="height:30px;">
                     <option value="all">全站</option>
@@ -161,6 +161,18 @@
     <hr>
 
     <div class="layui-form-item form-radio-type" style='height:60px;'>
+        {if $sub['is']}
+        <form class="layui-form">
+        <div class="layui-input-inline layui-query-select" style="width:70px;">
+            <select name="the_substation2" id='the_substation2' lay-filter="the_substation2" lay-verify="" style="height:30px;">
+                <option value="all">全站</option>
+                {foreach $sub['array_con'] as $k => $v}
+                <option value="{$k}" >{$v}</option>
+                {/foreach}
+            </select>
+        </div>
+        </form>
+        {/if}
         <input type="hidden" id="time-type2" name="timeType2" value=""/>
         <ul id="order-type2">
             <li lang="1">本月</li>
@@ -323,6 +335,7 @@
     }).use(['mForm', 'layer', 'jquery', 'element', 'laydate'], function () {
 
         var laydate = layui.laydate;
+        var form = layui.form;
 
         $('#order-type li').click(function () {
             $('#order-type li').each(function () {
@@ -336,6 +349,19 @@
             } else {
                 $('.time-interval').hide();
             }
+        });
+
+        // 批量上传类型切换
+        form.on('select(the_substation2)', function (data) {
+
+            MyChart.setWhere({
+                startTime: $("#time-start2").val(),
+                endTime: $("#time-end2").val(),
+                type: $("#time-type2").val(),
+                substation:$("#the_substation2").val()
+            });
+
+            MyChart.refreshCharts();
         });
 
         $('#order-type2 li').click(function () {
@@ -353,7 +379,8 @@
             MyChart.setWhere({
                 startTime: '',
                 endTime: '',
-                type: $("#time-type2").val()
+                type: $("#time-type2").val(),
+                substation:$("#the_substation2").val()
             });
 
             MyChart.refreshCharts();
@@ -363,7 +390,8 @@
             MyChart.setWhere({
                 startTime: $("#time-start2").val(),
                 endTime: $("#time-end2").val(),
-                type: $("#time-type2").val()
+                type: $("#time-type2").val(),
+                substation:$("#the_substation2").val()
             });
             MyChart.refreshCharts();
         });
@@ -420,7 +448,7 @@
         },
         remote: function (object) {
 
-//            console.log( this.where);
+            console.log( this.where);
             $.get('/admin/bill/one?one=' + object.remote, this.where, function (data) {
 
                 if (data.status == 'success') {

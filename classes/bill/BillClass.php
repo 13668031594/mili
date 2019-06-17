@@ -9,6 +9,7 @@
 namespace classes\bill;
 
 use app\member\model\MemberModel;
+use app\member\model\MemberRecordModel;
 use app\order\model\OrderModel;
 use app\recharge\model\RechargeModel;
 use app\Substation\model\SubstationModel;
@@ -25,6 +26,7 @@ class BillClass extends AdminClass
     public $wheres;
     public $begin;
     public $end;
+    public $substation;
 
     //今日新增会员
     public function all_bill()
@@ -190,9 +192,26 @@ class BillClass extends AdminClass
 
     public function time_type_2()
     {
+        self::substation();
+
         $result = self::time_type();
 
         self::time($result['type'], $result['begin'], $result['end']);
+    }
+
+    public function substation()
+    {
+        $sub_select = input('type', 'all');
+
+        if ($sub_select == 'all') {
+
+            $sub = parent::my_substation();
+        } else {
+
+            $sub = [$sub_select];
+        }
+
+        $this->substation = $sub;
     }
 
     //时间与筛选
@@ -364,7 +383,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->count();
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->count();
         }
 
         return [
@@ -384,7 +403,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->sum('total');
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->sum('total');
         }
 
         return [
@@ -404,7 +423,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->sum('express_number');
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->sum('express_number');
         }
 
         return [
@@ -424,7 +443,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->sum('total_express');
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->sum('total_express');
         }
 
         return [
@@ -444,7 +463,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->sum('goods_number');
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->sum('goods_number');
         }
 
         return [
@@ -464,7 +483,7 @@ class BillClass extends AdminClass
 
             $order = new OrderModel();
 
-            $result[$k] = $order->where($v)->sum('total_goods');
+            $result[$k] = $order->where($v)->whereIn('substation', $this->substation)->sum('total_goods');
         }
 
         return [
@@ -484,7 +503,7 @@ class BillClass extends AdminClass
 
             $member = new MemberModel();
 
-            $result[$k] = $member->where($v)->count();
+            $result[$k] = $member->where($v)->whereIn('substation', $this->substation)->count();
         }
 
         return [
@@ -504,7 +523,7 @@ class BillClass extends AdminClass
 
             $recharge = new RechargeModel();
 
-            $result[$k] = $recharge->where($v)->where('status', '=', 1)->sum('total');
+            $result[$k] = $recharge->where($v)->where('status', '=', 1)->whereIn('substation', $this->substation)->sum('total');
         }
 
         return [
@@ -522,7 +541,21 @@ class BillClass extends AdminClass
 
         foreach ($this->where as $k => $v) {
 
-            $result[$k] = 0;
+            $where = [];
+            foreach ($v as $ke => $va) {
+
+                $va[0] = 'r.'.$va[0];
+                $where[] = $va;
+            }
+
+            $record = new MemberRecordModel();
+
+            $result[$k] = $record->alias('r')
+                ->leftJoin('member m','m.id = r.member_id')
+                ->where($where)
+                ->where('r.type', '=', 70)
+                ->whereIn('m.substation',$this->substation)
+                ->count();
         }
 
         return [
@@ -540,7 +573,21 @@ class BillClass extends AdminClass
 
         foreach ($this->where as $k => $v) {
 
-            $result[$k] = 0;
+            $where = [];
+            foreach ($v as $ke => $va) {
+
+                $va[0] = 'r.'.$va[0];
+                $where[] = $va;
+            }
+
+            $record = new MemberRecordModel();
+
+            $result[$k] = $record->alias('r')
+                ->leftJoin('member m','m.id = r.member_id')
+                ->where($where)
+                ->where('r.type', '=', 70)
+                ->whereIn('m.substation',$this->substation)
+                ->sum('r.remind');
         }
 
         return [
