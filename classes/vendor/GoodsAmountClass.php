@@ -40,7 +40,7 @@ class GoodsAmountClass
         if ($sub['pid'] != 0) {
 
             $up = new SubstationLevelUpModel();
-            $up = $up->where('level_id', '=', $sub['level_id']);
+            $up = $up->where('level_id', '=', $sub['level_id'])->find();
 
             $this->amount += $up['goods_up'];
             $this->cost += $up['goods_cost_up'];

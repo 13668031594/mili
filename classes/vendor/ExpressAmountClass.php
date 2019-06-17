@@ -40,7 +40,7 @@ class ExpressAmountClass
         if ($sub['pid'] != 0) {
 
             $up = new SubstationLevelUpModel();
-            $up = $up->where('level_id', '=', $sub['level_id']);
+            $up = $up->where('level_id', '=', $sub['level_id'])->find();
 
             $this->amount += $up['express_up'];
             $this->cost += $up['express_cost_up'];
