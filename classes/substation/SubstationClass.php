@@ -74,7 +74,7 @@ class SubstationClass extends AdminClass implements ListInterface
         $substation->created_at = date('Y-m-d H:i:s');
         $substation->save();
 
-        $grade = new MemberGradeModel();
+        /*$grade = new MemberGradeModel();
         $insert = [
             'name' => '会员',
             'sort' => 50,
@@ -85,7 +85,7 @@ class SubstationClass extends AdminClass implements ListInterface
             'created_at' => $substation->created_at,
         ];
 
-        $grade->insert($insert);
+        $grade->insert($insert);*/
     }
 
     public function read($id)
