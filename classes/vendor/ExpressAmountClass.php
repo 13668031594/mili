@@ -22,7 +22,7 @@ class ExpressAmountClass
         $this->amount_model = new MemberGradeExpressModel();
         $this->level_amount_model = new ExpressLevelAmountModel();
 
-        if (SUBSTATION != 0){
+        if (SUBSTATION != 0) {
 
             //获取当前分站信息
             $sub = new SubstationModel();
@@ -48,6 +48,11 @@ class ExpressAmountClass
                 $this->cost += $up['express_cost_up'];
                 $this->protect += $up['express_protect_up'];
             }
+        } else {
+
+            $this->amount = 0;
+            $this->cost = 0;
+            $this->protect = 0;
         }
     }
 
@@ -75,7 +80,8 @@ class ExpressAmountClass
 
         //获取当前定价信息
         $a = $this->amount_model->where('express', '=', $express)->where('grade', '=', $grade)->where('substation', '=', SUBSTATION)->find();
-        $al = $this->level_amount_model->where('express', '=', $express)->where('grade', '=', $grade)->find();
+        if (SUBSTATION != 0) $al = $this->level_amount_model->where('express', '=', $express)->where('grade', '=', $grade)->find();
+        else $al = null;
 
         //根据基础定价计算出当前分站应有的价格
         $base_amount = $amount + $this->amount;

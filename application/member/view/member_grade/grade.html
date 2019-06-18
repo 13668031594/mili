@@ -155,7 +155,7 @@
                class="layui-input expressAmount"
                value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["cost"]}{else/}0{/if}' maxlength="10"
                {if SUBSTATION !=0}readonly{/if}/>
-        <div class="layui-form-mid layui-word-aux">保护费</div>
+        <div class="layui-form-mid layui-word-aux">保护价</div>
         <input type="text" name="expressAmount[{$v['id']}][protect]" lay-verify="" placeholder="快递费" autocomplete="off"
                class="layui-input expressAmount"
                value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["protect"]}{else/}0{/if}' maxlength="10"
