@@ -176,6 +176,8 @@ Route::group('', function () {
         Route::get('recharge-back', 'index/Recharge/getBack');//撤销充值记录
         Route::get('expense-note', 'index/Recharge/getExpense');//余额记录页面
         Route::get('expense-note-table', 'index/Recharge/getExpenseTable');//余额记录数据
+        Route::get('recharge1', 'index/Recharge/getRecharge1');//在线充值
+        Route::post('recharge1', 'index/Recharge/postRecharge1');//充值
 
         //代理中心
         Route::get('generalize', 'index/Agent/getGeneralize');//我的推广

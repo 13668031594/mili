@@ -40,7 +40,7 @@ class RechargeController extends \app\http\controller\IndexController
     }
 
     //充值页面
-    public function getRecharge2()
+    public function getRecharge1()
     {
         $class = new BankClass();
 
@@ -50,7 +50,7 @@ class RechargeController extends \app\http\controller\IndexController
             'bank' => $class->index(),
         ];
 
-        return parent::view('recharge', $result);
+        return parent::view('recharge1', $result);
     }
 
     //生成充值订单
@@ -66,6 +66,22 @@ class RechargeController extends \app\http\controller\IndexController
         $this->class->recharge($request);
 
 //        return parent::view('youyunbao', $result);
+        return parent::success();
+    }
+
+    //生成充值订单
+    public function postRecharge1(Request $request)
+    {
+        $this->class->status();
+
+        $data = $this->class->validator_recharge1($request);
+
+        $class = new YouyunbaoClass();
+
+        $result = $class->codepay($data['money'], $data['order'], $data['type']);
+//        $this->class->recharge($request);
+
+        return parent::view('youyunbao', $result);
         return parent::success();
     }
 
