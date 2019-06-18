@@ -9,7 +9,9 @@
 namespace app\youyunbao\controller;
 
 use app\index\controller\IndexController;
+use classes\vendor\StorageClass;
 use classes\vendor\Youyunbao\YouyunbaoClass;
+use think\Request;
 
 class YouyunbaoController extends IndexController
 {
@@ -31,5 +33,15 @@ class YouyunbaoController extends IndexController
         exit;
     }
 
+    public function youyunbao_notify(Request $request)
+    {
+        $storage = new StorageClass('youyunbao');
+
+        $post = $request->post();
+
+        $storage->save(json_encode($post, JSON_UNESCAPED_UNICODE));
+
+        exit('ok');
+    }
 
 }

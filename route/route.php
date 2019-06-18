@@ -243,5 +243,6 @@ Route::group('', function () {
 
     Route::get('/alipayh5','youyunbao/Youyunbao/alipayh5');
     Route::post('/orderajax','youyunbao/Youyunbao/orderajax');
+    Route::post('/youyunbao_notify','youyunbao/Youyunbao/youyunbao_notify');
 })->middleware('substation');
 
