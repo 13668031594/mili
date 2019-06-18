@@ -22,29 +22,32 @@ class ExpressAmountClass
         $this->amount_model = new MemberGradeExpressModel();
         $this->level_amount_model = new ExpressLevelAmountModel();
 
-        //获取当前分站信息
-        $sub = new SubstationModel();
-        $sub = $sub->find(SUBSTATION);
+        if (SUBSTATION != 0){
 
-        //获取初始等级信息
-        $level = new SubstationLevelModel();
-        $level = $level->find($sub['level_id']);
-        $this->amount = $level['express_up'];
-        $this->cost = $level['express_cost_up'];
-        $this->protect = $level['express_protect_up'];
+            //获取当前分站信息
+            $sub = new SubstationModel();
+            $sub = $sub->find(SUBSTATION);
 
-        //快递单独定价
-        $this->level_amount_model = $this->level_amount_model->where('substation', '=', $sub['pid'])->where('level_id', '=', $sub['level_id']);
+            //获取初始等级信息
+            $level = new SubstationLevelModel();
+            $level = $level->find($sub['level_id']);
+            $this->amount = $level['express_up'];
+            $this->cost = $level['express_cost_up'];
+            $this->protect = $level['express_protect_up'];
 
-        //二级分站，获取以及分站设置的等级信息
-        if ($sub['pid'] != 0) {
+            //快递单独定价
+            $this->level_amount_model = $this->level_amount_model->where('substation', '=', $sub['pid'])->where('level_id', '=', $sub['level_id']);
 
-            $up = new SubstationLevelUpModel();
-            $up = $up->where('level_id', '=', $sub['level_id'])->find();
+            //二级分站，获取以及分站设置的等级信息
+            if ($sub['pid'] != 0) {
 
-            $this->amount += $up['express_up'];
-            $this->cost += $up['express_cost_up'];
-            $this->protect += $up['express_protect_up'];
+                $up = new SubstationLevelUpModel();
+                $up = $up->where('level_id', '=', $sub['level_id'])->find();
+
+                $this->amount += $up['express_up'];
+                $this->cost += $up['express_cost_up'];
+                $this->protect += $up['express_protect_up'];
+            }
         }
     }
 
