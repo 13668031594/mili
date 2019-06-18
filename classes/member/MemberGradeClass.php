@@ -323,8 +323,8 @@ class MemberGradeClass extends AdminClass implements ListInterface
 //        if ($model->mode == 'off') {
 
         Db::table('young_member_grade_express')
-            ->where('grade', $model->id)
-            ->where('express', '<>', 0)
+            ->where('grade', '=', $model->id)
+//            ->where('express', '<>', 0)
             ->where('substation', '=', SUBSTATION)
             ->delete();
 
