@@ -418,6 +418,7 @@ class MemberGradeClass extends AdminClass implements ListInterface
         //等级名称而已
         $model = new ExpressModel();
         $express = $model->order('sort asc')->column('id,name');
+        $express[0] => '统一模式';
 
         //设置的成本价数组
         $costs = $request->post('cost');
