@@ -41,6 +41,25 @@
         <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
         <input type='hidden' name='level_id' id='level_id' value='{$level["id"]}'/>
 
+        <div class="layui-form-min">
+            <div class="layui-form-item">
+                <label class="layui-form-label">统一模式</label>
+                <hr>
+                <div class="layui-input-inline">
+                    <input type="text" name="cost[0]" lay-verify="required|number" placeholder="成本价"
+                           autocomplete="off"
+                           class="layui-input" value='{$level["grade"][0]["cost"]}' maxlength="20"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">成本价</div>
+                <hr>
+                <div class="layui-input-inline">
+                    <input type="text" name="protect[0]" lay-verify="required|number" placeholder="保护价"
+                           autocomplete="off"
+                           class="layui-input" value='{$level["grade"][0]["protect"]}' maxlength="20"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">保护价</div>
+            </div>
+        </div>
         {foreach $platform as $ke => $va}
         {foreach $express[$ke] as $v}
         <div class="layui-form-min">

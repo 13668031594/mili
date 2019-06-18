@@ -379,10 +379,9 @@ class MemberGradeClass extends AdminClass implements ListInterface
         $model = new SubstationLevelModel();
 
         $level = $model->order('sort asc')->find($level_id);
-//dd($level);
+
         $amount = new ExpressLevelAmountModel();
         $amount = $amount->where('substation', '=', SUBSTATION)->where('level_id', '=', $level['id'])->where('grade', '=', $self['id'])->column('*');
-
 
         $a = [];
 

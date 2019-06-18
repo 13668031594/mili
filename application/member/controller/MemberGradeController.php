@@ -151,7 +151,7 @@ class MemberGradeController extends AdminController
 
         $result = $this->class->read($request->get('id'));
 
-        $level = $this->class->substation_level($result,$level_id);
+        $level = $this->class->substation_level($result, $level_id);
 
         $express = $this->class->express();
 
@@ -160,8 +160,9 @@ class MemberGradeController extends AdminController
         $model = new SubstationLevelModel();
 
         $levels = $model->order('sort asc')->column('id,name');
+//        $levels = array_merge([0 => '统一模式'], $levels);
 
-        $result = array_merge($result,[
+        $result = array_merge($result, [
             'level_id' => $level_id,
             'level' => $level,
             'levels' => $levels,
@@ -169,7 +170,7 @@ class MemberGradeController extends AdminController
             'platform' => $platform,
         ]);
 //dd($result);
-        return parent::view('amount',$result);
+        return parent::view('amount', $result);
     }
 
     public function postAmount(Request $request)
