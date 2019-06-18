@@ -39,6 +39,20 @@ class RechargeController extends \app\http\controller\IndexController
         return parent::view('recharge', $result);
     }
 
+    //充值页面
+    public function getRecharge2()
+    {
+        $class = new BankClass();
+
+        $result = [
+            'choice' => '/recharge',
+            'order' => $this->class->order(),
+            'bank' => $class->index(),
+        ];
+
+        return parent::view('recharge', $result);
+    }
+
     //生成充值订单
     public function postRecharge(Request $request)
     {
