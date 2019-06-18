@@ -15,7 +15,7 @@ class SmsClass extends FirstClass
     private $helper;
     private $accessKeyId = 'LTAIuJphx76YZCan';
     private $accessKeySecret = 'bIrMn9ZiNgFxfbeGnyXMpbvgzEepmz';
-    private $signName = '礼品发货';
+    private $signName = '礼品快递';
     public $TemplateParam = null;
 
     public function __construct()
