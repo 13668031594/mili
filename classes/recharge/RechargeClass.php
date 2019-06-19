@@ -109,7 +109,7 @@ class RechargeClass extends AdminClass
         Db::commit();
     }
 
-    private function integralAdd($order)
+    public function integralAdd($order)
     {
         //会员寻找与家谱卷添加
         $member = new MemberModel();
@@ -131,7 +131,7 @@ class RechargeClass extends AdminClass
         $record->commis_now = $member->commis;
         $record->commis_all = $member->commis_all;
         $record->type = '20';
-        $record->content = '管理员处理了您的充值订单(订单号：' . $order['order_number'] . ')，『余额』增加：' . $order['remind'];
+        $record->content = '充值(订单号：' . $order['order_number'] . ')，『余额』增加：' . $order['remind'];
         $record->created_at = date('Y-m-d H:i:s');
         $record->save();
 
@@ -165,13 +165,13 @@ class RechargeClass extends AdminClass
         $record->remind_now = $referee->remind;
         $record->remind_all = $referee->remind_all;
         $record->type = '40';
-        $record->content = '管理员处理了您的下级『' . $member->nickname . '』的充值订单(订单号：' . $order['order_number'] . ')，您获得『佣金』' . $number;
+        $record->content = '您的下级『' . $member->nickname . '』的充值(订单号：' . $order['order_number'] . ')，您获得『佣金』' . $number;
         $record->created_at = date('Y-m-d H:i:s');
         $record->save();
     }
 
     //充值送会员
-    private function levelUp($order)
+    public function levelUp($order)
     {
         $set = new SystemClass();
         $set = $set->index();

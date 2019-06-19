@@ -93,6 +93,7 @@ class YouyunbaoClass
         $model->text = $sdata['text'];
         $model->member_id = $member_id;
         $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
         $model->save();
 
         $qrcode = $sdata["qrcode"];//二维码

@@ -19,6 +19,8 @@ class YouyunbaoPay extends Migrator
         $table->addColumn(Column::string('lb')->setNullable()->setComment('支付类型 1支付宝，2QQ钱包，3微信'));
         $table->addColumn(Column::string('type')->setNullable()->setComment('支付类型 1支付宝，2QQ钱包，3微信'));
 
+        $table->addColumn(Column::string('notify')->setNullable()->setComment('回调结果'));
+
         $table->addColumn(Column::timestamp('created_at')->setNullable()->setComment('添加时间'));
 
         $table->save();
