@@ -60,6 +60,14 @@ class YouyunbaoController extends IndexController
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
 
+        $class = new YouyunbaoClass();
+        if ($post['key'] != $class->config->config['appkey']) {
+
+            $model->notify = 'appkey错误';
+            $model->save();
+            self::notify_ok();
+        }
+
         $order_model = new YouyunbaoOrderModel();
         $order_model = $order_model->where('datas', '=', $model->name)->find();
 

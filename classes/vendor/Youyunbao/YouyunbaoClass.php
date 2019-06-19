@@ -12,7 +12,7 @@ use app\Youyunbao\model\YouyunbaoOrderModel;
 
 class YouyunbaoClass
 {
-    private $config;
+    public $config;
 
     public function __construct()
     {
