@@ -145,6 +145,7 @@ class YouyunbaoClass
             'text' => $text,
             'tishi' => $tishi,
             'type' => $yundata["type"],
+
         ];
     }
 
