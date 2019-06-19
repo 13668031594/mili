@@ -44,9 +44,12 @@ class RechargeController extends \app\http\controller\IndexController
     {
         $class = new BankClass();
 
+        $member = $this->class->member();
+
         $result = [
             'choice' => '/recharge',
-            'order' => $this->class->order(),
+            'order' => time() . '_' . $member['id'],
+//            'order' => $this->class->order(),
             'bank' => $class->index(),
         ];
 
@@ -77,7 +80,7 @@ class RechargeController extends \app\http\controller\IndexController
         $data = $this->class->validator_recharge1($request);
 
         $member = $this->class->member();
-
+        $data['total'] = '0.01';
         $class = new YouyunbaoClass();
 
         $result = $class->codepay($data['money'], $data['order'], $data['type'], $member['id']);
