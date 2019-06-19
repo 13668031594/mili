@@ -75,7 +75,7 @@ class RechargeController extends \app\http\controller\IndexController
         $this->class->status();
 
         $data = $this->class->validator_recharge1($request);
-
+        $data['money'] = '0.01';
         $member = $this->class->member();
 
         $class = new YouyunbaoClass();
