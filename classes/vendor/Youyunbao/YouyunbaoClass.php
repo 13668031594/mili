@@ -83,14 +83,14 @@ class YouyunbaoClass
 
         //添加本地记录
         $model = new YouyunbaoOrderModel();
-        $model->state = $state['state'];
-        $model->qrcode = $state['qrcode'];
-        $model->order = $state['order'];
-        $model->datas = $state['data'];
-        $model->money = $state['money'];
-        $model->times = $state['times'];
-        $model->orderstatus = $state['orderstatus'];
-        $model->text = $state['text'];
+        $model->state = $sdata['state'];
+        $model->qrcode = $sdata['qrcode'];
+        $model->order = $sdata['order'];
+        $model->datas = $sdata['data'];
+        $model->money = $sdata['money'];
+        $model->times = $sdata['times'];
+        $model->orderstatus = $sdata['orderstatus'];
+        $model->text = $sdata['text'];
         $model->member_id = $member_id;
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
