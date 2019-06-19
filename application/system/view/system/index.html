@@ -34,7 +34,7 @@
                 <!--<li>聚水潭接口</li>-->
                 <!--<li>提现转账</li>-->
                 <li>左侧客服</li>
-
+                <li>优云宝</li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
@@ -350,6 +350,43 @@
                 </div>
             </div>
 
+            <div class="layui-tab-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">使用开关</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='youSwitch' lay-filter="youSwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["youSwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='youSwitchValue' name="youSwitch"
+                               value="{$self['youSwitch']}"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">appid</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="youAppid" title="appid"
+                                   placeholder="appid" autocomplete="off" value="{$self['youAppid']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">优云宝发放的appid</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-min">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">appkey</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="youAppkey" title="appkey"
+                                   placeholder="appkey" autocomplete="off" value="{$self['youAppkey']}"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">优云宝发放的appkey</div>
+                    </div>
+                </div>
+            </div>
+
 
 
             <div class="layui-form-item">
@@ -558,6 +595,14 @@
                 $('#rechargeGradeSwitchValue').prop('value', 'on');
             } else {
                 $('#rechargeGradeSwitchValue').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(youSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#youSwitchValue').prop('value', 'on');
+            } else {
+                $('#youSwitchValue').prop('value', 'off');
             }
         });
 

@@ -53,30 +53,9 @@ class RechargeClass extends \classes\IndexClass
 
         $total = $request->post('total');
 
-//        if ($total < $set['rechargeBase']) parent::ajax_exception(000, '充值金额不得小于：' . $set['rechargeBase']);
+        if ($total < $set['rechargeBase']) parent::ajax_exception(000, '充值金额不得小于：' . $set['rechargeBase']);
 
-//        if ($total % $set['rechargeTimes']) parent::ajax_exception(000, '充值金额必须为：' . $set['rechargeTimes'] . '的正整数倍');
-
-//        $member = parent::member();
-//        $test = new RechargeModel();
-//        $test = $test->where('member_id', '=', $member['id'])->where('status', '=', 0)->find();
-//        if (!is_null($test)) parent::ajax_exception(000, '您还有未处理的充值订单');
-
-        /*$order_number = $request->post('order');
-        $order = new RechargeOrderModel();
-        $order = $order->where('order_number', '=', $order_number)->find();
-        if (!is_null($order)) {
-
-            $order->status = 1;
-            $order->save();
-        }
-
-        $test = new RechargeModel();
-        $test = $test->where('order_number', '=', $order_number)->find();
-        if (!is_null($test)) {
-
-            parent::ajax_exception(000, '请刷新重试');
-        }*/
+        if ($total % $set['rechargeTimes']) parent::ajax_exception(000, '充值金额必须为：' . $set['rechargeTimes'] . '的正整数倍');
 
         return [
             'order' => $request->post('order'),

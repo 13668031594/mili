@@ -46,8 +46,8 @@ class YouyunbaoController extends IndexController
 
         $post = $request->post();
 
-        $storage = new StorageClass('youyunbao.txt');
-        $storage->save(json_encode($post));
+//        $storage = new StorageClass('youyunbao.txt');
+//        $storage->save(json_encode($post));
 
         $model = new YouyunbaoPayModel();
         $model->ddh = $post['ddh'];

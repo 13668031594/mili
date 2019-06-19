@@ -152,6 +152,9 @@
                 <img class="hot" src="{$src}images/hot.gif"/>
                 {/if}
                 <ul>
+                    {if $set['youSwitch'] == 'on'}
+                    <li><a href="/recharge1">自动充值</a></li>
+                    {/if}
                     <li><a href="/recharge-note">充值记录</a></li>
                     <li><a href="/expense-note">余额记录</a></li>
                 </ul>

@@ -150,6 +150,10 @@ class SystemClass extends AdminClass
             'serverUrl|客服二维码连接' => 'require|length:0,255',
             'qr_note|客服二维码描述' => 'require|length:0,100',
             'work_time|客服上班时间' => 'require|length:0,100',
+
+            'youSwitch|优云宝充值开关' => 'require|in:on,off',
+            'youAppid|优云宝appid' => 'require|length:0,100',
+            'youAppkey|优云宝appkey' => 'require|length:0,100',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -207,7 +211,7 @@ class SystemClass extends AdminClass
             'qr_note' => '未填写',
             'work_time' => '24小时上班',
 
-            'youSwitch' => 'on',
+            'youSwitch' => 'off',
             'youAppid' => '未填写',
             'youAppkey' => '未填写',
         ];

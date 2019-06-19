@@ -9,6 +9,7 @@
 namespace classes\vendor\Youyunbao;
 
 use app\Youyunbao\model\YouyunbaoOrderModel;
+use classes\system\SystemClass;
 
 class YouyunbaoClass
 {
@@ -16,8 +17,10 @@ class YouyunbaoClass
 
     public function __construct()
     {
-        $appid = '3119660901';
-        $appkey = '3abb8c9ffd80feaf1254bf24c264fbe8';
+        $set = new SystemClass();
+        $set = $set->index();
+        $appid = $set['youAppid'];
+        $appkey = $set['youAppkey'];
 
         $this->config = new Youyunbao($appid, $appkey);
     }
