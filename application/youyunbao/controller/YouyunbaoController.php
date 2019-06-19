@@ -61,7 +61,7 @@ class YouyunbaoController extends IndexController
         $model->save();
 
         $order_model = new YouyunbaoOrderModel();
-        $order_model->where('datas', '=', $model->name)->find();
+        $order_model = $order_model->where('datas', '=', $model->name)->find();
 
         if (is_null($order_model)) {
 

@@ -87,7 +87,7 @@ class YouyunbaoClass
         $model->qrcode = $sdata['qrcode'];
         $model->order = $sdata['order'];
         $model->datas = $sdata['data'];
-        $model->money = $sdata['money'];
+        $model->money = $money;
         $model->times = $sdata['times'];
         $model->orderstatus = $sdata['orderstatus'];
         $model->text = $sdata['text'];
