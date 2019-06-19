@@ -206,6 +206,10 @@ class SystemClass extends AdminClass
             'serverUrl' => 'http://',
             'qr_note' => '未填写',
             'work_time' => '24小时上班',
+
+            'youSwitch' => 'on',
+            'youAppid' => '未填写',
+            'youAppkey' => '未填写',
         ];
     }
 
