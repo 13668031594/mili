@@ -220,6 +220,7 @@ class YouyunbaoClass
             "appkey" => $congig['appkey']//appkey密匙
         );
 
+
         //加密token 32位  小写
         $token = md5($this->config->urlparams($token));
         //exit($token);
