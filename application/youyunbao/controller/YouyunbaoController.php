@@ -135,8 +135,8 @@ class YouyunbaoController extends IndexController
 
         //完成订单结束后的操作
         $class = new RechargeClass();
-        $class->integralAdd($order->getData());
-        $class->levelUp($order->getData());
+        $class->integralAdd($recharge->getData());
+        $class->levelUp($recharge->getData());
 
         $model->notify = '充值成功';
         $model->save();
