@@ -133,6 +133,7 @@ class YouyunbaoController extends IndexController
         $model->notify = '充值成功';
         $model->save();
 
+
         self::notify_ok();
     }
 
