@@ -76,9 +76,11 @@ class RechargeController extends \app\http\controller\IndexController
 
         $data = $this->class->validator_recharge1($request);
 
+        $member = $this->class->member();
+
         $class = new YouyunbaoClass();
 
-        $result = $class->codepay($data['money'], $data['order'], $data['type']);
+        $result = $class->codepay($data['money'], $data['order'], $data['type'], $member['id']);
 //        $this->class->recharge($request);
 
         return parent::view('youyunbao', $result);

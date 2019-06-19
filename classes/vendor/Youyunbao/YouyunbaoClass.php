@@ -8,6 +8,8 @@
 
 namespace classes\vendor\Youyunbao;
 
+use app\Youyunbao\model\YouyunbaoOrderModel;
+
 class YouyunbaoClass
 {
     private $config;
@@ -20,7 +22,7 @@ class YouyunbaoClass
         $this->config = new Youyunbao($appid, $appkey);
     }
 
-    public function codepay($money, $order, $type)
+    public function codepay($money, $order, $type, $member_id)
     {
         error_reporting(0);//PHP报错不显示
         header("content-Type: text/html; charset=Utf-8");
@@ -78,6 +80,20 @@ class YouyunbaoClass
         if (!$state) {
             exit('异常' . $sdata["text"]);
         }
+
+        //添加本地记录
+        $model = new YouyunbaoOrderModel();
+        $model->state = $state['state'];
+        $model->qrcode = $state['qrcode'];
+        $model->order = $state['order'];
+        $model->datas = $state['data'];
+        $model->money = $state['money'];
+        $model->times = $state['times'];
+        $model->orderstatus = $state['orderstatus'];
+        $model->text = $state['text'];
+        $model->member_id = $member_id;
+        $model->created_at = date('Y-m-d H:i:s');
+        $model->save();
 
         $qrcode = $sdata["qrcode"];//二维码
 
@@ -187,30 +203,30 @@ class YouyunbaoClass
         $congig = $this->config->config;
 
         $yundata = array(
-            "appid"  => $congig['appid'],//获取appid
-            "order"  => $_REQUEST['order'],//这个是云端返回的一个唯一单号
-            "type"   => $_REQUEST['type'],//获取分类
-            "uip"    => $congig['uip']//获取用户IP地址
+            "appid" => $congig['appid'],//获取appid
+            "order" => $_REQUEST['order'],//这个是云端返回的一个唯一单号
+            "type" => $_REQUEST['type'],//获取分类
+            "uip" => $congig['uip']//获取用户IP地址
         );
 
         //订单查询签名格式
         // md5(appid=666666&type=1&uip=127.0.0.1&appkey=123456789);
         //以上是token签名规则
         $token = array(
-            "appid"  =>  $congig['appid'],//APPID号码
-            "type"   =>  $yundata["type"],//类别
-            "uip"    =>  $congig['uip'],//客户IP
-            "appkey" =>  $congig['appkey']//appkey密匙
+            "appid" => $congig['appid'],//APPID号码
+            "type" => $yundata["type"],//类别
+            "uip" => $congig['uip'],//客户IP
+            "appkey" => $congig['appkey']//appkey密匙
         );
 
         //加密token 32位  小写
         $token = md5($this->config->urlparams($token));
         //exit($token);
         //重组条件
-        $postdata = $this->config->urlparams($yundata).'&token='.$token;
+        $postdata = $this->config->urlparams($yundata) . '&token=' . $token;
 
         //订单查询网关地址后面加 order
-        $fdata = $this->config->curl_post_https($congig['server'].'order',$postdata);
+        $fdata = $this->config->curl_post_https($congig['server'] . 'order', $postdata);
 
         //$sdata = json_decode($fdata, true);//将json代码转换为数组
         /*
