@@ -124,7 +124,7 @@
             dataType: "json",
             url: "orderajax",
             timeout: 10000, //ajax请求超时时间10s
-            data: {type: "{$yundata['type']}", order: "{$order}", data: "{$data}"}, //post数据
+            data: {type: "{$type}", order: "{$order}", data: "{$data}"}, //post数据
             success: function (data, textStatus) {
                 //从服务器得到数据，显示数据并继续查询
                 if (data.code == 1) {
