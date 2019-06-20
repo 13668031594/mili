@@ -25,7 +25,7 @@ class FirstClass
      * @param array $other
      * @return array
      */
-    protected function page(\think\Model $model, $other = [])
+    protected function page($model, $other = [])
     {
         $where = isset($other['where']) ? $other['where'] : [];//筛选
         $whereIn = isset($other['whereIn']) ? $other['whereIn'] : [];//筛选
