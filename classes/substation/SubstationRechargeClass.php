@@ -15,6 +15,7 @@ use app\substation\model\SubstationRechargeOrderModel;
 use app\substation\model\SubstationRecordModel;
 use classes\AdminClass;
 use classes\member\MemberStoreClass;
+use classes\system\BankClass;
 use classes\system\SystemClass;
 use classes\vendor\StorageClass;
 use think\Request;
@@ -30,40 +31,14 @@ class SubstationRechargeClass extends AdminClass
 
         $name = empty($pid) ? 'bankSetting.txt' : 'bankSetting_' . $pid . '.txt';
 
-        $storage = new StorageClass($name);
-
-        //读取设定文件
-        $set = $storage->get();
-
-        //获取默认配置
-        $result = self::defaults();
-
-        //设定文件存在，修改返回配置
-        if (!is_array($set)) {
-
-            //格式化配置信息
-            $set = json_decode($set, true);
-
-            //循环设定数据
-            foreach ($result as $k => &$v) {
-
-                //设定文件中有的设定，修改之
-                if (isset($set[$k])) $v = $set[$k];
-            }
-        }
+        $set = new BankClass();
+        $set->storage = new StorageClass($name);
+        $result =  $set->index();
 
         $result['balance'] = $substation->balance;
 
         //返回设定文件
         return $result;
-    }
-
-    //默认数据
-    private function defaults()
-    {
-        return [
-            'file' => '收款设置',
-        ];
     }
 
     public function order()
@@ -124,6 +99,33 @@ class SubstationRechargeClass extends AdminClass
         }
     }
 
+    public function validator_recharge1(Request $request)
+    {
+        $rule = [
+            'total|充值金额' => 'require|integer',
+            'order|单号' => 'require',
+            'type|支付方式' => 'require|in:1,2,3'
+        ];
+//dd($request->post());
+        $result = parent::validator($request->post(), $rule);
+        if (!is_null($result)) parent::ajax_exception(000, $result);
+
+        $set = self::store_set();
+
+        $total = $request->post('total');
+
+        if ($total < $set['rechargeBase']) parent::ajax_exception(000, '充值金额不得小于：' . $set['rechargeBase']);
+
+        if ($total % $set['rechargeTimes']) parent::ajax_exception(000, '充值金额必须为：' . $set['rechargeTimes'] . '的正整数倍');
+
+        return [
+            'set' => $set,
+            'order' => $request->post('order'),
+            'money' => $request->post('total'),
+            'type' => $request->post('type'),
+        ];
+    }
+
     public function recharge(Request $request)
     {
         $master = parent::master();
@@ -149,60 +151,11 @@ class SubstationRechargeClass extends AdminClass
 
         $name = empty($pid) ? 'sysSetting.txt' : 'sysSetting_' . $pid . '.txt';
 
-        $store = new StorageClass($name);
-
-        //读取设定文件
-        $set = $store->get();
-
-        //获取默认配置
-        $result = self::defaults2();
-
-        //设定文件存在，修改返回配置
-        if (!is_array($set)) {
-
-            //格式化配置信息
-            $set = json_decode($set, true);
-
-            //循环设定数据
-            foreach ($result as $k => &$v) {
-
-                //设定文件中有的设定，修改之
-                if (isset($set[$k])) $v = $set[$k];
-            }
-        }
-
-        //返回设定文件
+        $set = new SystemClass();
+        $set->storage = new StorageClass($name);
+        $result = $set->index();
+        $result['substation_pid'] = $pid;
         return $result;
-    }
-
-    //默认数据
-    private function defaults2()
-    {
-        return [
-            'webName' => '米礼网',
-            'webTitle' => '米礼网',
-            'webKeyword' => '米礼网',
-            'webDesc' => '米礼网',
-            'webSwitch' => 'on',
-            'webCloseReason' => '网站维护中',
-            'fwb-content' => '请谨慎下单',
-            'logo' => config('young.image_not_found'),
-            'webCopyright' => '版权',
-            'userCommiss' => '100',
-            'rechargeBase' => '100',
-            'rechargeTimes' => '10',
-            'rechargeSwitch' => 'on',
-            'rechargeGradeSwitch' => 'on',
-            'login' => config('young.image_not_found'),
-            'loginUrl' => 'http://',
-            'reg' => config('young.image_not_found'),
-            'regUrl' => 'http://',
-            'goods_number' => '每单至多购买{$number}件该商品',
-            'self_default' => '请完善个人资料',
-            'withdraw' => '将在24小时内处理您的提现申请',
-            'loginReason' => '我们提供赠品采购、发货、一站式服务。',
-            'qq' => '',
-        ];
     }
 
     public function recharge_index(Request $request)

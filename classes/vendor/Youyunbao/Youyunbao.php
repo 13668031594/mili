@@ -24,8 +24,8 @@ class Youyunbao
     public function __construct(
         $appid = null,
         $appkey = null,
-        $server = 'http://yunpay.waa.cn/',
         $reurl = null,
+        $server = 'http://yunpay.waa.cn/',
         $uip = null,
         $helpts = 1,
         $alipayh5 = 1

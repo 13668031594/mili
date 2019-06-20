@@ -78,9 +78,21 @@
         </span>
     </div>
 
-    <form action="/admin/substation-recharge/store1" method="post">
+    <form class="layui-form" action="/admin/substation-recharge/store1" method="post">
 
         <div class="layui-form-min">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">付款方式</label>
+                <div class="layui-input-inline">
+                    <select name="type" lay-verify="">
+                        <option value="1">支付宝</option>
+                        <option value="2">qq钱包</option>
+                        <option value="3">微信</option>
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">在线支付的付款方式</div>
+            </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label">当前余额</label>
@@ -90,7 +102,7 @@
                 </div>
             </div>
 
-            <input type="hidden" name="order" lay-verify="required" placeholder="订单号" autocomplete="off"
+            <input type="hidden" name="order" value="{$order}">
 
             <div class="layui-form-item">
                 <label class="layui-form-label">金额</label>
@@ -99,19 +111,12 @@
                            class="layui-input" value='1000' maxlength="20"/>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input class="layui-btn" type="submit" lay-filter="*" />
             </div>
-            <hr>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">收款方式</label>
-
-                {php}echo $file;{/php}
-
-            </div>
+        </div>
 
 
     </form>

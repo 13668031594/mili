@@ -11,6 +11,7 @@ namespace app\substation\controller;
 
 use app\http\controller\AdminController;
 use classes\substation\SubstationRechargeClass;
+use classes\vendor\Youyunbao\YouyunbaoClass;
 use think\Db;
 use think\Request;
 
@@ -50,6 +51,21 @@ class SubstationRechargeController extends AdminController
         $class->recharge($request);
 
         return parent::success('/substation-recharge/recharge');
+    }
+
+    //添加订单
+    public function postStore1(Request $request)
+    {
+        $class = new SubstationRechargeClass();
+
+        $data = $class->validator_recharge1($request);
+        $data['money'] = '0.01';
+
+        $class = new YouyunbaoClass($data['set']);
+
+        $result = $class->codepay($data['money'], $data['order'], $data['type'], 0, $data['set']['substation_pid']);
+
+        return parent::view('youyunbao', $result);
     }
 
     //查看我的订单

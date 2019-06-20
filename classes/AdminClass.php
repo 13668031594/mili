@@ -10,6 +10,8 @@ namespace classes;
 
 use app\master\model\MasterModel;
 use app\Substation\model\SubstationModel;
+use classes\system\SystemClass;
+use classes\vendor\StorageClass;
 
 class AdminClass extends FirstClass
 {
@@ -79,5 +81,27 @@ class AdminClass extends FirstClass
         return $substation;
     }
 
-//   public function youyunbao
+    //判断上级站是否开启优云宝支付
+    public function youyunbao()
+    {
+        if (SUBSTATION == 0) return false;
+
+        $substation = new SubstationModel();
+        $substation = $substation->find(SUBSTATION);
+
+        if (!empty($substation->pid)) {
+
+            $name = 'sysSetting_' . $substation->pid . '.txt';
+        } else {
+
+            $name = 'sysSetting.txt';
+        }
+
+        $class = new SystemClass();
+        $class->storage = new StorageClass($name);
+        $set = $class->index();
+
+        if ($set['youSwitch'] == 'on') return true;
+        else return false;
+    }
 }
