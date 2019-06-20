@@ -28,6 +28,18 @@ class SubstationRechargeController extends AdminController
         return parent::view('store', $result);
     }
 
+    //充值页面
+    public function getCreate1()
+    {
+        $class = new SubstationRechargeClass();
+
+        $result = $class->bank();
+
+        $result['order'] = 's_' . time() . '_' . (SUBSTATION + 37957);
+
+        return parent::view('store1', $result);
+    }
+
     //添加订单
     public function postStore(Request $request)
     {
@@ -41,6 +53,7 @@ class SubstationRechargeController extends AdminController
     }
 
     //查看我的订单
+
     /**
      * 显示资源列表
      *

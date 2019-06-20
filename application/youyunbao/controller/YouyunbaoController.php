@@ -46,6 +46,12 @@ class YouyunbaoController extends IndexController
 
         $post = $request->post();
 
+        $class = new YouyunbaoClass();
+        if ($post['key'] != $class->config->config['appkey']) {
+
+            self::notify_ok();
+        }
+
 //        $storage = new StorageClass('youyunbao.txt');
 //        $storage->save(json_encode($post));
 
@@ -60,14 +66,13 @@ class YouyunbaoController extends IndexController
         $model->created_at = date('Y-m-d H:i:s');
         $model->save();
 
-        $class = new YouyunbaoClass();
-        if ($post['key'] != $class->config->config['appkey']) {
+        list($type, $time, $id) = explode($model->name);
 
-            $model->notify = 'appkey错误';
-            $model->save();
-            self::notify_ok();
-        }
+        if ($type == 'u') self::user_notify($model);
+    }
 
+    public function user_notify(YouyunbaoPayModel $model)
+    {
         $order_model = new YouyunbaoOrderModel();
         $order_model = $order_model->where('datas', '=', $model->name)->find();
 
@@ -140,7 +145,6 @@ class YouyunbaoController extends IndexController
 
         $model->notify = '充值成功';
         $model->save();
-
 
         self::notify_ok();
     }

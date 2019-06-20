@@ -62,6 +62,8 @@ class LoginController extends AdminController
 
         $is_substation = $this->class->is_substation();
 
-        return parent::view('index', ['master' => $master, 'set' => $set,'is_substation' => $is_substation]);
+        $youyunbao = $this->class->youyunbao();
+
+        return parent::view('index', ['master' => $master, 'set' => $set,'is_substation' => $is_substation,'you' => $youyunbao]);
     }
 }

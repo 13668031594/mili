@@ -86,7 +86,10 @@ class SendClass extends AdminClass
             'alias' => 'a',
             'leftJoin' => $leftJoin,
             'column' => 'a.*',
+            'order_name' => 'id',
         ];
+
+        $this->model = $this->model->order('created_at', 'desc');
 
         return parent::page($this->model, $result);
     }

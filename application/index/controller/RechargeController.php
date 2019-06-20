@@ -48,7 +48,7 @@ class RechargeController extends \app\http\controller\IndexController
 
         $result = [
             'choice' => '/recharge',
-            'order' => time() . '_' . $member['id'],
+            'order' => 'u_' . time() . '_' . ($member['id'] + 37957),
 //            'order' => $this->class->order(),
             'bank' => $class->index(),
         ];
