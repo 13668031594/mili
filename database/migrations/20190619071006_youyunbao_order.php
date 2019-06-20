@@ -27,6 +27,7 @@ class YouyunbaoOrder extends Migrator
         $table->addColumn(Column::decimal('pay_money', 18, 2)->setNullable()->setComment('实际支付金额'));
 
         $table->addColumn(Column::string('substation')->setDefault(0)->setComment('下单站点'));
+        $table->addColumn(Column::string('recharge_type')->setDefault(0)->setComment('充值类型，0会员充值，1分站充值'));
 
         $table->addColumn(Column::timestamp('created_at')->setNullable()->setComment('添加时间'));
 

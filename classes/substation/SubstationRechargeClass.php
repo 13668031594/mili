@@ -154,7 +154,7 @@ class SubstationRechargeClass extends AdminClass
         $set = new SystemClass();
         $set->storage = new StorageClass($name);
         $result = $set->index();
-        $result['substation_pid'] = $pid;
+//        $result['substation_pid'] = $pid;
         return $result;
     }
 

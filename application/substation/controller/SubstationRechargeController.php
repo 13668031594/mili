@@ -61,9 +61,11 @@ class SubstationRechargeController extends AdminController
         $data = $class->validator_recharge1($request);
         $data['money'] = '0.01';
 
+        $master = $class->master();
+
         $class = new YouyunbaoClass($data['set']);
 
-        $result = $class->codepay($data['money'], $data['order'], $data['type'], 0, $data['set']['substation_pid']);
+        $result = $class->codepay($data['money'], $data['order'], $data['type'], $master['id'], 1);
 
         return parent::view('youyunbao', $result);
     }

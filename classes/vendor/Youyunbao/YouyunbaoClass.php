@@ -25,21 +25,20 @@ class YouyunbaoClass
             $set = $set->index();
         } else {
 
-            if (isset($set['substation_pid'])) {
+            $substation = new SubstationModel();
+            $self = $substation->find(SUBSTATION);
 
-                if (!empty($set['substation_pid'])){
+            if (!empty($self->pid)) {
 
-                    $substation = new SubstationModel();
-                    $substation = $substation->find($set['substation_pid']);
-                    $reurl = 'http://' . $substation->localhost . '/youyunbao';
-                }else{
+                $substation = $substation->find($self->pid);
+                $reurl = 'http://' . $substation->localhost . '/youyunbao';
+            } else {
 
-                    $safe_path = include 'safe_path.php';
+                $safe_path = include 'safe_path.php';
 
-                    $url = $safe_path[0];
+                $url = $safe_path[0];
 
-                    $reurl = 'http://' . $url . '/youyunbao';
-                }
+                $reurl = 'http://' . $url . '/youyunbao';
             }
         }
 
@@ -49,7 +48,7 @@ class YouyunbaoClass
         $this->config = new Youyunbao($appid, $appkey, $reurl);
     }
 
-    public function codepay($money, $order, $type, $member_id, $sub_pid = 'member')
+    public function codepay($money, $order, $type, $recharge_id, $recharge = 0)
     {
         error_reporting(0);//PHP报错不显示
         header("content-Type: text/html; charset=Utf-8");
@@ -108,40 +107,21 @@ class YouyunbaoClass
             exit('异常' . $sdata["text"]);
         }
 
-        if ($sub_pid == 'member') {
-
-            //添加本地记录
-            $model = new YouyunbaoOrderModel();
-            $model->state = $sdata['state'];
-            $model->qrcode = $sdata['qrcode'];
-            $model->order = $sdata['order'];
-            $model->datas = $sdata['data'];
-            $model->money = $money;
-            $model->times = $sdata['times'];
-            $model->orderstatus = $sdata['orderstatus'];
-            $model->text = $sdata['text'];
-            $model->member_id = $member_id;
-            $model->created_at = date('Y-m-d H:i:s');
-            $model->substation = SUBSTATION;
-            $model->save();
-        } else {
-
-            //添加本地记录
-            $model = new YouyunbaoOrderModel();
-            $model->state = $sdata['state'];
-            $model->qrcode = $sdata['qrcode'];
-            $model->order = $sdata['order'];
-            $model->datas = $sdata['data'];
-            $model->money = $money;
-            $model->times = $sdata['times'];
-            $model->orderstatus = $sdata['orderstatus'];
-            $model->text = $sdata['text'];
-            $model->member_id = 0;
-            $model->created_at = date('Y-m-d H:i:s');
-            $model->substation = $sub_pid;
-            $model->save();
-        }
-
+        //添加本地记录
+        $model = new YouyunbaoOrderModel();
+        $model->state = $sdata['state'];
+        $model->qrcode = $sdata['qrcode'];
+        $model->order = $sdata['order'];
+        $model->datas = $sdata['data'];
+        $model->money = $money;
+        $model->times = $sdata['times'];
+        $model->orderstatus = $sdata['orderstatus'];
+        $model->text = $sdata['text'];
+        $model->member_id = $recharge_id;
+        $model->created_at = date('Y-m-d H:i:s');
+        $model->substation = SUBSTATION;
+        $model->recharge_type = $recharge;
+        $model->save();
 
         $qrcode = $sdata["qrcode"];//二维码
 
