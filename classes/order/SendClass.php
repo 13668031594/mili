@@ -89,7 +89,7 @@ class SendClass extends AdminClass
             'order_name' => 'id',
         ];
 
-        $this->model = $this->model->order('created_at', 'desc');
+//        $this->model = $this->model->order('created_at', 'desc');
 
         return parent::page($this->model, $result);
     }
