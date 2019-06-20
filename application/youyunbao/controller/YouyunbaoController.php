@@ -272,5 +272,4 @@ class YouyunbaoController extends IndexController
         Db::commit();
         exit('ok');
     }
-
 }
