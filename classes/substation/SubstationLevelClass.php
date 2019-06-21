@@ -232,7 +232,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
     }
 
     //分站等级
-    public function substation_level($id, $express)
+    public function substation_level($id, $express,$self)
     {
         $amount = new ExpressLevelAmountModel();
         $amount = $amount->where('substation', '=', SUBSTATION)->where('level_id', '=', $id)->column('*', 'express');
@@ -245,6 +245,10 @@ class SubstationLevelClass extends AdminClass implements ListInterface
 
                 $v['cost'] = $v['cost'] > $al['cost'] ? $v['cost'] : $al['cost'];
                 $v['protect'] = $v['protect'] > $al['protect'] ? $v['protect'] : $al['protect'];
+            }else{
+
+                $v['cost'] = $v['cost'] + $self['express_cost_up'];
+                $v['protect'] = $v['protect'] + $self['express_protect_up'];
             }
         }
 
