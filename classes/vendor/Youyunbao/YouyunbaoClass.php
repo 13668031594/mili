@@ -220,7 +220,7 @@ class YouyunbaoClass
         $sdata = json_decode($fdata, true);//将json代码转换为数组
 
         if ($sdata['state'] == 0) {
-            print_r($yundata);
+//            print_r($yundata);
             exit($sdata['text']);
         }
         $sdata = $sdata['text'];
