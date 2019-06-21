@@ -121,7 +121,6 @@ class GoodsClass extends AdminClass implements ListInterface
 
         $model->location = is_null($model->location) ? config('young.image_not_found') : $model->location;
 
-
         if (SUBSTATION != '0') {
             $class = new GoodsAmountClass();
 

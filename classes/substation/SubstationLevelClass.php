@@ -8,6 +8,8 @@
 
 namespace classes\substation;
 
+use app\express\model\ExpressModel;
+use app\Member\model\ExpressLevelAmountModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\Substation\model\SubstationLevelModel;
@@ -15,6 +17,7 @@ use app\Substation\model\SubstationLevelUpModel;
 use app\Substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\ListInterface;
+use classes\vendor\ExpressAmountClass;
 use think\Db;
 use think\Request;
 
@@ -40,7 +43,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
 
             foreach ($data['message'] as &$v) {
 
-                $ups = $up->where('substation', '=', SUBSTATION)->where('level_id','=',$v['id'])->find();
+                $ups = $up->where('substation', '=', SUBSTATION)->where('level_id', '=', $v['id'])->find();
 
                 if (!is_null($ups)) {
 //                    $ups = $ups->toArray();
@@ -84,7 +87,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
         if (is_null($substation)) parent::redirect_exception('/admin/substation-level/index', '分站等级不存在');
 
         $up = new SubstationLevelUpModel();
-        $ups = $up->where('substation', '=', SUBSTATION)->where('level_id','=',$substation['id'])->find();
+        $ups = $up->where('substation', '=', SUBSTATION)->where('level_id', '=', $substation['id'])->find();
 
         if (!is_null($ups)) {
 
@@ -198,5 +201,92 @@ class SubstationLevelClass extends AdminClass implements ListInterface
         $substation = $substation->whereIn('level_id', $id)->find();
 
         if (!is_null($substation)) parent::ajax_exception(000, '请先清空分站等级内的分站');
+    }
+
+    public function self_express()
+    {
+        $model = new ExpressModel();
+
+        $result = $model->column('*', 'id');
+
+        $result[0] = [
+            'id' => 0,
+            'name' => '统一模式',
+            'cost' => 0.00,
+            'protect' => 0.00,
+        ];
+        ksort($result);
+
+        $amount_class = new ExpressAmountClass();
+        foreach ($result as &$v) {
+
+            if (SUBSTATION != '0') {
+
+                $amount = $amount_class->amount($v['id'], $v['cost'], $v['protect']);
+                $v['cost'] = $amount['cost'];
+                $v['protect'] = $amount['protect'];
+            }
+        }
+
+        return $result;
+    }
+
+    //分站等级
+    public function substation_level($id, $express)
+    {
+        $amount = new ExpressLevelAmountModel();
+        $amount = $amount->where('substation', '=', SUBSTATION)->where('level_id', '=', $id)->column('*', 'express');
+
+        foreach ($express as &$v) {
+
+            if (isset($amount[$v['id']])) {
+
+                $al = $amount[$v['id']];
+
+                $v['cost'] = $v['cost'] > $al['cost'] ? $v['cost'] : $al['cost'];
+                $v['protect'] = $v['protect'] > $al['protect'] ? $v['protect'] : $al['protect'];
+            }
+        }
+
+        return $express;
+    }
+
+    //为每个分站等级配备成本价和保护价
+    public function level_amount(Request $request)
+    {
+        $level_id = $request->post('id');
+
+        $express = self::self_express();
+
+        //设置的成本价数组
+        $costs = $request->post('cost');
+
+        //设置的保护价数组
+        $protects = $request->post('protect');
+
+        $insert = [];
+        foreach ($express as $v) {
+
+            $cost = $costs[$v['id']];
+            $protect = $protects[$v['id']];
+
+            if ($v['cost'] > $cost) parent::ajax_exception(000, $v['name'].' 成本价不得低于：' . $v['cost']);
+            if ($v['protect'] > $protect) parent::ajax_exception(000, $v['name'].' 保护价不得低于：' . $v['protect']);
+
+            $i = [
+                'express' => $v['id'],
+                'cost' => $cost,
+                'protect' => $protect,
+                'substation' => SUBSTATION,
+                'level_id' => $level_id,
+            ];
+
+            $insert[] = $i;
+        }
+
+        $goods_amount_model = new ExpressLevelAmountModel();
+        $goods_amount_model->where('substation', '=', SUBSTATION)->where('level_id', '=', $level_id)->delete();
+
+        if (count($insert) > 0) $goods_amount_model->insertAll($insert);
     }
 }

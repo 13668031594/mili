@@ -13,6 +13,7 @@ use app\express\model\ExpressModel;
 use app\member\model\MemberGradeExpressModel;
 use classes\AdminClass;
 use classes\ListInterface;
+use classes\vendor\ExpressAmountClass;
 use think\Db;
 use think\Request;
 
@@ -40,7 +41,20 @@ class ExpressClass extends AdminClass implements ListInterface
             'order_name' => 'sort',
         ];
 
-        return parent::page($this->model, $other);
+        $result = parent::page($this->model, $other);
+
+        $amount_class = new ExpressAmountClass();
+        foreach ($result['message'] as &$v) {
+
+            if (SUBSTATION != '0') {
+
+                $amount = $amount_class->amount($v['id'],  $v['cost'], $v['protect']);
+                $v['cost'] = $amount['cost'];
+                $v['protect'] = $amount['protect'];
+            }
+        }
+
+        return $result;
     }
 
     public function create()
@@ -59,6 +73,8 @@ class ExpressClass extends AdminClass implements ListInterface
         $express->cost = $request->post('cost');
         $express->protect = $request->post('protect');
         $express->substation = SUBSTATION;
+        $express->cost = $request->post('cost');
+        $express->protect = $request->post('protect');
         $express->created_at = date('Y-m-d H:i:s');
         $express->save();
     }
@@ -69,7 +85,17 @@ class ExpressClass extends AdminClass implements ListInterface
 
         if (is_null($express)) parent::redirect_exception('/admin/express/index', '快递不存在');
 
-        return $express;
+        if (SUBSTATION != '0') {
+            $class = new ExpressAmountClass();
+
+            $result = $class->amount($id, $express->cost, $express->protect);
+
+            $express->amount = $result['amount'];
+            $express->cost = $result['cost'];
+            $express->protect = $result['protect'];
+        }
+
+        return $express->getData();
     }
 
     public function edit($id)
@@ -88,6 +114,8 @@ class ExpressClass extends AdminClass implements ListInterface
         $express->disabled = $request->post('disabled');
         $express->platform = $request->post('platform');
         $express->goods_code = $request->post('goods_code');
+        $express->cost = $request->post('cost');
+        $express->protect = $request->post('protect');
         $express->updated_at = date('Y-m-d H:i:s');
         $express->save();
     }
@@ -106,6 +134,8 @@ class ExpressClass extends AdminClass implements ListInterface
             'disabled|状态' => 'require',
             'platform|平台' => 'require|in:0,1,2',
             'goods_code|限制使用' => 'max:2000',
+            'cost|成本价' => 'require|between:0,100000000',
+            'protect|保护价' => 'require|between:0.01,100000000',
         ];
 
         $result = parent::validator($request->post(), $rule);
@@ -120,6 +150,8 @@ class ExpressClass extends AdminClass implements ListInterface
             'disabled|状态' => 'require',
             'platform|平台' => 'require|in:0,1,2',
             'goods_code|限制使用' => 'max:2000',
+            'cost|成本价' => 'require|between:0,100000000',
+            'protect|保护价' => 'require|between:0.01,100000000',
         ];
 
         $result = parent::validator($request->post(), $rule);

@@ -27,7 +27,7 @@
         </span>
     </div>
 
-    <form class="layui-form" action="/admin/member_grade/save">
+    <form class="layui-form" action="/admin/member_grade/save" method="post">
         {if isset($self)}
         <input type='hidden' name='id' id='id' value='{$self["id"]}'/>
         {/if}
@@ -119,7 +119,7 @@
             <div class="layui-input-inline">
                 <input type="text" name="expressAmount[0][cost]" lay-verify="required|number" placeholder="成本价" autocomplete="off"
                        class="layui-input" value='{if isset($amount) && isset($amount[0])}{$amount[0]["cost"]}{else/}0{/if}' maxlength="60"
-                       {if SUBSTATION !=0}readonly{/if}/>
+                       readonly/>
             </div>
             <div class="layui-form-mid layui-word-aux">统一模式成本价</div>
         </div>
@@ -130,7 +130,7 @@
                 <input type="text" name="expressAmount[0][protect]" lay-verify="required|number" placeholder="保护价"
                        autocomplete="off"
                        class="layui-input" value='{if isset($amount) && isset($amount[0])}{$amount[0]["protect"]}{else/}0{/if}' maxlength="60"
-                       {if SUBSTATION !=0}readonly{/if}/>
+                       readonly/>
             </div>
             <div class="layui-form-mid layui-word-aux">统一模式保护价</div>
         </div>
@@ -154,12 +154,12 @@
         <input type="text" name="expressAmount[{$v['id']}][cost]" lay-verify="" placeholder="快递费" autocomplete="off"
                class="layui-input expressAmount"
                value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["cost"]}{else/}0{/if}' maxlength="10"
-               {if SUBSTATION !=0}readonly{/if}/>
+               readonly/>
         <div class="layui-form-mid layui-word-aux">保护价</div>
         <input type="text" name="expressAmount[{$v['id']}][protect]" lay-verify="" placeholder="快递费" autocomplete="off"
                class="layui-input expressAmount"
                value='{if isset($amount) && isset($amount[$v["id"]])}{$amount[$v["id"]]["protect"]}{else/}0{/if}' maxlength="10"
-               {if SUBSTATION !=0}readonly{/if}/>
+               readonly/>
         <input type="hidden" name="expressAmount[{$v['id']}][id]" value="{$v['id']}">
         <input type="hidden" name="expressAmount[{$v['id']}][name]" value="{$v['name']}">
     </div>

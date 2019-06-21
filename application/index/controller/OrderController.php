@@ -33,7 +33,7 @@ class OrderController extends \app\http\controller\IndexController
         $store = $this->class->store();
 
         $express = $this->class->express($goods['code']);
-
+//dd($express);
         $content = $this->class->goods_content($goods_id);
 
         $result = [

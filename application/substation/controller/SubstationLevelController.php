@@ -127,4 +127,23 @@ class SubstationLevelController extends AdminController
         //更新
         $this->class->update($id, $request);
     }
+
+    //分站价格修改
+    public function getAmount(Request $request)
+    {
+        $id = $request->get('id');
+
+        $express = $this->class->self_express();
+
+        $express = $this->class->substation_level($id, $express);
+
+        return parent::view('amount', ['id' => $id, 'express' => $express]);
+    }
+
+    public function postAmount(Request $request)
+    {
+        $this->class->level_amount($request);
+
+        return parent::success('/substation-level/index');
+    }
 }

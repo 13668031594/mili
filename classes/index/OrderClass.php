@@ -10,11 +10,9 @@ namespace classes\index;
 
 
 use app\express\model\ExpressModel;
-use app\goods\model\GoodsAmountModel;
 use app\goods\model\GoodsContentModel;
 use app\goods\model\GoodsModel;
 use app\goods\model\GoodsRecordModel;
-use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
@@ -24,8 +22,9 @@ use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
 use app\Substation\model\SubstationModel;
 use app\substation\model\SubstationRecordModel;
-use classes\vendor\ExpressAmountClass;
+use classes\substation\SubstationLevelClass;
 use classes\vendor\GoodsAmountClass;
+use classes\vendor\GradeExpressAmountClass;
 use think\Db;
 use think\Model;
 use think\Request;
@@ -79,7 +78,10 @@ class OrderClass extends \classes\IndexClass
 
         $member = parent::member();
 
-        $amount_class = new ExpressAmountClass();
+        $express_self = new SubstationLevelClass();
+        $express_self = $express_self->self_express();
+
+        $amount_class = new GradeExpressAmountClass();
 
         $grade = new MemberGradeModel();
         $grade = $grade->where('id', '=', $member['grade_id'])->find();
@@ -108,15 +110,15 @@ class OrderClass extends \classes\IndexClass
 
             if ($grade->mode == 'on') {
 
-                $amount = $amount_class->amount(0, $member['grade_id']);
+                $amount = $amount_class->amount(0, $member['grade_id'],$express_self[0]['protect']);
             } else {
 
-                $amount = $amount_class->amount($v['id'], $member['grade_id']);
+                $amount = $amount_class->amount($v['id'], $member['grade_id'],$express_self[$v['id']]['protect']);
             }
 
             $result[$v['platform']][$v['id']] = [
                 'name' => $v['name'],
-                'amount' => $amount['amount'],
+                'amount' => $amount,
             ];
         }
 
@@ -455,14 +457,16 @@ class OrderClass extends \classes\IndexClass
         $grade = $grade->where('id', '=', $this->member['grade_id'])->find();
         if (is_null($grade)) parent::ajax_exception(000, '会员等级异常');
 
-        $b = new ExpressAmountClass();
+        $express_self = new SubstationLevelClass();
+        $express_self = $express_self->self_express();
+        $b = new GradeExpressAmountClass();
         //快递费验证
         if ($grade['mode'] == 'on') {
 
-            $b = $b->amount(0, $grade->id);
+            $b = $b->amount(0, $grade->id,$express_self[0]['protect']);
         } else {
 
-            $b = $b->amount($express->id, $grade->id);
+            $b = $b->amount($express->id, $grade->id,$express_self[$express->id]['protect']);
         }
         $amount = $b['amount'];
 

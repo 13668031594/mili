@@ -15,11 +15,13 @@ use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\Substation\model\SubstationLevelModel;
+use app\Substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\ListInterface;
+use classes\substation\SubstationLevelClass;
 use classes\vendor\ExpressAmountClass;
-use classes\vendor\GoodsAmountClass;
 use classes\vendor\GradeAmountClass;
+use classes\vendor\GradeExpressAmountClass;
 use think\Db;
 use think\Request;
 
@@ -110,36 +112,20 @@ class MemberGradeClass extends AdminClass implements ListInterface
         if (is_null($model)) parent::redirect_exception('/admin/member_grade/index', '等级不存在');
         $model = $model->getData();
 
-        $express = new ExpressModel();
-        $express = $express->column('id');
-        $express[] = 0;
+        $class = new SubstationLevelClass();
+        $express = $class->self_express();
 
-        //独立快递费用
-//        $amounts = $this->express->where('substation', '=', SUBSTATION)->where('grade', '=', $id)->column('express,amount,cost,protect', 'express');
-        $amounts = [];
+        $amount_class = new GradeExpressAmountClass();
 
-//        if (SUBSTATION != 0) {
+        foreach ($express as &$v) {
 
-        $class = new ExpressAmountClass();
-
-        foreach ($express as $v) {
-
-            $r = $class->amount($v, $id);
-
-            $a = [];
-            $a['express'] = $v;
-            $a['amount'] = $r['amount'];
-            $a['cost'] = $r['cost'];
-            $a['protect'] = $r['protect'];
-
-            $amounts[$v] = $a;
+            $v['amount'] = $amount_class->amount($v['id'],$id,$v['protect']);//初始化金额为0
         }
-//        }
 
         //结果数组
         $result = [
             'self' => $model,
-            'amount' => $amounts,
+            'amount' => $express,
         ];
 
         //反馈
@@ -277,14 +263,11 @@ class MemberGradeClass extends AdminClass implements ListInterface
     //验证独立快递费字段
     private function validator_mode_1(Request $request, $id)
     {
-//        if ($request->post('mode') == 'off') {
-
         $rule = [];
         $post = [];
 
         foreach ($request->post('expressAmount') as $k => $v) {
-//dump($request->post('expressAmount'));
-//exit;
+
             if ($v['id'] == 0) continue;
 
             if (!isset($v['name']) || !isset($v['amount']) || !isset($v['id'])) parent::ajax_exception(000, '请刷新重试');
@@ -295,17 +278,17 @@ class MemberGradeClass extends AdminClass implements ListInterface
             $result = parent::validator($post, $rule);
             if (!is_null($result)) parent::ajax_exception(000, $result);
         }
-//        }
 
-        if (SUBSTATION != 0 && $id != 0) {
+        if (SUBSTATION != 0) {
 
-            $class = new ExpressAmountClass();
+            $class = new SubstationLevelClass();
+            $express = $class->self_express();
 
-            foreach ($request->post('expressAmount') as &$v) {
+            foreach ($request->post('expressAmount') as $k => &$v) {
 
-                $r = $class->amount($v['id'], $id);
+               $protect = $express[$k]['protect'];
 
-                if ($r['protect'] > $v['amount']) parent::ajax_exception(000, $v['name'] . '销售价不得低于' . $r['protect']);
+                if ($protect > $v['amount']) parent::ajax_exception(000, $v['name'] . '销售价不得低于' . $protect);
 //                if ($r['cost'] > $v['amount']) parent::ajax_exception(000, $v['name'] . '销售价不得低于' . $r['amount']);
 //                if ($r['protect'] > $v['amount']) parent::ajax_exception(000, $v['name'] . '销售价不得低于' . $r['amount']);
             }
@@ -336,8 +319,8 @@ class MemberGradeClass extends AdminClass implements ListInterface
             $insert[$k]['grade'] = $model->id;
             $insert[$k]['express'] = $v['id'];
             $insert[$k]['amount'] = number_format($v['amount'], 2, '.', '');
-            $insert[$k]['cost'] = number_format($v['cost'], 2, '.', '');
-            $insert[$k]['protect'] = number_format($v['protect'], 2, '.', '');
+//            $insert[$k]['cost'] = number_format($v['cost'], 2, '.', '');
+//            $insert[$k]['protect'] = number_format($v['protect'], 2, '.', '');
         }
 
         if (count($insert) > 0) $this->express->insertAll($insert);

@@ -16,8 +16,10 @@ use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
 use app\member\model\MemberStoreModel;
+use classes\substation\SubstationLevelClass;
 use classes\vendor\ExpressAmountClass;
 use classes\vendor\GradeAmountClass;
+use classes\vendor\GradeExpressAmountClass;
 use think\Db;
 use think\Request;
 
@@ -294,8 +296,11 @@ class UserClass extends \classes\IndexClass
         $grades = new MemberGradeModel();
         $grades = $grades->where('status','=','on')->where('sort', '>=', $member_grade->sort)->order('sort desc')->column('*');
 
-        $express = new MemberGradeExpressModel();
-        $class = new ExpressAmountClass();
+        $express = new SubstationLevelClass();
+        $express = $express->self_express();
+        unset($express[0]);
+
+        $class = new GradeExpressAmountClass();
 
         //获取分站的等级信息
         $amount_model = new GradeAmountClass();
@@ -304,18 +309,18 @@ class UserClass extends \classes\IndexClass
         foreach ($grades as $k => &$v) {
 
             $ga = $amount_model->amount($v['id'], $v['recharge'], $v['buy_total']);
-//dump($ga);
+
             if ($ga['status'] == 'off'){
 
                 unset($grades[$k]);
                 continue;
             }
 
-            $v['express'] = $express->where('grade', '=', $v['id'])->column('express,amount', 'express');
+            $v['express'] = $express;
             foreach ($v['express'] as $ke => &$va) {
 
-                $amount = $class->amount($ke, $v['id']);
-                $va = $amount['amount'];
+                $amount = $class->amount($ke, $ke,$va['protect']);
+                $va = $amount;
             }
 
             $v['buy_total'] = ($ga['buy_total'] > $grade_amount['buy_total']) ? ($ga['buy_total'] - $grade_amount['buy_total']) : 0;

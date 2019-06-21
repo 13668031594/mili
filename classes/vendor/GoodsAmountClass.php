@@ -42,9 +42,17 @@ class GoodsAmountClass
             $up = new SubstationLevelUpModel();
             $up = $up->where('level_id', '=', $sub['level_id'])->find();
 
-            $this->amount += $up['goods_up'];
-            $this->cost += $up['goods_cost_up'];
-            $this->protect += $up['goods_protect_up'];
+            if (is_null($up)){
+
+                $this->amount += $level['goods_up'];
+                $this->cost += $level['goods_cost_up'];
+                $this->protect += $level['goods_protect_up'];
+            }else{
+
+                $this->amount += $up['goods_up'];
+                $this->cost += $up['goods_cost_up'];
+                $this->protect += $up['goods_protect_up'];
+            }
         }
     }
 

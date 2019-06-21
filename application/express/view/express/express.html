@@ -81,6 +81,25 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label">成本价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="cost" lay-verify="required|number" placeholder="商品成本价" autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["cost"]}{else/}0{/if}' maxlength="60"
+                           {if SUBSTATION !=0}readonly{/if}/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">保护价</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="protect" lay-verify="required|number" placeholder="商品保护价"
+                           autocomplete="off"
+                           class="layui-input" value='{if isset($self)}{$self["protect"]}{else/}0{/if}' maxlength="60"
+                           {if SUBSTATION !=0}readonly{/if}/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label">限制使用</label>
                 <div class="layui-input-block">
                 <textarea type="text" name="goods_code" placeholder="限制使用" autocomplete="off"
