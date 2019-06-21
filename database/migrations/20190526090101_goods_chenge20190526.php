@@ -40,8 +40,6 @@ class GoodsChenge20190526 extends Migrator
 
         $table = $this->table('member_grade_express');
         $table->addColumn(Column::integer('substation')->setDefault(0)->setComment('分站'));
-        $table->addColumn(Column::decimal('cost', 18, 2)->setDefault(0)->setComment('成本价'));
-        $table->addColumn(Column::decimal('protect', 18, 2)->setDefault(0)->setComment('保护价'));
         $table->save();
 
         $table = $this->table('order');
