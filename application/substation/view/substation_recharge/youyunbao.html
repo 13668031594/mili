@@ -13,7 +13,6 @@
 
     <script type="text/javascript" src="/template/js/qrcode.js"></script>
     <script src="/template/layer_mobile/layer.js?2.x"></script>
-
 </head>
 <body class="page-maintenance layout-full" {$alipayapp}>
 <div class="page animsition text-center" style="-webkit-animation: 800ms; opacity: 1;">
@@ -122,7 +121,7 @@
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "orderajax",
+            url: "/orderajax",
             timeout: 10000, //ajax请求超时时间10s
             data: {type: "{$type}", order: "{$order}", data: "{$data}"}, //post数据
             success: function (data, textStatus) {
