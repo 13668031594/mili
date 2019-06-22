@@ -469,6 +469,8 @@ class OrderClass extends \classes\IndexClass
             $b = $b->amount($express->id, $grade->id,$express_self[$express->id]['protect']);
         }
         $amount = $b;
+        $cost =  $express_self[$express->id]['cost'];
+        $protect =  $express_self[$express->id]['protect'];
 
 
         //余额验证
@@ -561,8 +563,8 @@ class OrderClass extends \classes\IndexClass
         //新增成本价
         $insert->goods_cost = $goods['cost'];
         $insert->goods_cost_all = $goods['cost'] * $goods_number;
-        $insert->express_cost = $b['cost'];
-        $insert->express_cost_all = $b['cost'] * $express_number;
+        $insert->express_cost = $cost;
+        $insert->express_cost_all = $cost * $express_number;
 
         $insert->substation_pay = 0;
         $insert->save();
