@@ -468,7 +468,7 @@ class OrderClass extends \classes\IndexClass
 
             $b = $b->amount($express->id, $grade->id,$express_self[$express->id]['protect']);
         }
-        $amount = $b['amount'];
+        $amount = $b;
 
 
         //余额验证
