@@ -46,6 +46,12 @@
                            class="layui-input" value='{$v["protect"]}' maxlength="20"/>
                 </div>
                 <div class="layui-form-mid layui-word-aux">分站保护价</div>
+                <hr>
+                <div class="layui-input-inline">
+                    <input type="text"  lay-verify="required|number" placeholder="保护价" autocomplete="off"
+                           class="layui-input" value='{$self[$v["id"]]["cost"]}' maxlength="20" readonly/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">本站成本价</div>
             </div>
         </div>
         {/foreach}

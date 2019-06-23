@@ -135,11 +135,11 @@ class SubstationLevelController extends AdminController
 
         $self = $this->class->read($id);
 
-        $express = $this->class->self_express();
+        $express_self = $this->class->self_express();
 
-        $express = $this->class->substation_level($id, $express,$self);
-
-        return parent::view('amount', ['id' => $id, 'express' => $express]);
+        $express = $this->class->substation_level($id, $express_self, $self);
+//        dd($self);
+        return parent::view('amount', ['id' => $id, 'self' => $express_self, 'express' => $express]);
     }
 
     public function postAmount(Request $request)

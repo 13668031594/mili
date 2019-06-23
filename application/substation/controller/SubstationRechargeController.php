@@ -59,7 +59,7 @@ class SubstationRechargeController extends AdminController
         $class = new SubstationRechargeClass();
 
         $data = $class->validator_recharge1($request);
-        $data['money'] = '0.01';
+//        $data['money'] = '0.01';
 
         $master = $class->master();
 
