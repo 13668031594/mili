@@ -50,8 +50,9 @@ class GradeExpressAmountClass
 
     public function amount($express_id, $grade,$protect)
     {
-        $result = $protect + $this->amount;
+        $result = $protect;
         $amount = $this->grade_amount_model->where('grade','=',$grade)->where('express','=',$express_id)->find();
+//        dd($amount);
         if (!is_null($amount) && ($amount->amount > $result))$result = $amount->amount;
 
         $result = number_format($result, 2, '.', '');
