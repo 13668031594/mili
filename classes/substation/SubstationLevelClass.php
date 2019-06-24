@@ -46,6 +46,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
                 $ups = $up->where('substation', '=', SUBSTATION)->where('level_id', '=', $v['id'])->find();
 
                 if (!is_null($ups)) {
+                    if (!empty($ups['name']))$v['name'] = $ups['name'];
 //                    $ups = $ups->toArray();
                     $v['goods_up'] = $ups['goods_up'];
                     $v['express_up'] = $ups['express_up'];
@@ -91,6 +92,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
 
         if (!is_null($ups)) {
 
+            if (!empty($ups['name']))$substation['name'] = $ups['name'];
             $substation['goods_up'] = $ups['goods_up'];
             $substation['express_up'] = $ups['express_up'];
             $substation['goods_cost_up'] = $ups['goods_cost_up'];
@@ -116,9 +118,10 @@ class SubstationLevelClass extends AdminClass implements ListInterface
         if (SUBSTATION != '0') {
 
             $up = new SubstationLevelUpModel();
-            $a = $up->where('substation', '=', SUBSTATION)->where('level_id','=',$id)->find();
+            $a = $up->where('substation', '=', SUBSTATION)->where('level_id', '=', $id)->find();
             if (!is_null($a)) {
 
+                $a->name = $request->post('name');
                 $a->goods_up = $request->post('goods_up');
                 $a->express_up = $request->post('express_up');
                 $a->goods_cost_up = $request->post('goods_cost_up');
@@ -129,6 +132,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
             } else {
 
                 $up->level_id = $substation->id;
+                $up->name = $request->post('name');
                 $up->substation = SUBSTATION;
                 $up->goods_up = $request->post('goods_up');
                 $up->express_up = $request->post('express_up');
@@ -150,10 +154,15 @@ class SubstationLevelClass extends AdminClass implements ListInterface
             $substation->express_protect_up = $request->post('express_protect_up');
             $substation->updated_at = date('Y-m-d H:i:s');
             $substation->save();
-
-            $model = new SubstationModel();
-            $model->where('level_id', '=', $substation->id)->update(['level_name' => $substation->name]);
         }
+
+        $sub = new SubstationModel();
+        $sub_ids = $sub->where('pid', '=', SUBSTATION)
+            ->whereOr('top', '=', SUBSTATION)
+            ->column('id');
+
+        $model = new SubstationModel();
+        $model->where('level_id', '=', $id)->whereIn('id', $sub_ids)->update(['level_name' => $substation->name]);
     }
 
     public function delete($id)
@@ -232,7 +241,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
     }
 
     //分站等级
-    public function substation_level($id, $express,$self)
+    public function substation_level($id, $express, $self)
     {
         $amount = new ExpressLevelAmountModel();
         $amount = $amount->where('substation', '=', SUBSTATION)->where('level_id', '=', $id)->column('*', 'express');
@@ -245,7 +254,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
 
                 $v['cost'] = $v['cost'] > $al['cost'] ? $v['cost'] : $al['cost'];
                 $v['protect'] = $v['protect'] > $al['protect'] ? $v['protect'] : $al['protect'];
-            }else{
+            } else {
 
                 $v['cost'] = $v['cost'] + $self['express_cost_up'];
                 $v['protect'] = $v['protect'] + $self['express_protect_up'];
@@ -274,8 +283,8 @@ class SubstationLevelClass extends AdminClass implements ListInterface
             $cost = $costs[$v['id']];
             $protect = $protects[$v['id']];
 
-            if ($v['cost'] > $cost) parent::ajax_exception(000, $v['name'].' 成本价不得低于：' . $v['cost']);
-            if ($v['protect'] > $protect) parent::ajax_exception(000, $v['name'].' 保护价不得低于：' . $v['protect']);
+            if ($v['cost'] > $cost) parent::ajax_exception(000, $v['name'] . ' 成本价不得低于：' . $v['cost']);
+            if ($v['protect'] > $protect) parent::ajax_exception(000, $v['name'] . ' 保护价不得低于：' . $v['protect']);
 
             $i = [
                 'express' => $v['id'],
