@@ -12,10 +12,13 @@ use app\Substation\model\SubstationModel;
 class ExpressAmountClass
 {
     private $level_amount_model;
-    private $cost = 0;
-    private $protect = 0;
+    private $cost1 = 0;
+    private $protect1 = 0;
+    private $cost2 = 0;
+    private $protect2 = 0;
     private $where = [];
     private $sub;
+    private $pid;
 
     public function __construct($sub = null)
     {
@@ -30,15 +33,15 @@ class ExpressAmountClass
             //获取当前分站信息
             $sub = new SubstationModel();
             $sub = $sub->find($this->sub);
+            $this->pid = $sub->pid;
 
             //获取初始等级信息
             $level = new SubstationLevelModel();
             $level = $level->find($sub['level_id']);
-            $this->cost = $level['express_cost_up'];
-            $this->protect = $level['express_cost_up'];
+            $this->cost1 = $level['express_cost_up'];
+            $this->protect1 = $level['express_cost_up'];
 
             //商品单独定价
-//            $this->level_amount_model = $this->level_amount_model->where('substation', '=', $sub['pid'])->where('level_id', '=', $sub['level_id']);
             $this->where = [
                 ['substation', '=', $sub['pid']],
                 ['level_id', '=', $sub['level_id']],
@@ -52,12 +55,12 @@ class ExpressAmountClass
 
                 if (is_null($up)) {
 
-                    $this->cost += $level['express_cost_up'];
-                    $this->protect += $level['express_cost_up'];
+                    $this->cost2 = $level['express_cost_up'];
+                    $this->protect2 = $level['express_cost_up'];
                 } else {
 
-                    $this->cost += $up['express_cost_up'];
-                    $this->protect += $up['express_cost_up'];
+                    $this->cost2 = $up['express_cost_up'];
+                    $this->protect2 = $up['express_cost_up'];
                 }
 
             }
@@ -66,28 +69,55 @@ class ExpressAmountClass
 
     public function amount($express_id, $cost, $protect)
     {
-        //根据基础定价计算出当前分站应有的价格
-        $base_cost = $cost + $this->cost;
-        $base_protect = $protect + $this->protect;
-
         $result = [
-            'cost' => $base_cost,
-            'protect' => $base_protect,
+            'cost' => $cost,
+            'protect' => $protect,
         ];
 
-        if ($this->sub != 0) {
+        if ($this->sub == 0) {
 
-//            $model = $this->level_amount_model;
-            //获取当前定价信息
-            $al = $this->level_amount_model->where($this->where)->where('express', '=', $express_id)->find();
-//            dump($express_id);
-//            dump($al);
-            //确定成本价与保护价
-            if (!is_null($al)) {
+            $result['cost'] = number_format($result['cost'], 2, '.', '');
+            $result['protect'] = number_format($result['protect'], 2, '.', '');
+            return $result;
+        }
 
-                $result['cost'] = $cost > $al->cost ? $cost : $al->cost;
-                $result['protect'] = $protect > $al->protect ? $protect : $al->protect;
+
+        //根据基础定价计算出当前分站应有的价格
+        if ($this->pid == 0) {
+
+            $base_cost = $cost + $this->cost1;
+            $base_protect = $protect + $this->protect1;
+        } else {
+            $where = $this->where;
+            $where[0] = ['substation', '=', 0];
+            $p_al = $this->level_amount_model->where($where)->where('express', '=', $express_id)->find();
+
+            if (is_null($p_al)) {
+
+                //上级站点没有自行定价
+                //保护价和成本价上浮两次
+                $base_cost = $cost + $this->cost1 + $this->cost2;
+                $base_protect = $protect + $this->protect1 + $this->protect2;
+            } else {
+
+                //上级站点有自行定价
+                $base_cost = $p_al->cost + $this->cost2;
+                $base_protect = $p_al->protect + $this->protect2;
             }
+        }
+
+        //获取当前定价信息
+        $al = $this->level_amount_model->where($this->where)->where('express', '=', $express_id)->find();
+
+        //确定成本价与保护价
+        if (is_null($al)) {
+
+            $result['cost'] = $base_cost;
+            $result['protect'] = $base_protect;
+        } else {
+
+            $result['cost'] = $cost > $al->cost ? $cost : $al->cost;
+            $result['protect'] = $protect > $al->protect ? $protect : $al->protect;
         }
 
         $result['cost'] = number_format($result['cost'], 2, '.', '');

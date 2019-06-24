@@ -236,7 +236,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
                 $v['protect'] = $amount['protect'];
             }
         }
-
+//dd($result);
         return $result;
     }
 
