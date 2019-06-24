@@ -21,6 +21,7 @@ use app\member\model\MemberStoreModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
+use app\Order\model\OrderSubstationProfitModel;
 use app\Substation\model\SubstationModel;
 use app\substation\model\SubstationRecordModel;
 use classes\substation\SubstationLevelClass;
@@ -667,7 +668,7 @@ class OrderClass extends \classes\IndexClass
         $record->save();
 
         //添加站点收益信息
-//        self::order_profit($insert);
+        self::order_profit($insert);
 
         //添加会员钱包记录结束
         Db::commit();
@@ -900,5 +901,72 @@ class OrderClass extends \classes\IndexClass
         $express_profit = $order->express_cost - $express_amount['cost'];
         $goods_profit_all = $order_cost_goods - $goods_cost;
         $express_profit_all = $order_cost_express - $express_cost;
+
+        $profit = new OrderSubstationProfitModel();
+        $profit->order_id = $order_id; //订单id'
+        $profit->goods_number = $goods_number; //订单商品总数
+        $profit->express_number = $express_number; //订单快递总数
+        $profit->order_sub = $sub_id; //订单来源分站id'
+        $profit->child_sub = $sub_id; //下级分站id'
+        $profit->my_sub = $pid; //收益分站id'
+        $profit->order_cost_all = $order_cost_all; //订单总成本
+        $profit->child_cost_all = $order_cost_all; //下级分站总成本价
+        $profit->my_cost_all = $goods_cost + $express_cost; //收益分站总成本价
+        $profit->profit_all = $goods_profit_all + $express_profit_all; //收益分站总收益
+        $profit->order_cost_goods = $order->goods_cost; //订单商品成本价格
+        $profit->child_cost_goods = $order->goods_cost; //下级分站商品成本价格
+        $profit->my_cost_goods = $goods_amount['cost']; //收益分站商品成本价格
+        $profit->profit_goods = $goods_profit; //收益分站商品收益，单个
+        $profit->profit_goods_all = $goods_profit_all; //收益分站商品收益，总计
+        $profit->order_cost_express = $order->express_cost; //订单快递成本价格
+        $profit->child_cost_express = $order->express_cost; //下级分站快递成本价格
+        $profit->my_cost_express = $express_amount['cost']; //收益分站快递成本价格
+        $profit->profit_express = $express_profit;//收益分站快递收入，单个
+        $profit->profit_express_all = $express_profit_all;//收益分站快递收入，总计
+        $profit->created_at = $order->created_at;//创建时间'
+        $profit->save();
+
+        //若是分分站下单，继续添加主站利润
+        if ($p_sub->id == 0)return;
+
+        //初始化要用的class
+        $goods_amount_class = new GoodsAmountClass(0);
+        $express_amount_class = new ExpressAmountClass(0);
+
+        //获取上级站的成本信息
+        $goods_amount_2 = $goods_amount_class->amount($goods->id, $goods->amount, $goods->cost, $goods->protect);
+        $express_amount_2 = $express_amount_class->amount($express->id, $express->cost, $express->protect);
+
+        //计算上级站成本与收益情况
+        $goods_cost_2 = $goods_amount_2['cost'] * $goods_number;
+        $express_cost_2 = $express_amount_2['cost'] * $express_number;
+        $goods_profit_2 = $goods_amount['cost'] - $goods_amount_2['cost'];
+        $express_profit_2 = $express_amount['cost'] - $express_amount_2['cost'];
+        $goods_profit_all_2 = $goods_cost - $goods_cost_2;
+        $express_profit_all_2 = $express_cost - $express_cost_2;
+
+        $profit_2 = new OrderSubstationProfitModel();
+        $profit_2->order_id = $order_id; //订单id'
+        $profit_2->goods_number = $goods_number; //订单商品总数
+        $profit_2->express_number = $express_number; //订单快递总数
+        $profit_2->order_sub = $sub_id; //订单来源分站id'
+        $profit_2->child_sub = $profit->my_sub; //下级分站id'
+        $profit_2->my_sub = 0; //收益分站id'
+        $profit_2->order_cost_all = $order_cost_all; //订单总成本
+        $profit_2->child_cost_all = $profit->my_cost_all; //下级分站总成本价
+        $profit_2->my_cost_all = $goods_cost_2 + $express_cost_2; //收益分站总成本价
+        $profit_2->profit_all = $goods_profit_all_2 + $express_profit_all_2; //收益分站总收益
+        $profit_2->order_cost_goods = $order->goods_cost; //订单商品成本价格
+        $profit_2->child_cost_goods = $profit->my_cost_goods; //下级分站商品成本价格
+        $profit_2->my_cost_goods = $goods_amount_2['cost']; //收益分站商品成本价格
+        $profit_2->profit_goods = $goods_profit_2; //收益分站商品收益，单个
+        $profit_2->profit_goods_all = $goods_profit_all_2; //收益分站商品收益，总计
+        $profit_2->order_cost_express = $order->express_cost; //订单快递成本价格
+        $profit_2->child_cost_express = $profit->my_cost_express; //下级分站快递成本价格
+        $profit_2->my_cost_express = $express_amount_2['cost']; //收益分站快递成本价格
+        $profit_2->profit_express = $express_profit_2;//收益分站快递收入，单个
+        $profit_2->profit_express_all = $express_profit_all_2;//收益分站快递收入，总计
+        $profit_2->created_at = $order->created_at;//创建时间'
+        $profit_2->save();
     }
 }

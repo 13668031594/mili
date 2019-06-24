@@ -116,7 +116,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
         if (SUBSTATION != '0') {
 
             $up = new SubstationLevelUpModel();
-            $a = $up->where('substation', '=', SUBSTATION)->find();
+            $a = $up->where('substation', '=', SUBSTATION)->where('level_id','=',$id)->find();
             if (!is_null($a)) {
 
                 $a->goods_up = $request->post('goods_up');
