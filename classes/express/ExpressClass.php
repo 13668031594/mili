@@ -135,7 +135,7 @@ class ExpressClass extends AdminClass implements ListInterface
             'platform|平台' => 'require|in:0,1,2',
             'goods_code|限制使用' => 'max:2000',
             'cost|成本价' => 'require|between:0,100000000',
-            'protect|保护价' => 'require|between:0.01,100000000',
+            'protect|保护价' => 'require|between:0,100000000',
         ];
 
         $result = parent::validator($request->post(), $rule);
@@ -151,7 +151,7 @@ class ExpressClass extends AdminClass implements ListInterface
             'platform|平台' => 'require|in:0,1,2',
             'goods_code|限制使用' => 'max:2000',
             'cost|成本价' => 'require|between:0,100000000',
-            'protect|保护价' => 'require|between:0.01,100000000',
+            'protect|保护价' => 'require|between:0,100000000',
         ];
 
         $result = parent::validator($request->post(), $rule);

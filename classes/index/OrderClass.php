@@ -13,6 +13,7 @@ use app\express\model\ExpressModel;
 use app\goods\model\GoodsContentModel;
 use app\goods\model\GoodsModel;
 use app\goods\model\GoodsRecordModel;
+use app\Member\model\ExpressLevelAmountModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
@@ -23,6 +24,7 @@ use app\order\model\OrderSendModel;
 use app\Substation\model\SubstationModel;
 use app\substation\model\SubstationRecordModel;
 use classes\substation\SubstationLevelClass;
+use classes\vendor\ExpressAmountClass;
 use classes\vendor\GoodsAmountClass;
 use classes\vendor\GradeExpressAmountClass;
 use think\Db;
@@ -110,10 +112,10 @@ class OrderClass extends \classes\IndexClass
 
             if ($grade->mode == 'on') {
 
-                $amount = $amount_class->amount(0, $member['grade_id'],$express_self[0]['protect']);
+                $amount = $amount_class->amount(0, $member['grade_id'], $express_self[0]['protect']);
             } else {
 
-                $amount = $amount_class->amount($v['id'], $member['grade_id'],$express_self[$v['id']]['protect']);
+                $amount = $amount_class->amount($v['id'], $member['grade_id'], $express_self[$v['id']]['protect']);
             }
 
             $result[$v['platform']][$v['id']] = [
@@ -463,14 +465,14 @@ class OrderClass extends \classes\IndexClass
         //快递费验证
         if ($grade['mode'] == 'on') {
 
-            $b = $b->amount(0, $grade->id,$express_self[0]['protect']);
+            $b = $b->amount(0, $grade->id, $express_self[0]['protect']);
         } else {
 
-            $b = $b->amount($express->id, $grade->id,$express_self[$express->id]['protect']);
+            $b = $b->amount($express->id, $grade->id, $express_self[$express->id]['protect']);
         }
         $amount = $b;
-        $cost =  $express_self[$express->id]['cost'];
-        $protect =  $express_self[$express->id]['protect'];
+        $cost = $express_self[$express->id]['cost'];
+        $protect = $express_self[$express->id]['protect'];
 
 
         //余额验证
@@ -506,7 +508,6 @@ class OrderClass extends \classes\IndexClass
         $p = $platform[$store['platform']];
 
         Db::startTrans();
-
 
         //正式下单
         $insert = new OrderModel();
@@ -570,7 +571,7 @@ class OrderClass extends \classes\IndexClass
         $insert->save();
         //正式下单结束
 
-        if (SUBSTATION != 0){
+        if (SUBSTATION != 0) {
 
             //分站扣款
             $substation = new SubstationModel();
@@ -578,7 +579,7 @@ class OrderClass extends \classes\IndexClass
 
             $all = $insert->goods_cost_all + $insert->express_cost_all;
 
-            if ($all <= $substation->balance){
+            if ($all <= $substation->balance) {
 
                 $substation->balance -= $all;
                 $substation->save();
@@ -596,12 +597,11 @@ class OrderClass extends \classes\IndexClass
                 $insert->substation_pay = 1;
                 $insert->save();
             }
-        }else{
+        } else {
 
             $insert->substation_pay = 1;
             $insert->save();
         }
-
 
 
         //添加收货地址
@@ -665,6 +665,9 @@ class OrderClass extends \classes\IndexClass
         $record->type = '2';
 
         $record->save();
+
+        //添加站点收益信息
+//        self::order_profit($insert);
 
         //添加会员钱包记录结束
         Db::commit();
@@ -844,5 +847,58 @@ class OrderClass extends \classes\IndexClass
         $member = parent::member();
         $order = new OrderModel();
         $order->where('id', '=', $id)->where('member_id', '=', $member['id'])->update(['note' => $note]);
+    }
+
+    public function order_profit($order)
+    {
+        //若是主站下单，无需添加成本
+        if ($order->substation == 0) return;
+
+        //列出查询需要的信息
+        $goods_id = $order->goods_id;
+        $express_id = $order->express_id;
+
+        //列出本单信息
+        $order_id = $order->id;//订单id
+        $sub_id = $order->substation;//下单站点id
+        $goods_number = $order->goods_number;//商品总数
+        $express_number = $order->express_number;//快递总数
+        $order_cost_goods = $order->goods_cost_all;//商品总成本
+        $order_cost_express = $order->express_cost_all;//快递总成本
+        $order_cost_all = $order_cost_goods + $order_cost_express;//订单总成本
+
+        //初始化要用到的model
+        $sub_model = new SubstationModel();//分站模型
+        $goods_model = new GoodsModel();//商品模型
+        $express_model = new ExpressModel();//快递模型
+
+        //获取商品信息
+        $goods = $goods_model->find($goods_id);
+        if (is_null($goods)) return;
+
+        //获取快递信息
+        $express = $express_model->find($express_id);
+        if (is_null($express)) return;
+
+        //寻找上级站点
+        $p_sub = $sub_model->find($sub_id);//找到自己的站点信息
+        if (is_null($p_sub)) return;//没有找到分站信息
+        $pid = $p_sub->pid;//赋值上级站点id
+
+        //初始化要用的class
+        $goods_amount_class = new GoodsAmountClass($pid);
+        $express_amount_class = new ExpressAmountClass($pid);
+
+        //获取上级站的成本信息
+        $goods_amount = $goods_amount_class->amount($goods->id, $goods->amount, $goods->cost, $goods->protect);
+        $express_amount = $express_amount_class->amount($express->id, $express->cost, $express->protect);
+
+        //计算上级站成本与收益情况
+        $goods_cost = $goods_amount['cost'] * $goods_number;
+        $express_cost = $express_amount['cost'] * $express_number;
+        $goods_profit = $order->goods_cost - $goods_amount['cost'];
+        $express_profit = $order->express_cost - $express_amount['cost'];
+        $goods_profit_all = $order_cost_goods - $goods_cost;
+        $express_profit_all = $order_cost_express - $express_cost;
     }
 }

@@ -12,20 +12,24 @@ use app\Substation\model\SubstationModel;
 class ExpressAmountClass
 {
     private $level_amount_model;
-    private $amount;
     private $cost = 0;
     private $protect = 0;
+    private $where = [];
+    private $sub;
 
-    public function __construct()
+    public function __construct($sub = null)
     {
+        if (is_null($sub)) $this->sub = SUBSTATION;
+        else $this->sub = $sub;
+
         //初始化定价模型
         $this->level_amount_model = new ExpressLevelAmountModel();
 
-        if (SUBSTATION != 0) {
+        if ($this->sub != 0) {
 
             //获取当前分站信息
             $sub = new SubstationModel();
-            $sub = $sub->find(SUBSTATION);
+            $sub = $sub->find($this->sub);
 
             //获取初始等级信息
             $level = new SubstationLevelModel();
@@ -34,7 +38,11 @@ class ExpressAmountClass
             $this->protect = $level['express_cost_up'];
 
             //商品单独定价
-            $this->level_amount_model = $this->level_amount_model->where('substation', '=', $sub['pid'])->where('level_id', '=', $sub['level_id']);
+//            $this->level_amount_model = $this->level_amount_model->where('substation', '=', $sub['pid'])->where('level_id', '=', $sub['level_id']);
+            $this->where = [
+                ['substation', '=', $sub['pid']],
+                ['level_id', '=', $sub['level_id']],
+            ];
 
             //二级分站，获取以及分站设置的等级信息
             if ($sub['pid'] != 0) {
@@ -42,11 +50,11 @@ class ExpressAmountClass
                 $up = new SubstationLevelUpModel();
                 $up = $up->where('level_id', '=', $sub['level_id'])->find();
 
-                if (is_null($up)){
+                if (is_null($up)) {
 
                     $this->cost += $level['express_cost_up'];
                     $this->protect += $level['express_cost_up'];
-                }else{
+                } else {
 
                     $this->cost += $up['express_cost_up'];
                     $this->protect += $up['express_cost_up'];
@@ -67,16 +75,18 @@ class ExpressAmountClass
             'protect' => $base_protect,
         ];
 
-        if (SUBSTATION != 0) {
+        if ($this->sub != 0) {
 
+//            $model = $this->level_amount_model;
             //获取当前定价信息
-            $al = $this->level_amount_model->where('express', '=', $express_id)->find();
-
+            $al = $this->level_amount_model->where($this->where)->where('express', '=', $express_id)->find();
+//            dump($express_id);
+//            dump($al);
             //确定成本价与保护价
             if (!is_null($al)) {
 
-                $result['cost'] = $base_cost > $al->cost ? $base_cost : $al->cost;
-                $result['protect'] = $base_protect > $al->protect ? $base_protect : $al->protect;
+                $result['cost'] = $cost > $al->cost ? $cost : $al->cost;
+                $result['protect'] = $protect > $al->protect ? $protect : $al->protect;
             }
         }
 

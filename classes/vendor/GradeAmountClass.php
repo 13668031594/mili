@@ -7,9 +7,13 @@ use app\Member\model\MemberGradeAmountModel;
 class GradeAmountClass
 {
     private $amount_model;
+    private $sub;
 
-    public function __construct()
+    public function __construct($sub = null)
     {
+        if (is_null($sub)) $this->sub = SUBSTATION;
+        else $this->sub = $sub;
+
         //初始化定价模型
         $this->amount_model = new MemberGradeAmountModel();
     }
@@ -23,7 +27,7 @@ class GradeAmountClass
         ];
 
         //获取当前定价信息
-        $a = $this->amount_model->where('grade', '=', $id)->where('substation', '=', SUBSTATION)->find();
+        $a = $this->amount_model->where('grade', '=', $id)->where('substation', '=', $this->sub)->find();
 
         if (!is_null($a)) {
 
