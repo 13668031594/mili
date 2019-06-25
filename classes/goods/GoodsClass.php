@@ -544,4 +544,10 @@ class GoodsClass extends AdminClass implements ListInterface
 
         if (count($insert) > 0) $goods_amount_model->insertAll($insert);
     }
+
+    public function level_amount_reset($goods_id,$substation = SUBSTATION)
+    {
+        $goods_amount_model = new GoodsLevelAmountModel();
+        $goods_amount_model->where('substation', '=', $substation)->where('goods_id', '=', $goods_id)->delete();
+    }
 }

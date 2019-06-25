@@ -29,7 +29,17 @@
         </span>
     </div>
 
-    <form class="layui-form" action="/admin/bank/index">
+    <form class="layui-form" lay-filter="form" action="/admin/bank/index">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">开关</label>
+            <div class="layui-input-block">
+                <input type="checkbox" id='switch' lay-filter="switch"
+                       lay-skin="switch"
+                       lay-text="开启|关闭" {if $self['switch'] == 'on'}checked{/if}/>
+                <input type="hidden" id='switchValue' name="switch" value="{$self['switch']}"/>
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">内容</label>
@@ -58,6 +68,7 @@
     layui.config({
         base: '{$src}res/js/common/'
     }).use(['mForm', 'layer', 'layedit', 'element'], function () {
+
         var layedit = layui.layedit;
         layedit.build('content', {
             height: 380
@@ -69,6 +80,14 @@
                 $('#show').prop('value', 'on');
             } else {
                 $('#show').prop('value', 'off');
+            }
+        });
+
+        form.on('switch(switch)', function (data) {
+            if (data.elem.checked) {
+                $('#switchValue').prop('value', 'on');
+            } else {
+                $('#switchValue').prop('value', 'off');
             }
         });
     }); //加载入口

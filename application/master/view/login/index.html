@@ -84,7 +84,9 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;"><i class="layui-icon layui-icon-tabs"></i> 站点余额</a>
                     <dl class="layui-nav-child">
+                        {if $bank}
                         <dd><a href="javascript:;" data-menu='/admin/substation-recharge/create'><i class="layui-icon layui-icon-file"></i> 手动充值</a></dd>
+                        {/if}
                         {if $you}
                         <dd><a href="javascript:;" data-menu='/admin/substation-recharge/create1'><i class="layui-icon layui-icon-file"></i> 自动充值</a></dd>
                         {/if}

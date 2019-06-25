@@ -99,7 +99,7 @@ class RechargeController extends \app\http\controller\IndexController
     public function getNoteTable()
     {
         $result = $this->class->note();
-
+//dd($result);
         return parent::tables($result);
     }
 

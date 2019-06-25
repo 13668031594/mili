@@ -46,7 +46,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
                 $ups = $up->where('substation', '=', SUBSTATION)->where('level_id', '=', $v['id'])->find();
 
                 if (!is_null($ups)) {
-                    if (!empty($ups['name']))$v['name'] = $ups['name'];
+                    if (!empty($ups['name'])) $v['name'] = $ups['name'];
 //                    $ups = $ups->toArray();
                     $v['goods_up'] = $ups['goods_up'];
                     $v['express_up'] = $ups['express_up'];
@@ -92,7 +92,7 @@ class SubstationLevelClass extends AdminClass implements ListInterface
 
         if (!is_null($ups)) {
 
-            if (!empty($ups['name']))$substation['name'] = $ups['name'];
+            if (!empty($ups['name'])) $substation['name'] = $ups['name'];
             $substation['goods_up'] = $ups['goods_up'];
             $substation['express_up'] = $ups['express_up'];
             $substation['goods_cost_up'] = $ups['goods_cost_up'];
@@ -301,5 +301,11 @@ class SubstationLevelClass extends AdminClass implements ListInterface
         $goods_amount_model->where('substation', '=', SUBSTATION)->where('level_id', '=', $level_id)->delete();
 
         if (count($insert) > 0) $goods_amount_model->insertAll($insert);
+    }
+
+    public function level_amount_reset($level_id,$substation = SUBSTATION)
+    {
+        $goods_amount_model = new ExpressLevelAmountModel();
+        $goods_amount_model->where('substation', '=', $substation)->where('level_id', '=', $level_id)->delete();
     }
 }

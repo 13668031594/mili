@@ -27,7 +27,10 @@
         </span>
     </div>
 
+    <!--<button class="layui-btn" id='reset333'>重置数据</button>-->
+
     <form class="layui-form" action="/admin/substation-level/amount">
+        <button type="button" class="layui-btn" id="reset">重置数据</button>
         <input type='hidden' name='id' id='id' value='{$id}'/>
 
         {foreach $express as $v}
@@ -56,7 +59,6 @@
         </div>
         {/foreach}
 
-
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" id='submit' lay-submit lay-filter="*">立即提交</button>
@@ -67,9 +69,40 @@
 </div>
 <script src="{$src}layui/layui.js"></script>
 <script>
+
+    var id = {php}echo $id;{/php};
+
     layui.config({
         base: '{$src}res/js/common/'
-    }).use(['mForm', 'layer', 'element', 'form']);
+    }).use(['mForm', 'layer', 'element', 'form'],function(){
+
+
+    });
+
+        $("#reset").on('click', function () {
+//console.log('333');
+            layer.confirm('确定要重置吗？', function (index) {
+
+                layer.close(index);
+
+                var dmsg = layer.msg('请稍候...', {time: false});
+
+                // 自定义操作
+                $.getJSON('/admin/substation-level/amountReset', {id: id}, function (data) {
+
+                    layer.close(dmsg);
+
+                    if (data.status == 'success') {
+
+                        layer.msg('操作成功');
+                        location.href='/admin/substation-level/amount?id='+id;
+                    } else {
+                        layer.msg('操作失败：' + data.message);
+                    }
+                });
+
+            });
+        });
 </script>
 </body>
 

@@ -143,19 +143,33 @@
             </li>
 
             <li>
-                <a href="/recharge" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                {if $set['youSwitch'] == 'on'}
+                <a href="/recharge1" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                {elseif $bank_set['switch'] == 'on'}
+                <a href="/recharge1" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                {else}
+                <a href="/recharge-note" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                {/if}
                 {if $nav['recharge']['tilt'] == 'on'}<i>{/if}
+                {if $set['youSwitch'] == 'on'}
                 在线充值
+                {elseif $bank_set['switch'] == 'on'}
+                手动充值
+                {else}
+                充值记录
+                {/if}
                 {if $nav['recharge']['tilt']}</i>{/if}
                 </a>
                 {if $nav['recharge']['hot'] == 'on'}
                 <img class="hot" src="{$src}images/hot.gif"/>
                 {/if}
                 <ul>
-                    {if $set['youSwitch'] == 'on'}
-                    <li><a href="/recharge1">自动充值</a></li>
+                    {if $set['youSwitch'] == 'on' && $bank_set['switch'] == 'on'}
+                    <li><a href="/recharge">手动充值</a></li>
                     {/if}
+                    {if $set['youSwitch'] == 'on' || $bank_set['switch'] == 'on'}
                     <li><a href="/recharge-note">充值记录</a></li>
+                    {/if}
                     <li><a href="/expense-note">余额记录</a></li>
                 </ul>
             </li>

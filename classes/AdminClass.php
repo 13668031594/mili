@@ -10,6 +10,7 @@ namespace classes;
 
 use app\master\model\MasterModel;
 use app\Substation\model\SubstationModel;
+use classes\system\BankClass;
 use classes\system\SystemClass;
 use classes\vendor\StorageClass;
 
@@ -102,6 +103,30 @@ class AdminClass extends FirstClass
         $set = $class->index();
 
         if ($set['youSwitch'] == 'on') return true;
+        else return false;
+    }
+
+    //判断上级站是否开启优云宝支付
+    public function bank()
+    {
+        if (SUBSTATION == 0) return false;
+
+        $substation = new SubstationModel();
+        $substation = $substation->find(SUBSTATION);
+
+        if (!empty($substation->pid)) {
+
+            $name = 'bankSetting_' . $substation->pid . '.txt';
+        } else {
+
+            $name = 'bankSetting.txt';
+        }
+
+        $class = new BankClass();
+        $class->storage = new StorageClass($name);
+        $set = $class->index();
+
+        if ($set['switch'] == 'on') return true;
         else return false;
     }
 }

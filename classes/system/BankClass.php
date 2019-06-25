@@ -91,6 +91,7 @@ class BankClass extends AdminClass
     public function save_validator()
     {
         $rule = [
+            'switch|开关' => 'require',
             'file|收款内容' => 'require|min:1|max:100000',
         ];
 
@@ -109,6 +110,7 @@ class BankClass extends AdminClass
     private function defaults()
     {
         return [
+            'switch' => 'on',
             'file' => '收款设置',
         ];
     }

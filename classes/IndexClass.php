@@ -13,6 +13,7 @@ use app\member\model\MemberModel;
 use app\member\model\MemberStoreModel;
 use app\nav\model\LinkModel;
 use classes\nav\NavClass;
+use classes\system\BankClass;
 use classes\system\SystemClass;
 use think\Request;
 
@@ -53,6 +54,17 @@ class IndexClass extends FirstClass
     public function set()
     {
         $model = new SystemClass();
+        return $model->index();
+    }
+
+    /**
+     * 读取系统设置
+     *
+     * @return array
+     */
+    public function bank_set()
+    {
+        $model = new BankClass();
         return $model->index();
     }
 

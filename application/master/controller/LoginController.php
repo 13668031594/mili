@@ -4,6 +4,7 @@ namespace app\master\controller;
 
 use app\http\controller\AdminController;
 use classes\master\LoginClass;
+use classes\system\BankClass;
 use classes\system\SystemClass;
 use think\Request;
 
@@ -58,12 +59,21 @@ class LoginController extends AdminController
 
         $set = $set->index();
 
+
         $master = $this->class->master();
 
         $is_substation = $this->class->is_substation();
 
         $youyunbao = $this->class->youyunbao();
 
-        return parent::view('index', ['master' => $master, 'set' => $set,'is_substation' => $is_substation,'you' => $youyunbao]);
+        $bank = $this->class->bank();
+
+        return parent::view('index', [
+            'master' => $master,
+            'set' => $set,
+            'is_substation' => $is_substation,
+            'you' => $youyunbao,
+            'bank' => $bank,
+        ]);
     }
 }

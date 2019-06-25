@@ -249,4 +249,13 @@ class GoodsController extends AdminController
 
         return parent::success('/goods/index');
     }
+
+    public function getAmountReset()
+    {
+        $id = \request()->get('id');
+
+        $this->class->level_amount_reset($id);
+
+        return $this->success();
+    }
 }
