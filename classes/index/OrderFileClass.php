@@ -15,6 +15,7 @@ class OrderFileClass
         if (input('type') == '0') {
 
             self::taobao_regin();
+
             $result = self::text($files);
         } else {
 
@@ -385,7 +386,7 @@ class OrderFileClass
             if ($pro != $pro_t) continue;
 
             foreach ($v['child'] as $va) {
-
+//dd($v['child'])
                 if (self::special_pro($result['pro'])) {
 
                     $long2 = 0;
@@ -413,7 +414,7 @@ class OrderFileClass
                 if ($city != $city_t) continue;
 
                 //不设区的市级单位
-                if (self::special_city($result['pro'], $result['city'])) {
+                if (self::special_city($result['pro'], $result['city']) || empty($va['child'])) {
 
                     $result['area'] = $city_t;
 
