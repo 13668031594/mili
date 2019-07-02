@@ -91,22 +91,24 @@ class YouyunbaoClass
             //启用本地备注模式
             /*$order_data = base64_encode($yundata["data"] . ',' . $yundata["money"]);//将数据进行base64编码
             $qrcode = 'http://' . $_SERVER['HTTP_HOST'] . '/alipayh5?data=' . $order_data . '';//本地自动生成二维码地址
-            $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => time() + 300, 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据*/
+                        $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => time() + 300, 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据
+
+            */
             //启用本地备注模式
-            $h5yundata = array("appid"=>$congig['appid'],"data"=>$yundata['data'],"money"=>$yundata['money'],"atype"=>1,"type"=>1);
-            $h5token = array("appid"=>$congig['appid'],"data"=>$yundata['data'],"money"=>$yundata['money'],"type"=>1,"appkey" =>$congig['appkey']);
+            $h5yundata = array("appid" => $congig['appid'], "data" => $yundata['data'], "money" => $yundata['money'], "atype" => 1, "type" => 1);
+            $h5token = array("appid" => $congig['appid'], "data" => $yundata['data'], "money" => $yundata['money'], "type" => 1, "appkey" => $congig['appkey']);
             $h5token = md5($this->config->urlparams($h5token));
-            $h5postdata = $this->config->urlparams($h5yundata).'&token='.$h5token;
-            $h5fdata = $this->config->curl_post_https($congig['server'].'Alipay',$h5postdata);
+            $h5postdata = $this->config->urlparams($h5yundata) . '&token=' . $h5token;
+            $h5fdata = $this->config->curl_post_https($congig['server'] . 'Alipay', $h5postdata);
             $h5sdata = json_decode($h5fdata, true);//将json代码转换为数组
-            if($h5sdata['state']==0){
+            if ($h5sdata['state'] == 0) {
                 exit($h5sdata['text']);
             }
             $h5sdata = $h5sdata['text'];
-            $qrcode ='alipays://platformapi/startapp?appId=20000123&actionType=scan&biz_data={"s":"money","u": "'.$h5sdata['alipayid'].'","a": "'.$h5sdata['money'].'","m":"'.$h5sdata['data'].'"}';
+            $qrcode = 'alipays://platformapi/startapp?appId=20000123&actionType=scan&biz_data={"s":"money","u": "' . $h5sdata['alipayid'] . '","a": "' . $h5sdata['money'] . '","m":"' . $h5sdata['data'] . '"}';
             //$qrcode ='alipays://platformapi/startapp?appId=09999988&actionType=toAccount&goBack=NO&amount='.$h5sdata['money'].'&userId='.$h5sdata['alipayid'].'&memo='.$h5sdata['data'].'';
 
-            $sdata = array('state'=>1,'qrcode'=>$qrcode,'youorder'=>$yundata["data"],'data'=>$yundata["data"],'money'=>$yundata["money"],'times'=>time() + 300,'orderstatus'=>0,'text'=>10089); //本地生成二维码可手动伪造JSON数据
+            $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => time() + 300, 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据
         } else {
             //否则走云端
             $fdata = $this->config->curl_post_https($congig['server'], $postdata);//发送数据到网关
