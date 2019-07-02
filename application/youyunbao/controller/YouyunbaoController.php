@@ -33,7 +33,7 @@ class YouyunbaoController extends IndexController
         $class = new YouyunbaoClass();
 
         $sdata = $class->alipayh5();
-dd($sdata);
+//dd($sdata);
         return parent::view('alipayh5', ['sdata' => $sdata]);
     }
 
