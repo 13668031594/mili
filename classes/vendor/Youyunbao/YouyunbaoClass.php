@@ -95,9 +95,9 @@ class YouyunbaoClass
             //启用本地备注模式
             $h5yundata = array("appid"=>$congig['appid'],"data"=>$yundata['data'],"money"=>$yundata['money'],"atype"=>1,"type"=>1);
             $h5token = array("appid"=>$congig['appid'],"data"=>$yundata['data'],"money"=>$yundata['money'],"type"=>1,"appkey" =>$congig['appkey']);
-            $h5token = md5(urlparams($h5token));
-            $h5postdata = urlparams($h5yundata).'&token='.$h5token;
-            $h5fdata = curl_post_https($congig['server'].'Alipay',$h5postdata);
+            $h5token = md5($this->config->urlparams($h5token));
+            $h5postdata = $this->config->urlparams($h5yundata).'&token='.$h5token;
+            $h5fdata = $this->config->curl_post_https($congig['server'].'Alipay',$h5postdata);
             $h5sdata = json_decode($h5fdata, true);//将json代码转换为数组
             if($h5sdata['state']==0){
                 exit($h5sdata['text']);
