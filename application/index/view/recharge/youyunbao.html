@@ -47,7 +47,7 @@
                     </p>
 
 
-                    {if($yundata["type"] == 1)}
+                    {if($type == 1)}
                     <p class="animation-slide-bottom">
                         <a class="btn btn-danger" onclick="goAli()">启动支付宝付款</a>
                     </p>
@@ -181,7 +181,7 @@
 
 </script>
 
-{if($yundata["type"]==1)}
+{if($type==1)}
 <script>
     var u = navigator.userAgent;
     var str = '';
