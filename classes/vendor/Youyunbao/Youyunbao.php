@@ -28,7 +28,7 @@ class Youyunbao
         $server = 'http://yunpay.waa.cn/',
         $uip = null,
         $helpts = 1,
-        $alipayh5 = 0
+        $alipayh5 = 1
     )
     {
         $this->appid = $appid;
