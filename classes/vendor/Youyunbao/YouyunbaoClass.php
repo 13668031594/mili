@@ -105,8 +105,8 @@ class YouyunbaoClass
                 exit($h5sdata['text']);
             }
             $h5sdata = $h5sdata['text'];
-//            $qrcode = 'alipays://platformapi/startapp?appId=20000123&actionType=scan&biz_data={"s":"money","u": "' . $h5sdata['alipayid'] . '","a": "' . $h5sdata['money'] . '","m":"' . $h5sdata['data'] . '"}';
-            $qrcode ='alipays://platformapi/startapp?appId=09999988&actionType=toAccount&goBack=NO&amount='.$h5sdata['money'].'&userId='.$h5sdata['alipayid'].'&memo='.$h5sdata['data'].'';
+            $qrcode = 'alipays://platformapi/startapp?appId=20000123&actionType=scan&biz_data={"s":"money","u": "' . $h5sdata['alipayid'] . '","a": "' . $h5sdata['money'] . '","m":"' . $h5sdata['data'] . '"}';
+//            $qrcode ='alipays://platformapi/startapp?appId=09999988&actionType=toAccount&goBack=NO&amount='.$h5sdata['money'].'&userId='.$h5sdata['alipayid'].'&memo='.$h5sdata['data'].'';
 
             $sdata = array('state' => 1, 'qrcode' => $qrcode, 'youorder' => $yundata["data"], 'data' => $yundata["data"], 'money' => $yundata["money"], 'times' => (time() + 300), 'orderstatus' => 0, 'text' => 10089); //本地生成二维码可手动伪造JSON数据
         } else {
