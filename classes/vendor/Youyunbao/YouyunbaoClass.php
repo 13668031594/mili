@@ -186,7 +186,7 @@ class YouyunbaoClass
 
         return [
             'config' => $congig,
-            'money' => $money,
+            'money' => $moneys,
             'qrcode' => $qrcode,
             'times' => $times,
             'orderstatus' => $orderstatus,
@@ -197,7 +197,6 @@ class YouyunbaoClass
             'text' => $text,
             'tishi' => $tishi,
             'type' => $yundata["type"],
-
         ];
     }
 
@@ -248,8 +247,9 @@ class YouyunbaoClass
             exit($sdata['text']);
         }
         $sdata = $sdata['text'];
-dump($sdata);
-exit;
+//dump($sdata);
+//dump('123123');
+//exit;
         return $sdata;
     }
 
