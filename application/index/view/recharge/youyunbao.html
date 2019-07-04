@@ -46,12 +46,11 @@
                         <a class="btn btn-danger" href="{$congig['reurl']}">返回</a>
                     </p>
 
-
-                    {if($type == 1)}
+                    <!--{if($type == 1)}
                     <p class="animation-slide-bottom">
                         <a class="btn btn-danger" onclick="goAli()">启动支付宝付款</a>
                     </p>
-                    {/if}
+                    {/if}-->
                     <!--<p class="animation-slide-bottom">
                         <a class="btn btn-danger" onclick="help()">付款帮助？</a>
                     </p>-->
@@ -168,12 +167,12 @@
     window.onload = loadmsg();
 
 
-    /*function help() {
+    function help() {
         layer.open({
             content: '<p style="font-size:25px;color:#F00"><b>必须付款：{$moneys} 元 才能自动到账</b></p>{$tishi}',
             btn: '我知道了'
         });
-    }*/
+    }
 
     {if ($congig['helpts'] == 1)}
     window.onload = help();
