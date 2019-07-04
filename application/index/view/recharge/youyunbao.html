@@ -169,14 +169,14 @@
 
     function help() {
         layer.open({
-            content: '<p style="font-size:25px;color:#F00"><b>必须付款：{$moneys} 元 才能自动到账</b></p>{$tishi}',
+            content: '<p style="font-size:25px;color:#F00"><b>必须付款：'+{$moneys}+' 元 才能自动到账</b></p>'+{$tishi},
             btn: '我知道了'
         });
     }
 
-    {if ($congig['helpts'] == 1)}
-    window.onload = help();
-    {/if}
+    if ({$config["helpts"]} == '1') {
+        window.onload = help();
+    }
 
 </script>
 
