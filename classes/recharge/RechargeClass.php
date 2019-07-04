@@ -37,6 +37,7 @@ class RechargeClass extends AdminClass
         $startTime = $request->get('startTime');
         $endTime = $request->get('endTime');
         $status = $request->get('status');
+        $from = $request->get('from');
         $keyword = $request->get('keyword');
         $keywordType = $request->get('keywordType');
 
@@ -60,6 +61,9 @@ class RechargeClass extends AdminClass
         }
         if (!empty($status) || ($status == '0')) {
             $where[] = ['status', '=', $status];
+        }
+        if (!empty($from)) {
+            $where[] = ['from', '=', $from];
         }
 
         return parent::page($this->model, ['where' => $where]);

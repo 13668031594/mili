@@ -44,6 +44,16 @@
             {/if}
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
+                <select name="from" lay-verify="" style="height:30px;">
+                    <option value="">来源</option>
+                    <option value="bank">银行转账</option>
+                    <option value="weichat">微信</option>
+                    <option value="alipay">支付宝</option>
+                    <option value="qq">qq钱包</option>
+                </select>
+            </div>
+
+            <div class="layui-input-inline layui-query-select" style="width:70px;">
                 <select name="status" lay-verify="" style="height:30px;">
                     <option value="">状态</option>
                     <option value="0">待处理</option>
