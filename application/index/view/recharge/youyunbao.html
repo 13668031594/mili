@@ -106,7 +106,7 @@
 
     // 设置参数方式
     var qrcode = new QRCode('qrcode', {
-        text: {$qrcode},
+        text: '{php}echo $qrcode;{/php}',
         width: 168,
         height: 168,
         colorDark: '#000000',
