@@ -124,13 +124,17 @@ class YouyunbaoClass
             exit('异常' . $sdata["text"]);
         }
 
+        $from = 'wechat';
+        if ($yundata['type'] == 1) $from = 'alipay';
+        if ($yundata['type'] == 2) $from = 'qq';
+
         //添加本地记录
         $model = new YouyunbaoOrderModel();
         $model->state = $sdata['state'];
         $model->qrcode = $sdata['qrcode'];
         $model->order = $sdata['order'];
         $model->datas = $sdata['data'];
-        $model->money = $money;
+        $model->money = $sdata['money'];
         $model->times = $sdata['times'];
         $model->orderstatus = $sdata['orderstatus'];
         $model->text = $sdata['text'];
@@ -138,6 +142,7 @@ class YouyunbaoClass
         $model->created_at = date('Y-m-d H:i:s');
         $model->substation = SUBSTATION;
         $model->recharge_type = $recharge;
+        $model->from = $from;
         $model->save();
 
         $qrcode = $sdata["qrcode"];//二维码

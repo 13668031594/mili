@@ -144,6 +144,7 @@ class YouyunbaoController extends IndexController
         $recharge->change_nickname = '自动到账';
         $recharge->change_date = date('Y-m-d H:i:s');
         $recharge->substation = SUBSTATION;
+        $recharge->from = $order_model->from;
         $recharge->save();
 
         //完成订单结束后的操作
@@ -163,7 +164,7 @@ class YouyunbaoController extends IndexController
 
         $master = new MasterModel();
         $master = $master->find($order_model->member_id);
-        if (is_null($master)){
+        if (is_null($master)) {
 
             $master['id'] = $order_model->member_id;
             $master['nickname'] = '未找到';
@@ -171,7 +172,7 @@ class YouyunbaoController extends IndexController
 
         $substation = new SubstationModel();
         $substation = $substation->find($order_model->substation);
-        if (is_null($substation)){
+        if (is_null($substation)) {
 
             $order_model->save();
 
@@ -200,6 +201,7 @@ class YouyunbaoController extends IndexController
         $order->change_id = 0;
         $order->change_nickname = '自动到账';
         $order->change_date = $date;
+        $recharge->from = $order_model->from;
         $order->save();
 
         //状态为处理，发放积分
@@ -228,7 +230,7 @@ class YouyunbaoController extends IndexController
             ->order('created_at asc')
             ->column('id,express_cost_all,goods_cost_all');
 
-        if (count($orders) > 0){
+        if (count($orders) > 0) {
 
             foreach ($orders as $v) {
 
