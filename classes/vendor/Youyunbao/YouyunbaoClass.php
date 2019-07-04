@@ -114,9 +114,9 @@ class YouyunbaoClass
             $fdata = $this->config->curl_post_https($congig['server'], $postdata);//发送数据到网关
             $sdata = json_decode($fdata, true);//将json代码转换为数组
         }
-        dump(time());
-        dump($sdata);
-        exit;
+//        dump(time());
+//        dump($sdata);
+//        exit;
         /*返回的json参数
         {"state":"1","qrcode":"二维码","youorder":"token","data":"data","money":"10.00","times":"1531384783","orderstatus":"0","text":"10089"}
         state = 1 为成功获取二维码数据  0表示异常 请看错误代码
