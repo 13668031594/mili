@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Substation\model;
+namespace app\substation\model;
 
 use think\Model;
 

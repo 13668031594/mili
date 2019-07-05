@@ -91,7 +91,7 @@ class Config extends Seeder
 
     private function substation_level()
     {
-        $level = new \app\Substation\model\SubstationLevelModel();
+        $level = new \app\substation\model\SubstationLevelModel();
 
         $test = $level->find();
 
@@ -122,7 +122,7 @@ class Config extends Seeder
 
         $model = new \app\member\model\MemberGradeExpressModel();
 
-        $substation = new \app\Substation\model\SubstationModel();
+        $substation = new \app\substation\model\SubstationModel();
         $substation = $substation->column('id');
         $substation[] = 0;
 

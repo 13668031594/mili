@@ -11,7 +11,7 @@ namespace classes;
 use app\http\exceptions\AjaxException;
 use app\http\exceptions\RedirectException;
 use app\member\model\MemberGradeModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use think\Db;
 use think\Model;
 use think\Validate;

@@ -9,13 +9,13 @@
 namespace classes\member;
 
 use app\express\model\ExpressModel;
-use app\Member\model\ExpressLevelAmountModel;
-use app\Member\model\MemberGradeAmountModel;
+use app\member\model\ExpressLevelAmountModel;
+use app\member\model\MemberGradeAmountModel;
 use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
-use app\Substation\model\SubstationLevelModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationLevelModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\ListInterface;
 use classes\substation\SubstationLevelClass;

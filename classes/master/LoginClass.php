@@ -9,7 +9,7 @@
 namespace classes\master;
 
 use app\master\model\MasterModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use think\Request;
 

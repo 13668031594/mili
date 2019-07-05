@@ -9,7 +9,7 @@
 namespace app\member\controller;
 
 use app\http\controller\AdminController;
-use app\Substation\model\SubstationLevelModel;
+use app\substation\model\SubstationLevelModel;
 use classes\member\MemberGradeClass;
 use think\Request;
 

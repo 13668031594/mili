@@ -3,10 +3,10 @@
 namespace classes\vendor;
 
 use app\goods\model\GoodsAmountModel;
-use app\Goods\model\GoodsLevelAmountModel;
-use app\Substation\model\SubstationLevelModel;
-use app\Substation\model\SubstationLevelUpModel;
-use app\Substation\model\SubstationModel;
+use app\goods\model\GoodsLevelAmountModel;
+use app\substation\model\SubstationLevelModel;
+use app\substation\model\SubstationLevelUpModel;
+use app\substation\model\SubstationModel;
 
 class GoodsAmountClass
 {

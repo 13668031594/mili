@@ -8,8 +8,8 @@
 
 namespace classes\vendor\Youyunbao;
 
-use app\Substation\model\SubstationModel;
-use app\Youyunbao\model\YouyunbaoOrderModel;
+use app\substation\model\SubstationModel;
+use app\youyunbao\model\YouyunbaoOrderModel;
 use classes\system\SystemClass;
 
 class YouyunbaoClass

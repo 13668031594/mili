@@ -2,7 +2,7 @@
 
 namespace classes\vendor;
 
-use app\Member\model\MemberGradeAmountModel;
+use app\member\model\MemberGradeAmountModel;
 
 class GradeAmountClass
 {

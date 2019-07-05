@@ -4,7 +4,7 @@ namespace app\http\middleware;
 
 use app\http\exceptions\RedirectException;
 use app\master\model\MasterModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use think\Route;
 
 class MasterLoginMiddleware

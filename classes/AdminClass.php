@@ -9,7 +9,7 @@
 namespace classes;
 
 use app\master\model\MasterModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\system\BankClass;
 use classes\system\SystemClass;
 use classes\vendor\StorageClass;

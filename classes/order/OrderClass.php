@@ -15,7 +15,7 @@ use app\member\model\MemberRecordModel;
 use app\order\model\OrderExpressModel;
 use app\order\model\OrderModel;
 use app\order\model\OrderSendModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use app\substation\model\SubstationRecordModel;
 use classes\AdminClass;
 use classes\system\SystemClass;

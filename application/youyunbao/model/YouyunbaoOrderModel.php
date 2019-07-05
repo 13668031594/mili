@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Youyunbao\model;
+namespace app\youyunbao\model;
 
 use think\Model;
 

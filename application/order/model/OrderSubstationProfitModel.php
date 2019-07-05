@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Order\model;
+namespace app\order\model;
 
 use think\Model;
 

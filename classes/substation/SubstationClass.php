@@ -10,8 +10,8 @@ namespace classes\substation;
 
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;
-use app\Substation\model\SubstationLevelModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationLevelModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\ListInterface;
 use think\Db;

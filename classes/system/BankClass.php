@@ -8,7 +8,7 @@
 
 namespace classes\system;
 
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\vendor\StorageClass;
 use think\Request;

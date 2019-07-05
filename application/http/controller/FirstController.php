@@ -9,7 +9,7 @@
 namespace app\http\controller;
 
 
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 
 class FirstController

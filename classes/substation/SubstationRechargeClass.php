@@ -9,7 +9,7 @@
 namespace classes\substation;
 
 use app\order\model\OrderModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use app\substation\model\SubstationRechargeModel;
 use app\substation\model\SubstationRechargeOrderModel;
 use app\substation\model\SubstationRecordModel;

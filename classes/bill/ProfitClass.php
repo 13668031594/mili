@@ -11,7 +11,7 @@ namespace classes\bill;
 use app\express\model\ExpressModel;
 use app\goods\model\GoodsClassModel;
 use app\order\model\OrderModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use think\Request;
 

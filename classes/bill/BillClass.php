@@ -12,7 +12,7 @@ use app\member\model\MemberModel;
 use app\member\model\MemberRecordModel;
 use app\order\model\OrderModel;
 use app\recharge\model\RechargeModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 
 class BillClass extends AdminClass

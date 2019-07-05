@@ -10,7 +10,7 @@ namespace classes\index;
 
 use app\avatar\model\AvatarModel;
 use app\express\model\ExpressModel;
-use app\Member\model\MemberGradeAmountModel;
+use app\member\model\MemberGradeAmountModel;
 use app\member\model\MemberGradeExpressModel;
 use app\member\model\MemberGradeModel;
 use app\member\model\MemberModel;

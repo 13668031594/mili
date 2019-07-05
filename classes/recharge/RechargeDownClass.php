@@ -9,7 +9,7 @@
 namespace classes\recharge;
 
 use app\recharge\model\RechargeModel;
-use app\Substation\model\SubstationModel;
+use app\substation\model\SubstationModel;
 use classes\AdminClass;
 use classes\order\SendClass;
 
