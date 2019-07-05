@@ -117,11 +117,11 @@
                                 <label class="layui-form-label">平台</label>
                                 <div class="layui-input-block" style="width: 350px;">
                                     <select name="platform" lay-filter="platform" lay-verify="required">
-                                        <option value="self">{$set['webName']}</option>
                                         <option value="taobao">淘宝</option>
                                         <option value="tianmao">天猫</option>
                                         <option value="jingdong">京东</option>
                                         <option value="pinduoduo">拼多多</option>
+                                        <option value="self">{$set['webName']}</option>
                                     </select>
                                 </div>
                             </div>
@@ -130,11 +130,11 @@
                                 <div class="layui-input-block">
                                     <input type="radio" lay-filter="uploadType" name="uploadType" value="0" title="数据表格"
                                            checked>
-                                    <input type="radio" lay-filter="uploadType" name="uploadType" value="1"
-                                           title="智能接口">
+                                    <!--<input type="radio" lay-filter="uploadType" name="uploadType" value="1"
+                                           title="智能接口">-->
                                 </div>
                             </div>
-                            <div class="upload-item-table">
+                            <div class="upload-item-table" >
 
                                 <!--<div class="layui-form-item layui-form-text">
                                     <div class="layui-input-block" style="width: 350px;">
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>-->
 
-                                <div class="layui-form-item" id="self_note">
+                                <div class="layui-form-item" id="self_note" style="display:none;">
                                     <div class="layui-input-block layui-word-aux">
                                         不清楚上传格式，请<a style="text-decoration: underline" href="orderInModel.xls">下载模板</a>，按模板内容填写后上传
                                     </div>
@@ -205,7 +205,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="screen-container" style="display: none;">
+                            <div id="screen-container" >
                                 <div class="pt" style="margin-left: -10px;"><span class="layui-badge"><b>2</b></span><b
                                         class="ct">请选择筛选数据</b></div>
                                 <div class="layui-form-item">

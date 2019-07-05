@@ -4,6 +4,7 @@ namespace app\recharge\controller;
 
 use app\http\controller\AdminController;
 use classes\recharge\RechargeClass;
+use classes\recharge\RechargeDownClass;
 use think\Db;
 use think\Request;
 
@@ -42,5 +43,25 @@ class RechargeController extends AdminController
         Db::commit();
 
         return parent::success('/admin/recharge/index');
+    }
+
+    public function getDownload()
+    {
+        $class = new RechargeDownClass();
+
+        //删除过期的excel文件
+        $class->excel_delete();
+
+        //生成excel
+        $url = $class->excel();
+
+        $result = [
+            'status' => 'success',
+            'url' => '/' . $url,
+            'message' => '生成成功',
+        ];
+
+
+        return json($result);
     }
 }

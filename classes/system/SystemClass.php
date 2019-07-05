@@ -154,6 +154,9 @@ class SystemClass extends AdminClass
             'youSwitch|优云宝充值开关' => 'require|in:on,off',
             'youAppid|优云宝appid' => 'require|length:0,100',
             'youAppkey|优云宝appkey' => 'require|length:0,100',
+            'youWechatSwitch|优云宝微信充值开关' => 'require|in:on,off',
+            'youAlipaySwitch|优云宝支付宝充值开关' => 'require|in:on,off',
+            'youQQSwitch|优云宝QQ充值开关' => 'require|in:on,off',
         ];
 
         $result = parent::validator(input(), $rule);
@@ -214,6 +217,9 @@ class SystemClass extends AdminClass
             'youSwitch' => 'off',
             'youAppid' => '未填写',
             'youAppkey' => '未填写',
+            'youWechatSwitch' => 'off',
+            'youAlipaySwitch' => 'off',
+            'youQQSwitch' => 'off',
         ];
     }
 

@@ -86,9 +86,15 @@
                 <label class="layui-form-label">付款方式</label>
                 <div class="layui-input-inline">
                     <select name="type" lay-verify="">
-                        <!--<option value="1">支付宝</option>-->
-                        <!--<option value="2">qq钱包</option>-->
+                        {if $set['youAlipaySwitch'] == 'on'}
+                        <option value="1">支付宝</option>
+                        {/if}
+                        {if $set['youQQSwitch'] == 'on'}
+                        <option value="2">qq钱包</option>
+                        {/if}
+                        {if $set['youWechatSwitch'] == 'on'}
                         <option value="3">微信</option>
+                        {/if}
                     </select>
                 </div>
                 <div class="layui-form-mid layui-word-aux">在线支付的付款方式</div>

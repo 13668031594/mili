@@ -323,6 +323,8 @@ class OrderClass extends \classes\IndexClass
                 exit;
         }
 
+        if (count($address) <= 0)parent::ajax_exception(000,'没有符合条件的收货人');
+
         return $address;
     }
 

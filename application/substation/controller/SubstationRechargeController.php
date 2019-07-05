@@ -11,6 +11,8 @@ namespace app\substation\controller;
 
 use app\http\controller\AdminController;
 use classes\substation\SubstationRechargeClass;
+use classes\substation\SubstationRechargeDownClass;
+use classes\system\SystemClass;
 use classes\vendor\Youyunbao\YouyunbaoClass;
 use think\Db;
 use think\Request;
@@ -37,6 +39,8 @@ class SubstationRechargeController extends AdminController
         $result = $class->bank();
 
         $result['order'] = 's_' . time() . '_' . (SUBSTATION + 37957);
+
+        $result['set'] = $class->master_set();
 
         return parent::view('store1', $result);
     }
@@ -152,5 +156,25 @@ class SubstationRechargeController extends AdminController
         $result = $class->record($request);
 
         return parent::tables($result);
+    }
+
+    public function getDownload()
+    {
+        $class = new SubstationRechargeDownClass();
+
+        //删除过期的excel文件
+        $class->excel_delete();
+
+        //生成excel
+        $url = $class->excel();
+
+        $result = [
+            'status' => 'success',
+            'url' => '/' . $url,
+            'message' => '生成成功',
+        ];
+
+
+        return json($result);
     }
 }

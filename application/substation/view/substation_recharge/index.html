@@ -44,7 +44,7 @@
             {/if}
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="from" lay-verify="" style="height:30px;">
+                <select name="from" lay-verify="" style="height:30px;" id="from">
                     <option value="">来源</option>
                     <option value="bank">银行转账</option>
                     <option value="weichat">微信</option>
@@ -54,7 +54,7 @@
             </div>
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="status" lay-verify="" style="height:30px;">
+                <select name="status" lay-verify="" style="height:30px;" id="status">
                     <option value="">状态</option>
                     <option value="0">待处理</option>
                     <option value="1">已处理</option>
@@ -63,12 +63,12 @@
                 </select>
             </div>
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="keywordType" lay-verify="" style="height:30px;">
+                <select name="keywordType" lay-verify="" style="height:30px;" id="keywordType">
                     <option value="1">订单号</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" />
+                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" id="keyword"/>
             </div>
 
             <div class="layui-input-inline">
@@ -86,6 +86,14 @@
                 <button class="layui-btn layui-btn-sm" lay-submit lay-filter="query">
                     <i class="layui-icon ">&#xe615;</i>搜索
                 </button>
+            </div>
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" id='exportButton'>立即导出</button>
+                    <a id="download" download="" class="layui-hide" href="javascript:;">点击下载</a>
+                </div>
             </div>
         </form>
     </div>

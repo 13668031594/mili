@@ -370,4 +370,27 @@ class SubstationRechargeClass extends AdminClass
 
         return parent::page($model, ['where' => $where,'order_name' => 'id','order_type'=> 'desc']);
     }
+
+    //判断上级站是否开启优云宝支付
+    public function master_set()
+    {
+        if (SUBSTATION == 0) return false;
+
+        $substation = new SubstationModel();
+        $substation = $substation->find(SUBSTATION);
+
+        if (!empty($substation->pid)) {
+
+            $name = 'sysSetting_' . $substation->pid . '.txt';
+        } else {
+
+            $name = 'sysSetting.txt';
+        }
+
+        $class = new SystemClass();
+        $class->storage = new StorageClass($name);
+        $set = $class->index();
+
+        return $set;
+    }
 }

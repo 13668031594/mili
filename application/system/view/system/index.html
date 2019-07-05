@@ -385,6 +385,37 @@
                         <div class="layui-form-mid layui-word-aux">优云宝发放的appkey</div>
                     </div>
                 </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">微信支付</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='youWechatSwitch' lay-filter="youWechatSwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["youWechatSwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='youWechatSwitchValue' name="youWechatSwitch"
+                               value="{$self['youWechatSwitch']}"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付宝支付</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='youAlipaySwitch' lay-filter="youAlipaySwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["youAlipaySwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='youAlipaySwitchValue' name="youAlipaySwitch"
+                               value="{$self['youAlipaySwitch']}"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">QQ支付</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" id='youQQSwitch' lay-filter="youQQSwitch"
+                               lay-skin="switch"
+                               lay-text="开启|关闭" {if $self["youQQSwitch"] == 'on'}checked{/if}/>
+                        <input type="hidden" id='youQQSwitchValue' name="youQQSwitch"
+                               value="{$self['youQQSwitch']}"/>
+                    </div>
+                </div>
             </div>
 
 
@@ -603,6 +634,24 @@
                 $('#youSwitchValue').prop('value', 'on');
             } else {
                 $('#youSwitchValue').prop('value', 'off');
+            }
+        });form.on('switch(youWechatSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#youWechatSwitchValue').prop('value', 'on');
+            } else {
+                $('#youWechatSwitchValue').prop('value', 'off');
+            }
+        });form.on('switch(youAlipaySwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#youAlipaySwitchValue').prop('value', 'on');
+            } else {
+                $('#youAlipaySwitchValue').prop('value', 'off');
+            }
+        });form.on('switch(youQQSwitch)', function (data) {
+            if (data.elem.checked) {
+                $('#youQQSwitchValue').prop('value', 'on');
+            } else {
+                $('#youQQSwitchValue').prop('value', 'off');
             }
         });
 

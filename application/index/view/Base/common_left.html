@@ -22,9 +22,9 @@
             <a href="/store" {if isset($choice) && ($choice== '/store')}class="choice"{/if}>发货店铺</a>
         </dd>
 
-        <dd>
+        <!--<dd>
             <a href="/upgrade" {if isset($choice) && ($choice== '/upgrade')}class="choice"{/if}>升级会员</a>
-        </dd>
+        </dd>-->
     </dl>
 
     <dl class="left-menu-item">
@@ -48,9 +48,17 @@
 
     <dl class="left-menu-item">
         <dt>充值管理</dt>
+        {if $set['youSwitch'] == 'on'}
+        <dd>
+            <a href="/recharge1" {if isset($choice) && ($choice== '/recharge')}class="choice"{/if}>自动充值</a>
+        </dd>
+        {/if}
+        {if $bank_set['switch'] == 'on'}
         <dd>
             <a href="/recharge" {if isset($choice) && ($choice== '/recharge')}class="choice"{/if}>在线充值</a>
         </dd>
+        {/if}
+
 
         <dd>
             <a href="/recharge-note" {if isset($choice) && ($choice== '/recharge-note')}class="choice"{/if}>充值记录</a>

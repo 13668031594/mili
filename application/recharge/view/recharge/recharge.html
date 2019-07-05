@@ -44,7 +44,7 @@
             {/if}
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="from" lay-verify="" style="height:30px;">
+                <select name="from" lay-verify="" style="height:30px;" id="from">
                     <option value="">来源</option>
                     <option value="bank">银行转账</option>
                     <option value="weichat">微信</option>
@@ -55,7 +55,7 @@
 
 
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="status" lay-verify="" style="height:30px;">
+                <select name="status" lay-verify="" style="height:30px;" id="status">
                     <option value="">状态</option>
                     <option value="0">待处理</option>
                     <option value="1">已处理</option>
@@ -64,13 +64,13 @@
                 </select>
             </div>
             <div class="layui-input-inline layui-query-select" style="width:70px;">
-                <select name="keywordType" lay-verify="" style="height:30px;">
+                <select name="keywordType" lay-verify="" style="height:30px;" id="keywordType">
                     <option value="1">订单号</option>
                     <option value="0">账号</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid"/>
+                <input type="text" name='keyword' placeholder="请输入关键字" class="layui-input layui-input-mid" id="keyword"/>
             </div>
 
             <div class="layui-input-inline">
@@ -91,7 +91,16 @@
                     <i class="layui-icon ">&#xe615;</i>搜索
                 </button>
             </div>
+
+            <div class="layui-input-inline">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <button class="layui-btn" id='exportButton'>立即导出</button>
+                    <a id="download" download="" class="layui-hide" href="javascript:;">点击下载</a>
+                </div>
+            </div>
         </form>
+
     </div>
 
     <table lay-filter="table" id='idTable' lay-data='{id:"idTable"}'>
@@ -117,7 +126,7 @@
     var tUrl = {
         0: '/admin/recharge/status', // 取消 处理
     };
-    var sub = {php} echo $sub['json'];{/php}
+    var sub = {php}echo $sub['json'];{/php}
 
         var transform = {
             0: '待处理',
@@ -140,7 +149,7 @@
             var layer = layui.layer;
             var mTable = layui.mTable;
             var laydate = layui.laydate;
-            var sub = {php} echo $sub['json'];{/php}
+            var sub = {php}echo $sub['json'];{/php}
 
                 laydate.render({
                     elem: '#startTime',
@@ -186,6 +195,45 @@
                 mTable.render();
             }
         );
+
+        // 导出
+        $("#exportButton").on('click', function () {
+
+            $(this).prop({'disabled': true}).addClass('layui-btn-disabled').text('正在导出...');
+
+            var begin = $("#startTime").val();
+            var end = $("#endTime").val();
+            var status = $('#status').val();
+            var from = $('#from').val();
+            var keyword = $('#keyword').val();
+            var keywordType = $('#keywordType').val();
+            var _this = this;
+
+
+            $.getJSON('/admin/recharge/download', {begin: begin, end: end,status:status,from:from,keyword:keyword,keywordType:keywordType}, function (data) {
+
+                $(_this).prop({'disabled': false}).removeClass('layui-btn-disabled').text('立即导出');
+
+                if (data.status == 'success') {
+                    layer.msg('导出成功,请点击下载按钮');
+                    var files = data.url.split('/');
+                    var fileName = files.pop();
+                    $("#download").attr({'href': data.url, 'download': fileName}).removeClass('layui-hide');
+                } else {
+
+                    if (data.code == '101') {
+
+                        layer.msg('导出成功:' + data.message);
+                    } else {
+
+                        layer.msg('导出失败:' + data.message);
+                    }
+                }
+
+            });
+
+            return false;
+        });
 </script>
 </body>
 

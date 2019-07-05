@@ -166,7 +166,7 @@ class SendClass extends AdminClass
      * @param array $data
      * @return string
      */
-    private function excelExport($fileName = '', $headArr = [], $data = [])
+    public function excelExport($fileName = '', $headArr = [], $data = [])
     {
         $fileName = $this->dir . '/' . $fileName . "_" . time() . ".xls";
 

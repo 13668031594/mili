@@ -138,7 +138,7 @@
                     <li><a href="/change-password">修改密码</a></li>
                     <li><a href="/pay-password">支付密码</a></li>
                     <li><a href="/store">发货店铺</a></li>
-                    <li><a href="/upgrade">升级会员</a></li>
+                    <!--<li><a href="/upgrade">升级会员</a></li>-->
                 </ul>
             </li>
 
@@ -146,13 +146,13 @@
                 {if $set['youSwitch'] == 'on'}
                 <a href="/recharge1" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
                 {elseif $bank_set['switch'] == 'on'}
-                <a href="/recharge1" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
+                <a href="/recharge" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
                 {else}
                 <a href="/recharge-note" {if $nav['recharge']['flash'] == 'on'}class="change-color"{/if}>
                 {/if}
                 {if $nav['recharge']['tilt'] == 'on'}<i>{/if}
                 {if $set['youSwitch'] == 'on'}
-                在线充值
+                自动充值
                 {elseif $bank_set['switch'] == 'on'}
                 手动充值
                 {else}
